@@ -26,6 +26,7 @@
 %\DeclareMathSymbol{\Tangent}
 \DeclareMathOperator{\sech}{sech}
 \DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator*{\argmin}{\arg\min}
 
 \begin{document}
 \title{Continuous Models for Scene and Traffic Participant Interactions in Road Scene Understanding.}
@@ -413,8 +414,6 @@ So far we have modeled our point tracks energy in a non-smooth way:
     \int_1^\infty a_j^i(\lambda)\|\trackpj{t} - \projectionOf{\invProjectionOf{\trackpj{t-1}}}\|^2 d\lambda
 \end{multline}
 
-
-
 The tricky part here is inverse projection $\invProjectionOf{.}$ . When we
 project an image point back to 3D we get a ray $\lambda K^{-1}\trackpj{t-1}$
 which is ambiguous up to a scale factor $\lambda$. Using our hypothesized 3D
@@ -513,6 +512,7 @@ $\lambda$, we can come up with an association probability
 \newcommand{\occfxi}{L(\mathbf{x}; \pos{i}{t-1}, \Sigma_i)}
 \newcommand{\occfi}{L(\lambda \ray; \pos{i}{t-1}, \Sigma_i)}
 \newcommand{\assocP}{a^{i}_{j,t-1}(\lambda)}
+\newcommand{\assocPk}{a^{i}_{j,t-1}(\lambda_k)}
 \begin{align}
    \assocP &= \frac{(\max \{ 0, \nabla \occf^\top
 \ray \})^2 }{P_{\text{reflection}}}\lambdadist\\
@@ -520,11 +520,45 @@ $\lambda$, we can come up with an association probability
   \prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda}
 \end{align}
 
-Now coming back to our point track energy, the distribution over $\lambda$
-becomes our association function which instead of associating each point track
-with a traffic participant, associates it with a depth ($\lambda$). Hence our
-summation over $N$ traffic participants is replaced by an integral over the
-entire ray.
+Note that this fraction although called association probability does not
+capture the entire information that we have available for compute association
+of points to tracks. This above fraction is the association probability given 
+the hypothesized parameters of traffic participant model. Given that a point is
+observed on the image the sum of probability marginalized over other parameters
+must be one i.e.
+\begin{align}
+    \sum_{i = 1}^N
+    \int_1^{\infty}
+    \assocP d\lambda = 1
+\end{align}
+
+To compute the association probability between traffic participant $i$ and
+point track $j$ we must use re-projection error as well. When the association
+$i$ and $j$ is right and the point of reflection is at depth $\lambda$ the
+re-projection error must be zero, otherwise the error becomes a measure of
+distance from the true solution:
+
+\newcommand{\Ereproj}{E^{(ij)}_{\text{reproj}}}
+\begin{align}
+  \Ereproj(\lambda) = \|\trackpj{t} - f^i_{reproj}(\trackpj{t-1}, \lambda)\|^2
+\end{align}
+
+The error terms can be converted to probability domain by considering the error
+term as negative log of probablity
+
+\begin{align}
+  P^{(ij)}_{\text{assoc by reproj}}(\lambda) = \frac{1}{\sqrt{2\pi}}\exp(-\Ereproj(\lambda))
+\end{align}
+
+Using both the evidence terms we can write probability of association as
+\begin{align}
+  P^{(ij)}_{\text{assoc}} \propto \int_0^{\infty} \assocP \frac{1}{\sqrt{2\pi}}\exp(-\Ereproj(\lambda))d\lambda
+  \label{eq:prob-assoc}
+\end{align}
+
+However, for estimating the overall energy we just need to compute the expected
+value of the re-projection error for given parameters, i.e.
+
 \begin{multline}
   \Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i,\{ \dimsn{i} \}_i) = \\
     \sum_{i = 1}^N
@@ -534,6 +568,18 @@ entire ray.
     \|\trackpj{t} - f^i_{reproj}(\trackpj{t-1}, \lambda)\|^2
     d\lambda
 \end{multline}
+
+If the aim is to find the best possible association, it is easier as we need to
+to compute the association that minimizes the expected re-projection error for
+point $j$. It remains to be seen that how the minima of following expression relates to minima of \eqref{eq:prob-assoc}
+
+\begin{align}
+  i^* = \argmin_{i=1}^N \int_0^\infty \assocP \Ereproj(\lambda) d\lambda
+\end{align}
+
+Since the computation of $\assocP$ entirely depends on hypothesized parameters,
+it severely limits the applicability of this method outside this kind of
+parameterized model.
 
 \subsubsection{Approximations}
 \newcommand{\Ptrans}{P_{\text{transmission}}}
@@ -651,14 +697,41 @@ So the energy becomes
     \sum_{j = 1}^{M}
     \int_1^{\infty}
     \assocP
-    E^i_{\text{reproj}}(\lambda)
+    \Ereproj(\lambda)
     d\lambda
 \end{multline}
-where $x = \lambda \ray$ and $E^i_{\text{reproj}}(\lambda) = \|\trackpj{t} -
+where $x = \lambda \ray$ and $\Ereproj(\lambda) = \|\trackpj{t} -
 f^i_{reproj}(\trackpj{t-1}, \lambda)\|^2$ is reprojection error which is a
 quadratic in $\lambda$
 
 The integral in the above expression is computed numerically.
+
+\subsection{Numerical integration}
+Numerical integration is possible by computed by sampling. Samples need to be
+generated from the association probability $\assocP$ for a given $j$. We take
+proposal distribution to be a GMM with modes around probable reflection points.
+The weights of all Gaussians in the mixture are proportional to the distance of
+the point $j$ from projection of ellipsoid centre i.e. $\|\trackpj{t} - \projectionOf{\relp{i}{t}}\|$ . The range of Gaussian $G_i$
+must be in the interval $[\|\relp{i}{t}\|, \|\relp{i}{t}\| +
+\sqrt{3}\max(\dimsn{i})]$. Hence we take the mean as $\|\relp{i}{t}\| +
+\frac{\sqrt{3}}{2}\max(\dimsn{i})$ and variance as
+$\frac{1}{3}\max(\dimsn{i})^2$. The distribution from which we sample is 
+\newcommand{\Gauss}{\mathcal{N}}
+\newcommand{\PropDist}{\mathcal{W}}
+\begin{align}
+  \PropDist(\lambda) = \sum_i A_i \Gauss(\lambda; \|\relp{i}{t}\| +
+  \frac{\sqrt{3}}{2}\max(\dimsn{i}), \frac{1}{\sqrt{3}}\max(\dimsn{i}))
+\end{align}
+And the numerical integral with $K$ samples is computed by
+\begin{align}
+    \int_1^{\infty}
+    \assocP
+    \Ereproj(\lambda)
+    d\lambda
+    =
+    \frac{1}{K}\sum_k \Ereproj \frac{\assocPk}{\PropDist(\lambda_k)}
+\end{align}
+where $\lambda_k$ is the $k$th sample drawn from $\PropDist(\lambda)$.
 
 \begin{comment}
   %%%%%%%%%%%%%%%% Analytical attempt to integration %%%%%%%%%%%%%%%%%%%%%
