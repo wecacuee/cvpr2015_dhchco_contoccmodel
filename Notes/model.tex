@@ -661,8 +661,8 @@ So based on intuition, we approximate the $\Ptrans$ by following function
 \end{align}
 where 
 \begin{align}
-  \mu_u^i &= \projectionOf{\pos{i}{t-1}} \\
-  \Sigma_u^i &= \projectionOf{\Sigma_i}\\
+  \mu_u^i &= \projectionOf{\pos{i}{t-1}} \label{eq:muiudef}\\
+  \Sigma_u^i &= \projectionOf{\Sigma_i} \label{eq:sigmauidef}\\
   \mu^i_d(\mathbf{u}) &= \relp{i}{t}\\
   k_u &= 10\log(49)\\
   k_d &= \frac{\log(49)}{\sqrt{h^2 + l^2 + w^2}}
@@ -711,15 +711,20 @@ Numerical integration is possible by computed by sampling. Samples need to be
 generated from the association probability $\assocP$ for a given $j$. We take
 proposal distribution to be a GMM with modes around probable reflection points.
 The weights of all Gaussians in the mixture are proportional to the distance of
-the point $j$ from projection of ellipsoid centre i.e. $\|\trackpj{t} - \projectionOf{\relp{i}{t}}\|$ . The range of Gaussian $G_i$
-must be in the interval $[\|\relp{i}{t}\|, \|\relp{i}{t}\| +
-\sqrt{3}\max(\dimsn{i})]$. Hence we take the mean as $\|\relp{i}{t}\| +
+the point $j$ from projection of ellipsoid centre i.e. 
+\begin{align}
+  A_{ij} = \frac{1}{Z_j}\exp(-(\trackpj{t} - \mu^i_u)^\top\Sigma_u^i(\trackpj{t} - \mu^i_u))
+\end{align}
+where $Z_j = \sum_{i=1}^N A_{ij}$ and $\mu^i_u$ and $\Sigma_u^i$ are described in \eqref{eq:muiudef} and \eqref{eq:sigmauidef} respectively.
+The range of Gaussian $G_i$
+must be in the interval $[\|\relp{i}{t}\|, \|\relp{i}{t}\| -
+\sqrt{3}\max(\dimsn{i})]$. Hence we take the mean as $\|\relp{i}{t}\| -
 \frac{\sqrt{3}}{2}\max(\dimsn{i})$ and variance as
 $\frac{1}{3}\max(\dimsn{i})^2$. The distribution from which we sample is 
 \newcommand{\Gauss}{\mathcal{N}}
-\newcommand{\PropDist}{\mathcal{W}}
+\newcommand{\PropDist}{\mathcal{W}_j}
 \begin{align}
-  \PropDist(\lambda) = \sum_i A_i \Gauss(\lambda; \|\relp{i}{t}\| +
+  \PropDist(\lambda) = \sum_i A_{ij} \Gauss(\lambda; \|\relp{i}{t}\| -
   \frac{\sqrt{3}}{2}\max(\dimsn{i}), \frac{1}{\sqrt{3}}\max(\dimsn{i}))
 \end{align}
 And the numerical integral with $K$ samples is computed by
