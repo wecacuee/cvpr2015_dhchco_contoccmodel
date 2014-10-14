@@ -992,21 +992,15 @@ Let the detection score function over the detection $\bb{i}$ be
 %
 
 \subsection{Soft occlusion regions}
-Let the projections of hypothesized soft ellipsoids be
-$\projectionOf{\dimsn{i}}$ with some mean $\mu_i$ and variance $\Sigma_i$
-(assuming that projection of ellipsoids can be approximated by ellipses on
-image plane). We take the occlusion (intersection of two ellipses) to be
-modelled by product of the respective Gaussians.
+The soft occlusion regions is exactly the $\Ptrans$
 %
 \begin{align}
-  O_{ij}(x; \mu_{Oij}, \Sigma_{Oij}) = N(x; \mu_i, \Sigma_i)N(x; \mu_j,
-  \Sigma_j)
+  O_{j}(x; \mu_{Oj}, \Sigma_{Oj}) = 1 - \Ptrans
 \end{align}
 %
-The product of Gaussian can be computed analytically. 
 
 \subsection{Merging occlusion regions with detection score}
-But what does detection score function represents? It is a measure of
+What does detection score function represents? It is a measure of
 correlation of trained object features and the features in the candidate
 bounding box. If the detection scores are indeed Gaussians around the mean
 bounding box $\mu_j$, the $\Sigma_j^{-1}$ represents the variance (and
@@ -1020,7 +1014,21 @@ effect on detection score depends a lot on the features of the occluder. Given
 this understanding we want to decrease our confidence on the mean detection
 boundaries around the occluded boundaries. One of the simplest ways will be to
 scale the appropriate diagonal element of $\Sigma_j$ by an appropriate scaling
-factor.
+factor. But how does occlusion affects the non diagonal terms. Consider that we
+have a set of measurements whose mean and variance are known $\mu = E(x)$ and $\Sigma = E ((x - \mu_x)(x - \mu_x)^\top)$. We want to know the
+affect of uncertainty on mean and variance of existing observations. On adding
+noise $[\Delta x, \Delta y]^\top$ with zero mean and covariance $\Delta
+\Sigma = E(\Delta x \Delta x^\top)$ the covariance of new data is given by
+\begin{multline}
+  E((x + \Delta x)(x+\Delta x)^\top) = E(xx^\top) + E(x \Delta x^\top) \\
+  + E(\Delta x x^\top) + E(\Delta x \Delta x^\top)
+\end{multline}
+where the terms $E(x \Delta x^\top)$ denote the correlation between the data
+vector and the uncertainty in the data. Although we understand that in our case
+the data is the appearance based detection score and uncertainty because of
+occlusion is closely related to the appearance and hence detection score, we
+assume independence between $x$ and $\Delta x$. Hence our resultant covariance
+matrix $ E((x + \Delta x)(x+\Delta x)^\top) = \Sigma + \Delta \Sigma$
 
 We observe that the soft occlusion regions are 2D while the detection scores
 are 4D. But that should not be a problem because the detection scores are
@@ -1042,14 +1050,13 @@ discussion so far, the function $O_{ij}(.)$ gives an additional measure of
 uncertainty associated with each point in the space. To finally re-model our
 detection scores scaled by continuous occlusion we sample $O_{ij}(.)$ at the
 mean detection boundaries from GMM $S(.)$ and we scale the detection boundary
-variance by $\mathcal{P}_{ij} = \rho_{ij}\rho_{ij}^\top$ where $\rho_{ij} =
-\mathbf{1} + O_{ij}(\mu^{(d)}_j; \mu'_{Oij}, \Sigma'_{Oij})$. The new variance
+variance by $\mathcal{P}_{j} = \rho_{j}\rho_{j}^\top$ where $\rho_{j} =
+O_{j}(\mu^{(d)}_i; \mu'_{Oj}, \Sigma'_{Oj})$. The new variance
 in detection score is given by 
 %
 \begin{align}
-  \Sigma'^{(d)}_j = \prod_{k \in \text{occluders}} \mathcal{P}_{kj}
-  \Sigma^{(d)}_j
-  \prod_{k \in \text{occluders}} \mathcal{P}^\top_{kj}
+  \Sigma'^{(d)}_j = \mathcal{P}_{j}
+  + \Sigma^{(d)}_j
 \end{align}
 %
 The detection scores GMM with occlusion is given by replacing the covariance
