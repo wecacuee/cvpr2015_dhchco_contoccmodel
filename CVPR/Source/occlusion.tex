@@ -1,7 +1,7 @@
 \section{Occlusion-Aware 3D Object Modeling}
 \label{sec:TPmodel}
 
-In this section, we introduce our representation of 3D traffic participants and our modeling of object-object occlusion relationships. 
+In this section, we introduce our representation of 3D traffic participants and our modeling of object-object occlusion relationships. We refer the reader to Figure [[FIGURE]] for an illustration of the proposed concepts.
 
 \paragraph{Occupancy model for traffic participants}
 Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whos opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at location $\bx$ corresponding to a traffic participant $i$ centered at $\bp$ as:
@@ -18,9 +18,10 @@ with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distan
 \paragraph{Image formation}
 Given the above occupancy representation of the scene, a point on an object is observed in the camera when precisely two conditions are satisfied. First, the backprojected ray from the observed image pixel is transmitted through free space until it reaches the object. Second, the ray encounters an opaque enough object surface and is reflected. More formally, the probability of observation of a point $\bx_j$ on object $O_i$ is given by
 \begin{align}
-  P^{ij}_{\textit{observation}} = P^{ij}_{\textit{reflection}}P^{j}_{\textit{transmission}}
+P^{ij}_{\textit{observation}} = P^{ij}_{\textit{reflection}}P^{j}_{\textit{transmission}}.
+\label{eq:imgform}
 \end{align}
-The reflection term ensures the presence of an object to constitute the observation, while the transmission probability allows us to model occlusions.
+The reflection probability ensures the presence of an object to constitute the observation, while the transmission probability allows us to model occlusions. The forms of these two functions are described next.
 
 
 \paragraph{Reflection probability}
@@ -47,7 +48,6 @@ For an image point $\bu_j$ to correspond to a 3D point $\bx_j$ at depth $\lambda
 \begin{align}
 P^j_{\textit{transmission}}(\lambda) = \prod_{0}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda},
 \label{eq:ptrans-integral}
-\vspace{\eqs}
 \end{align}
 where $\displaystyle\prod_{0}^{\lambda}$ represents the \emph{product integral} from $0$ to $\lambda$.\footnote{A product integral is a simple integral in log domain: 
 \vspace{-0.2cm}
@@ -72,6 +72,10 @@ where $\cL_u(.)$ is sigmoid in image domain, with $\bmu^i_u$ and $\bGamma_i$ rep
 %
 
 Thus, we have modeled the transmission probability to effectively capture the effect of occlusion due to all traffic participants in a scene that lie along a particular ray. We reiterate that our reflection and transmission probabilities are continuous functions, which allows us to define continuous energy functions for association and 3D object localization, as described in the next section.
+
+
+%\paragraph{Probabilistic occlusion levels}
+%With the above modeling and using \eqref{eq:imgform}, 
 
 
 
