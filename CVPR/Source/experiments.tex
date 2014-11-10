@@ -1,0 +1,68 @@
+\section{Experiments}
+\label{sec:experiments}
+
+
+\paragraph{Dataset}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Association error evaluation}
+
+To verify the correctness of our association probability $\assocP$ we perform
+association error experiment that compare the accuracy of point track
+association with TPs with that of bounding box baseline method.
+
+% \begin{align}
+%   f^{i}_{reproj}&(\trackpj{t-1}, \lambda) =
+%   \projectionOf{\invProjectionOf{\trackpj{t-1}}}\\
+%   %&= K(R^i_t ((R^i_{t-1})^\top\lambda \ray - (R^i_{t-1})^\top T_{t-1}) + T_{t})\\
+%   &= \frac
+%   {p_{1:2}\lambda + q_{1:2}}
+%   {p_{3}\lambda + q_{3}}
+% \end{align}
+% where $p_{1:3} = KR^i_t(R^i_{t-1})^\top\ray$ and
+% $q_{1:3} = KR^i_t(R^i_{t-1})^\top T_{t-1} + KT_t$
+% 
+% Now that we have an association from TP $i$ to point track $j$ through
+% $\lambda$, we can come up with an association probability
+% \begin{align}
+%    \assocP &= \frac{(\max \{ 0, \nabla \occf^\top
+% \ray \})^2 }{P_{\text{reflection}}}\lambdadist\\
+% &=(\max \{ 0, \nabla \occf^\top \ray \})^2
+%   \prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda}
+% \end{align}
+
+Note that the fraction $\assocP$ although called association probability does
+not capture the entire information that we have available for compute
+association of points to tracks. This above fraction is the association
+probability given the hypothesized parameters of TP model. 
+
+To compute the association probability between TP $i$ and
+point track $j$ we must use re-projection error as well. When the association
+$i$ and $j$ is right and the point of reflection is at depth $\lambda$ the
+re-projection error must be zero \eqref{eq:reprojerror}, otherwise the error
+becomes a measure of distance from the true solution.
+The error terms can be converted to probability domain by considering the error
+term as negative log of probability
+
+\begin{align}
+  P^{(ij)}_{\text{assoc by reproj}}(\lambda) = \frac{1}{Z}\exp(-\Ereproj(\lambda))
+\end{align}
+
+Using both the evidence terms we can write probability of association as
+\begin{align}
+  P^{(ij)}_{\text{assoc}} = \frac{1}{Z'}\int_0^{\infty} \assocP \frac{1}{\sqrt{2\pi}}\exp(-\Ereproj(\lambda))d\lambda
+  \label{eq:prob-assoc}
+\end{align}
+
+Once we have the probability of association we can compute the best possible
+assignment of TP for each point. The points having very small association
+probability are assigned to the background,
+\begin{align}
+  i^*_{j} = \argmin_{i} \int_0^\infty \assocP \Ereproj(\lambda) d\lambda
+\end{align}
+
+We use bounding box based assignment of point tracks to TPs as the baseline.
+For the regions where the bounding boxes overlap, we assign the points to the
+TP that has smaller mean depth then the competing bounding box.

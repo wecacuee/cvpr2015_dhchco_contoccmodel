@@ -1,0 +1,32 @@
+\section{Introduction}
+\label{sec:intro}
+
+\begin{tight_itemize}
+  \item Introduce the problem
+  \item Describe our approach
+  \item Contrast with Milan's work
+  \item Contrast with Andreas Geiger's work
+  \item Highlight the contributions
+\end{tight_itemize}
+\vspace{10cm}
+\begin{figure}[!!t]
+  \includegraphics[width=\columnwidth]{Figures/graphicalModelFrom61ConstVars.pdf}
+  \caption{Graphical model. The six numbered black circles represent the
+    unknown state variables of each car. All other nodes in the graphical model
+    are assumed
+    observed variables. Consider each energy in the model one by one. (1)
+    Bounding box energy: The bounding box energy without occlusion modeling is
+    a unary term, but with occlusion it becomes a higher order term that
+    affects the state of occluder as well. In this graphical model we assume
+    that the scene is being observed from left to right, hence "2" occludes "6"
+    and "5" and "5" occludes "1". The bounding box detection is represented by
+  $\mathbf{d}_{bb}^i(t)$ and the statistical dependencies are represented by
+  red lines. (2) Point tracks ($\Energy{track}$): Since occlusion is also
+  included in modeling point tracks energy we have similar interdependencies
+  for point tracks energy. The available point tracks are modeled by
+  $\mathbf{u}(t)$. (3) Collision ($\Energy{coll}$) : The collision energy
+  mathematically is a dense graph between all the TP but here we represent
+  collision among only those TP that are near enough to have a significant
+collision energy. (4) Orientation from detection ($\Energy{ori}$) (5) Orientation from lane (and map) information ($\Energy{lane}$)}
+  \label{fig:graphmodel}
+\end{figure}

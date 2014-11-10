@@ -1,0 +1,123 @@
+\section{Modeling traffic participants}
+\label{sec:TPmodel}
+Following standard model of occupancy in 3D reconstruction community, we model
+the TP's as high occupancy regions in space. We model the
+uncertainty in occupancy equivalent of transparency i.e. the regions that are
+more certain to be occupied are viewed as relatively more opaque then other
+regions. Based on this intuition we model TP's translucent
+ellipsoids whose opacity is maximum at the center and drops off away from the
+center. More specifically we model, the occupancy of a TP as a
+logistic function, 
+
+\begin{align}
+   \occf = L(\mathbf{x}; \pos{i}{t}, \Sigma_i)
+\end{align}
+where $L(.)$ is the logistic function defined by
+\begin{align}
+  L(\mathbf{x}; \pos{i}{t}, \Sigma_i) = \frac{1}{
+    1 + e^{-k(1 - d(\mathbf{x},\pos{i}{t}))}
+    }
+\end{align}
+where $d(\mathbf{x},\pos{i}{t}) =
+(\mathbf{x}-\pos{i}{t})^\top\Sigma_i(\mathbf{x}-\pos{i}{t})$ and $k =
+10\ln{49}$. $k$ is chosen such that $L(.) = 0.98$ when $d(.) =
+0.9$. $\Sigma_i$ determines the spread of the ellipsoid and depends on the
+dimensions of the TP. Please refer to supplementary material 
+for computation of $\Sigma_i$ from TP's dimensions.
+
+We model the probability of a point $\mathbf{x}_j$ on a object $i$ getting successfully
+observed in a camera image at point $\trackpj{t}$ is dependent up two factors,
+(1) reflection and (2) transmission through intermediate space. The reflection
+part ensures that there is an object to reflect a point at a certain region in
+the 3D space while transmission part models occlusion.
+\begin{align}
+  P^{(ij)}_{\text{observation}} = P^{(ij)}_{\text{reflection}}P^{(j)}_{\text{transmission}}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Reflection probability}
+For Lambertian reflection we replace the surface normal with the
+gradient of occupancy.
+%
+\begin{align}
+  \Prefl = (\max \{0, \nabla \occf^\top
+  \hat{\mathbf{r}_j}\})^2
+\end{align}
+%
+where $\ray =
+\frac{K^{-1}\trackpj{t}}{\|K^{-1}\trackpj{t}\|}$ is unit vector in the
+direction of ray. The gradient in the direction opposite to ray yields -ve
+probability which needs to be clipped off. Squaring the function keep it
+smooth near zero.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Transmission probability}
+A model for transmission of light through a material of thickness $x$,
+density $\rho$ and opacity $k_o$ is given by Beer-Lambert law 
+%
+\begin{align}
+  I(x) = I_0e^{-k_o\rho x}
+\end{align}
+%
+
+Since both opacity and density are represented by the occupancy function
+$\occftot = \sum_i \occf$, and also the domain of our $\occftot$ is $[0, 1]$ instead of $[0,
+\infty]$ as in case of $k_o$; we replace $e^{-k_o\rho}$ by the transparency
+function $1 - \occftot$. So the transmission probability over a small distance
+$d\lambda$ is given by
+%
+\begin{align}
+  P_{\text{transmission}}(\lambda + d\lambda) =
+  P_{\text{transmission}}(\lambda) (1-\occftot)^{d\lambda}
+\end{align}
+%
+
+For a given 3D point $\mathbf{x}_j = \lambda \ray$, the probability that the
+point $\trackpj{t}$ is reflected from a distance $\lambda$ is given by
+
+\begin{align}
+  %P^{(j)}_{\text{observation}}(\lambda) &= P_{\text{reflection}}
+  \Ptrans &=
+  \prod_{0}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda} %\\
+  %= \max \{ 0, (\nabla f_{occ}&(\lambda \ray)^\top \ray) \}
+  %\prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda}
+  \label{eq:ptrans-integral}
+\end{align}
+where $\prod_{0}^{\lambda}$ represents the \emph{product integral} from $0$ to
+$\lambda$. 
+
+In practice, the integral for transmission probability
+\eqref{eq:ptrans-integral} is difficult to compute even numerically. So we
+choose a product of sigmoid function that approximates the behaviour of
+transmission probability,
+%
+\begin{align}
+\label{eq:evalCumulativePtrans}
+  \Ptrans &= \prod_i L_u(\trackp{t}; \muiu,\Sigmaiu)L_{\lambda}(\lambda; \mu^i_d)
+\end{align}
+%
+where $L_u(.)$ is sigmoid in image domain with $\mu^i_u$ and $\Sigma^i_u$
+representing the elliptical projection of $i^{th}$ TP.
+$L_{\lambda}(.)$ is sigmoid in the depth domain with $\mu^i_d$ as the mean
+depth of the $i^{th}$ TP.
+%
+\begin{align}
+  L_u(\mathbf{u}; \muiu,\Sigmaiu) &= \frac{1}{
+    1 + e^{-k_u(1 - (\mathbf{u} - \muiu)^\top\Sigmaiu(\mathbf{u} -
+    \muiu))}
+  }
+  \\
+  L_{\lambda}(\lambda; \mu^i_d) &= \frac{1}{
+    1 + e^{-k_d(\lambda - \mu^i_d)}
+}
+\end{align}
+%
+
+\begin{comment}%% Comment
+  A product integral is a simple integral in log domain
+  \begin{align}
+    \prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda} =
+    e^{\int_{1}^{\lambda} \ln{(1 - f_{occ}(\lambda \ray))}{d\lambda}}
+  \end{align}
+\end{comment}%% Comment
+

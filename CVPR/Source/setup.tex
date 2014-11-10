@@ -1,0 +1,76 @@
+\section{Overview of Problem and Our Approach}
+TODO:
+\vspace{4cm}
+
+
+\paragraph{Notation}
+
+
+\begin{table}[h]
+  \begin{tabular}{|l|l|}
+    \hline
+    Symbol & Meaning \\
+    \hline
+    $\pos{i}{t}$ & Position of $i$th car at time $t$\\
+    $\ori{i}{t}$ & Orientation of $i$th car at time $t$\\
+     $\dimsn{i}$ & 3D bounding box of the car (dimensions)\\
+    $\state{i}{t}$ & State of car $=\{\pos{i}{t}, \ori{i}{t}, \dimsn{i}\}$\\
+    $\egop$ & Position of camera at time $t$\\
+    $\egoo$ & Orientation of camera at time $t$\\
+    $\relp{i}{t}$ & Relative car pose w.r.t. camera \\
+    $\tracklets$ & 3D points tracked on car $i$ in its own frame\\
+    $\trackp{t}$ & Projection of $\tracklets$ in camera\\
+    $\projectionOf{.}$ & Projection function for pose $\relp{i}{t}$\\
+    $\bb{i}$ & 2D bounding box of the car in image\\
+    \hline
+  \end{tabular}
+\end{table}
+
+%%%%%%%%% BODY TEXT
+\paragraph{The Model}
+
+The objective is to find the most likely traffic participant (TP) state given
+various evidences $\mathbb{E} = \{\{\trackp{t}\}, \{\bb{i}\}, \text{lane det.},
+\text{map}, \text{GPS}\}$.
+
+Mathematically, find:
+\begin{align}
+  \{\state{i}{t}\}^* &= \arg \max P(\{\state{i}{t}\} | \mathbb{E})
+\end{align}
+
+Bayes rule
+\begin{align}
+  P(\{\state{i}{t}\} | \mathbb{E}) &=
+  \frac{1}{Z}P( \mathbb{E} | \{\state{i}{t}\})P(\{\state{i}{t}\})
+\end{align}
+
+
+Assume conditional independence according to graphical model in
+\ref{fig:graphmodel}.
+
+\begin{multline}
+  P(\{\state{i}{t}\} | \mathbb{E}) =
+  \frac{1}{Z}
+  \prod_{t=s_i}^{e_i}\prod_{i,j: i \ne j}(P(\state{i}{t}, \state{j}{t}))\\
+%
+  \prod_{i=1}^{N}
+  \prod_{t=s_i}^{e_i}
+  P(\bb{i} | \state{i}{t})
+  P(\trackp{t} | \state{i}{t})\\
+  P(\state{i}{t} | L_m(t))
+  P(\state{i}{t} | \state{i}{t-1})
+  P(\state{i}{t})
+\end{multline}
+
+We can formulate similar objective function in negative log domain:
+\footnote{TODO:Resolve inconsistency in summation absorption in energy terms.}
+\begin{multline}
+  -\log{P(\{\state{i}{t}\} | \mathbb{E})} = 
+  Z' + \sum_{i,j:i\ne j} \sum_{t=s_i}^{e_i}  \WEnergyCol \\
+  + \sum_{i=1}^N \sum_{t=s_i}^{e_i}
+    \WEnergy{box}
+  + \WEnergy{track}\\
+  + \WEnergy{lane}
+  + \WEnergy{dyn}
+  + \WEnergy{prior}
+\end{multline}
