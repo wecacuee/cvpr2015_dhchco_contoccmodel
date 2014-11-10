@@ -1,123 +1,173 @@
-\section{Modeling traffic participants}
+\section{Occlusion-Aware 3D Object Modeling}
 \label{sec:TPmodel}
-Following standard model of occupancy in 3D reconstruction community, we model
-the TP's as high occupancy regions in space. We model the
-uncertainty in occupancy equivalent of transparency i.e. the regions that are
-more certain to be occupied are viewed as relatively more opaque then other
-regions. Based on this intuition we model TP's translucent
-ellipsoids whose opacity is maximum at the center and drops off away from the
-center. More specifically we model, the occupancy of a TP as a
-logistic function, 
 
-\begin{align}
-   \occf = L(\mathbf{x}; \pos{i}{t}, \Sigma_i)
-\end{align}
-where $L(.)$ is the logistic function defined by
-\begin{align}
-  L(\mathbf{x}; \pos{i}{t}, \Sigma_i) = \frac{1}{
-    1 + e^{-k(1 - d(\mathbf{x},\pos{i}{t}))}
-    }
-\end{align}
-where $d(\mathbf{x},\pos{i}{t}) =
-(\mathbf{x}-\pos{i}{t})^\top\Sigma_i(\mathbf{x}-\pos{i}{t})$ and $k =
-10\ln{49}$. $k$ is chosen such that $L(.) = 0.98$ when $d(.) =
-0.9$. $\Sigma_i$ determines the spread of the ellipsoid and depends on the
-dimensions of the TP. Please refer to supplementary material 
-for computation of $\Sigma_i$ from TP's dimensions.
+In this section, we introduce our representation of 3D traffic participants and our modeling of object-object occlusion relationships. 
 
-We model the probability of a point $\mathbf{x}_j$ on a object $i$ getting successfully
-observed in a camera image at point $\trackpj{t}$ is dependent up two factors,
-(1) reflection and (2) transmission through intermediate space. The reflection
-part ensures that there is an object to reflect a point at a certain region in
-the 3D space while transmission part models occlusion.
+\paragraph{Occupancy model for traffic participants}
+Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whos opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at location $\bx$ corresponding to a traffic participant $i$ centered at $\bp$ as:
 \begin{align}
-  P^{(ij)}_{\text{observation}} = P^{(ij)}_{\text{reflection}}P^{(j)}_{\text{transmission}}
+  \occft{\bx} = \cL(\bx; \bp, \bSigma)
 \end{align}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Reflection probability}
-For Lambertian reflection we replace the surface normal with the
-gradient of occupancy.
-%
+where $\cL(\cdot)$ is the logistic function given by
 \begin{align}
-  \Prefl = (\max \{0, \nabla \occf^\top
-  \hat{\mathbf{r}_j}\})^2
+  L(\bx; \bp, \bSigma) = \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp))}},
+\end{align}
+with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends of the dimensions of the traffic participant. Please refer to the additional material for computation of $\bSigma$ from object dimensions.
+
+
+\paragraph{Image formation}
+Given the above occupancy representation of the scene, a point on an object is observed in the camera when precisely two conditions are satisfied. First, the backprojected ray from the observed image pixel is transmitted through free space until it reaches the object. Second, the ray encounters an opaque enough object surface and is reflected. More formally, the probability of observation of a point $\bx_j$ on object $O_i$ is given by
+\begin{align}
+  P^{ij}_{\textit{observation}} = P^{ij}_{\textit{reflection}}P^{j}_{\textit{transmission}}
+\end{align}
+The reflection term ensures the presence of an object to constitute the observation, while the transmission probability allows us to model occlusions.
+
+
+\paragraph{Reflection probability}
+Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\ray = \displaystyle\frac{\bK^{-1}\bu_j}{\lVert \bK^{-1}\bu_j \rVert}$ be the corresponding unit vector along the backprojected ray from the camera center. Then, the probability of reflection at depth $\lambda$ along the ray $\ray$, by an object $O_i$, is determined by the object's gradient of the occupancy function $f_{occ}^i$:
+\begin{align}
+  P^{ij}_{\textit{reflection}} (\lambda) = (\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2
+\end{align}
+The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object object, the above reverts to a (squared) Lambertian reflection.
+
+
+\paragraph{Transmission probability}
+A model for transmission of light through a material of thickness $\alpha$, density $\rho$ and opacity $\beta$ is given by the Beer-Lambert Law:
+\begin{align}
+I(x) = I_0 e^{-\beta\rho\alpha}.
 \end{align}
 %
-where $\ray =
-\frac{K^{-1}\trackpj{t}}{\|K^{-1}\trackpj{t}\|}$ is unit vector in the
-direction of ray. The gradient in the direction opposite to ray yields -ve
-probability which needs to be clipped off. Squaring the function keep it
-smooth near zero.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Transmission probability}
-A model for transmission of light through a material of thickness $x$,
-density $\rho$ and opacity $k_o$ is given by Beer-Lambert law 
+In our formulation of scene occupancy, both opacity and density at a scene point $\bx_j$ are encapsulated within the total occupancy function $\occftot = \sum_i \occf$. Further, the domain of our ocupancy function $\occftot$ is $[0, 1]$ instead of $[0, \infty)$ for opacity $\beta$. Thus, we replace $e^{-\beta\rho}$ by the transparency function $1 - \occftot$ and consequently, the transmission probability over a small distance $d\lambda$ is given by
 %
 \begin{align}
-  I(x) = I_0e^{-k_o\rho x}
+  \!\!\!\! P_{\textit{transmission}}(\lambda + d\lambda) = P_{\textit{transmission}}(\lambda) (1-\occftot)^{d\lambda}.
 \end{align}
 %
-
-Since both opacity and density are represented by the occupancy function
-$\occftot = \sum_i \occf$, and also the domain of our $\occftot$ is $[0, 1]$ instead of $[0,
-\infty]$ as in case of $k_o$; we replace $e^{-k_o\rho}$ by the transparency
-function $1 - \occftot$. So the transmission probability over a small distance
-$d\lambda$ is given by
-%
+For an image point $\bu_j$ to correspond to a 3D point $\bx_j$ at depth $\lambda$ along the backprojected ray $\ray$, the ray must be transmitted through space with the probability
 \begin{align}
-  P_{\text{transmission}}(\lambda + d\lambda) =
-  P_{\text{transmission}}(\lambda) (1-\occftot)^{d\lambda}
+P^j_{\textit{transmission}}(\lambda) = \prod_{0}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda},
+\label{eq:ptrans-integral}
+\vspace{\eqs}
 \end{align}
-%
-
-For a given 3D point $\mathbf{x}_j = \lambda \ray$, the probability that the
-point $\trackpj{t}$ is reflected from a distance $\lambda$ is given by
-
-\begin{align}
-  %P^{(j)}_{\text{observation}}(\lambda) &= P_{\text{reflection}}
-  \Ptrans &=
-  \prod_{0}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda} %\\
-  %= \max \{ 0, (\nabla f_{occ}&(\lambda \ray)^\top \ray) \}
-  %\prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda}
-  \label{eq:ptrans-integral}
-\end{align}
-where $\prod_{0}^{\lambda}$ represents the \emph{product integral} from $0$ to
-$\lambda$. 
-
-In practice, the integral for transmission probability
-\eqref{eq:ptrans-integral} is difficult to compute even numerically. So we
-choose a product of sigmoid function that approximates the behaviour of
-transmission probability,
-%
-\begin{align}
-\label{eq:evalCumulativePtrans}
-  \Ptrans &= \prod_i L_u(\trackp{t}; \muiu,\Sigmaiu)L_{\lambda}(\lambda; \mu^i_d)
-\end{align}
-%
-where $L_u(.)$ is sigmoid in image domain with $\mu^i_u$ and $\Sigma^i_u$
-representing the elliptical projection of $i^{th}$ TP.
-$L_{\lambda}(.)$ is sigmoid in the depth domain with $\mu^i_d$ as the mean
-depth of the $i^{th}$ TP.
-%
-\begin{align}
-  L_u(\mathbf{u}; \muiu,\Sigmaiu) &= \frac{1}{
-    1 + e^{-k_u(1 - (\mathbf{u} - \muiu)^\top\Sigmaiu(\mathbf{u} -
-    \muiu))}
-  }
-  \\
-  L_{\lambda}(\lambda; \mu^i_d) &= \frac{1}{
-    1 + e^{-k_d(\lambda - \mu^i_d)}
+where $\displaystyle\prod_{0}^{\lambda}$ represents the \emph{product integral} from $0$ to $\lambda$.\footnote{A product integral is a simple integral in log domain: 
+\vspace{-0.2cm}
+\begin{equation}
+\prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda} = e^{\int_{1}^{\lambda} \ln{(1 - f_{occ}(\lambda \ray))}{d\lambda}}. \nonumber
+\end{equation}
 }
+
+In practice, the integral for transmission probability \eqref{eq:ptrans-integral} is difficult to compute even numerically. So we choose a parameterization in the form of a product of sigmoid functions, which is a reasonable approximation to the behaviour of the transmission probability:
+%
+\begin{align}
+P^j_{\textit{transmission}}(\lambda) = \prod_i \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \nu_i),
+\label{eq:evalCumulativePtrans}
+\end{align}
+%
+where $\cL_u(.)$ is sigmoid in image domain, with $\bmu^i_u$ and $\bGamma_i$ representing the elliptical projection of object $O_i$ in the image and $\cL_{\lambda}(.)$ is sigmoid in the depth domain with $\nu_i$ the mean depth of object $O_i$. That is,
+%
+\begin{align}
+\cL_u(\bu; \bmu_i, \bGamma_i^{-1}) &= \frac{1}{1 + e^{-k_u(1 - (\bu - \bmu_i)^\top \bGamma_i^{-1} (\bu - \bmu_i))}} \\
+\cL_{\lambda}(\lambda; \nu_i) &= \frac{1}{1 + e^{-k_d(\lambda - \nu_i)}}
 \end{align}
 %
 
-\begin{comment}%% Comment
-  A product integral is a simple integral in log domain
-  \begin{align}
-    \prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda} =
-    e^{\int_{1}^{\lambda} \ln{(1 - f_{occ}(\lambda \ray))}{d\lambda}}
-  \end{align}
-\end{comment}%% Comment
+Thus, we have modeled the transmission probability to effectively capture the effect of occlusion due to all traffic participants in a scene that lie along a particular ray. We reiterate that our reflection and transmission probabilities are continuous functions, which allows us to define continuous energy functions for association and 3D object localization, as described in the next section.
+
+
+
+%% We model the probability of a point $\mathbf{x}_j$ on a object $i$ getting successfully
+%% observed in a camera image at point $\trackpj{t}$ is dependent up two factors,
+%% (1) reflection and (2) transmission through intermediate space. The reflection
+%% part ensures that there is an object to reflect a point at a certain region in
+%% the 3D space while transmission part models occlusion.
+%% \begin{align}
+%%   P^{(ij)}_{\text{observation}} = P^{(ij)}_{\text{reflection}}P^{(j)}_{\text{transmission}}
+%% \end{align}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% \subsection{Reflection probability}
+%% For Lambertian reflection we replace the surface normal with the
+%% gradient of occupancy.
+%% %
+%% \begin{align}
+%%   \Prefl = (\max \{0, \nabla \occf^\top
+%%   \hat{\mathbf{r}_j}\})^2
+%% \end{align}
+%% %
+%% where $\ray =
+%% \frac{K^{-1}\trackpj{t}}{\|K^{-1}\trackpj{t}\|}$ is unit vector in the
+%% direction of ray. The gradient in the direction opposite to ray yields -ve
+%% probability which needs to be clipped off. Squaring the function keep it
+%% smooth near zero.
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% \subsection{Transmission probability}
+%% A model for transmission of light through a material of thickness $x$,
+%% density $\rho$ and opacity $k_o$ is given by Beer-Lambert law 
+%% %
+%% \begin{align}
+%%   I(x) = I_0e^{-k_o\rho x}
+%% \end{align}
+%% %
+
+%% Since both opacity and density are represented by the occupancy function
+%% $\occftot = \sum_i \occf$, and also the domain of our $\occftot$ is $[0, 1]$ instead of $[0,
+%% \infty]$ as in case of $k_o$; we replace $e^{-k_o\rho}$ by the transparency
+%% function $1 - \occftot$. So the transmission probability over a small distance
+%% $d\lambda$ is given by
+%% %
+%% \begin{align}
+%%   P_{\text{transmission}}(\lambda + d\lambda) =
+%%   P_{\text{transmission}}(\lambda) (1-\occftot)^{d\lambda}
+%% \end{align}
+%% %
+
+%% For a given 3D point $\mathbf{x}_j = \lambda \ray$, the probability that the
+%% point $\trackpj{t}$ is reflected from a distance $\lambda$ is given by
+
+%% \begin{align}
+%%   %P^{(j)}_{\text{observation}}(\lambda) &= P_{\text{reflection}}
+%%   \Ptrans &=
+%%   \prod_{0}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda} %\\
+%%   %= \max \{ 0, (\nabla f_{occ}&(\lambda \ray)^\top \ray) \}
+%%   %\prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda}
+%%   \label{eq:ptrans-integral}
+%% \end{align}
+%% where $\prod_{0}^{\lambda}$ represents the \emph{product integral} from $0$ to
+%% $\lambda$. 
+
+%% In practice, the integral for transmission probability
+%% \eqref{eq:ptrans-integral} is difficult to compute even numerically. So we
+%% choose a product of sigmoid function that approximates the behaviour of
+%% transmission probability,
+%% %
+%% \begin{align}
+%% \label{eq:evalCumulativePtrans}
+%%   \Ptrans &= \prod_i L_u(\trackp{t}; \muiu,\Sigmaiu)L_{\lambda}(\lambda; \mu^i_d)
+%% \end{align}
+%% %
+%% where $L_u(.)$ is sigmoid in image domain with $\mu^i_u$ and $\Sigma^i_u$
+%% representing the elliptical projection of $i^{th}$ TP.
+%% $L_{\lambda}(.)$ is sigmoid in the depth domain with $\mu^i_d$ as the mean
+%% depth of the $i^{th}$ TP.
+%% %
+%% \begin{align}
+%%   L_u(\mathbf{u}; \muiu,\Sigmaiu) &= \frac{1}{
+%%     1 + e^{-k_u(1 - (\mathbf{u} - \muiu)^\top\Sigmaiu(\mathbf{u} -
+%%     \muiu))}
+%%   }
+%%   \\
+%%   L_{\lambda}(\lambda; \mu^i_d) &= \frac{1}{
+%%     1 + e^{-k_d(\lambda - \mu^i_d)}
+%% }
+%% \end{align}
+%% %
+
+%% \begin{comment}%% Comment
+%%   A product integral is a simple integral in log domain
+%%   \begin{align}
+%%     \prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda} =
+%%     e^{\int_{1}^{\lambda} \ln{(1 - f_{occ}(\lambda \ray))}{d\lambda}}
+%%   \end{align}
+%% \end{comment}%% Comment
 
