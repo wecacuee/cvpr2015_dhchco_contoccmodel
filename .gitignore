@@ -1,0 +1,12 @@
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.log
+*.pdf
+*.snm
+*.brf
+*.svn
+.*.swp
+CVPR/cvpr2015AuthorKit/
+CVPR/graphics
