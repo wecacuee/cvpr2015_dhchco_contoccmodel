@@ -521,7 +521,7 @@ TODO: Write Introduction
   \end{description}
 \end{comment}
 
-\begin{comment}
+  \section{Uncertainty addition in measurement}
   Consider that we have a set of measurements whose mean and variance are known $\mu = E(x)$ and $\Sigma = E ((x - \mu_x)(x - \mu_x)^\top)$. We want to know the
   affect of uncertainty on mean and variance of existing observations. On adding
   noise $[\Delta x, \Delta y]^\top$ with zero mean and covariance $\Delta
@@ -553,7 +553,6 @@ TODO: Write Introduction
   With our
   discussion so far, the function $O_{ij}(.)$ gives an additional measure of
   uncertainty associated with each point in the space.
-\end{comment}
 
 % Explanation of Beizer curves is not needed %%%%%%%%%%%%%%%%%%%
 % A lane is modeled by four control points of a \Beizer curve $L_j = \{l_0, l_1,
@@ -725,12 +724,9 @@ where $k$ is steepness parameter.
 
 
 
-\begin{comment}
-
-
+\section{Analytical attempt to integration}
   %%%%%%%%%%%%%%%% Analytical attempt to integration %%%%%%%%%%%%%%%%%%%%%
   \begin{align}
-
     E^i_{\text{reproj}}(\lambda) &= \left\|\trackpj{t} - \frac{p_{1:2}\lambda +
   q_{1:2}}{p_3\lambda + q_3}\right\|^2\\
   &= \frac{(p_1\lambda + q_1 - u_{j1}(t))^2 + (p_2\lambda + q_2 - u_{j2}(t))^2}
@@ -830,7 +826,6 @@ where $k$ is steepness parameter.
 
   \clearpage
   %%%%%%%%%%%%%%%% Analytical attempt to integration %%%%%%%%%%%%%%%%%%%%%
-\end{comment}
 
 % \subsection{Object detection score}
 % \begin{align}
