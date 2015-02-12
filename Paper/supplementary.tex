@@ -21,7 +21,10 @@
 \def\cvprPaperID{489} % *** Enter the CVPR Paper ID here
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
 
+\DeclareMathOperator{\diag}{diag}
+
 % 3D pose of the cars and ego motion
+\newcommand{\uv}[1]{\hat{\mathbf{#1}}}
 \newcommand{\pos}[2]{\mathbf{p}^{(#1)}(#2)}
 \newcommand{\ori}[2]{\mathbf{\omega}^{(#1)}(#2)}
 \newcommand{\state}[2]{\mathbf{s}^{#1}(#2)}
@@ -130,6 +133,14 @@
 \newcommand{\LaneUncertainty}[1]{\Sigma_{L_m}(#1)}
 \newcommand{\projOnLane}[1]{\pi_{L_m(k)}(#1)}
 
+\newcommand{\xymin}[1]{#1_{\text{min}}}
+\newcommand{\xymax}[1]{#1_{\text{max}}}
+\newcommand{\xmin}{\xymin{x}}
+\newcommand{\xmax}{\xymax{x}}
+\newcommand{\ymin}{\xymin{y}}
+\newcommand{\ymax}{\xymax{y}}
+\newcommand{\Tr}[3]{{}^{#1}{#2}_{#3}}
+
 % Pages are numbered in submission mode, and unnumbered in camera-ready
 %\ifcvprfinal\pagestyle{empty}\fi
 %\setcounter{page}{4321}
@@ -139,7 +150,8 @@
 \DeclareMathOperator*{\argmin}{\arg\min}
 
 \begin{document}
-\title{Continuous Models for Scene and Traffic Participant Interactions in Road Scene Understanding.}
+%\title{Continuous Models for Scene and Traffic Participant Interactions in Road Scene Understanding.}
+\title{Fitting convex polyhedra to project 2D bounding box}
 \author{Vikas Dhiman\\
   University of Michigan\\
   Ann Arbor, MI, USA\\
@@ -159,6 +171,136 @@ Jason J Corso\\
 
 
 \section{Supplementary Material}
+\subsection{Analytic initialization}
+Problem: given detection bounding box and ground plane estimate the unknown parameters i.e. position, orientation and size of the car. This problem is under-determined. Given the bounding box, we just have four constraints while we have six unknowns. To reduce the number of unknowns we assume that detection also gives us an estimate of angle and we assume that length of car is 1.3 times the height. Now, we have 4 unknowns and 4 constraints and we can solve them analytically.
+
+\subsubsection{Necessary transforms}
+Let the ground plane be known with parameters $(\uv{n}, h)$. Let us take the ground plane to be the XY plane with Z axis pointing upwards and origin at the point of intersection of Y-axis with ground plane. The unit vector describing the ground plane is ambiguous by sign, we choose the sign of $\uv{n}$ such that $\hat{n}_2 > 0$, i.e. the unit vector is along the positive Y-axis of the camera based on the assumption that the camera axis are approximately aligned such that Y-axis points downwards and Z-axis to the front.
+
+\begin{align}
+  ^gR_c &= [\uv{i}, -\uv{n} \times \uv{i}, -\uv{n}]\\
+  ^gt_c &= [0, 0, h]^\top\\
+        \text{where} & \\
+ \uv{i} &= \frac{1}{\sqrt{\hat{n}^2_3, \hat{n}^2_2}}[0, \hat{n}_3, \hat{n}_2]^\top
+\end{align}
+
+In homogeneous coordinates, let the camera to ground transformation be
+represented by $^gT_c = \begin{bmatrix}^gR_c & ^gt_c\\ \mathbf{0} &
+1\end{bmatrix}$ and its inverse be represented by $^cT_g = {}^gT_c^{-1}$. Let
+the yaw of car be given as theta in camera coordinates. Assume it to be same as
+ground plane coordinates.
+
+\begin{align}
+  \Tr{g}{R}{t} &= \begin{bmatrix}
+  \cos(\theta) & \sin(\theta) & 0 \\
+ -\sin(\theta) & \cos(\theta) & 0 \\
+             0 & 0 & 1
+  \end{bmatrix}
+\end{align}
+
+\subsubsection{System of equations}
+Let the detected bounding box be represented by $[\xmin, \ymin, \xmax, \ymax]^T$. Let $^cT_t$ be the transformation from tracklet to camera.
+\newcommand{\Cu}{C_u}
+\newcommand{\Cc}{C_c}
+\begin{align}
+  \Cu &= \begin{bmatrix}
+    0.5 & 0.5 & 0\\
+    0.5 & -0.5 & 0\\
+    -0.5 & -0.5 & 0\\
+    -0.5 & 0.5 & 0\\
+    0.5 & 0.5 & 1\\
+    0.5 & -0.5 & 1\\
+    -0.5 & -0.5 & 1\\
+    -0.5 & 0.5 & 1
+  \end{bmatrix}\\
+  C_i &= \diag( C_{u\{i,:\}} ) \begin{bmatrix}3& 0\\0 & 1 \\1 & 0\end{bmatrix} 
+\end{align}
+
+\newcommand{\ttg}{\Tr{g}{\mathbf{t}}{t}}
+\newcommand{\tgc}{\Tr{c}{\mathbf{t}}{g}}
+\newcommand{\Rgc}{\Tr{c}{R}{g}}
+\newcommand{\Rtg}{\Tr{g}{R}{t}}
+\newcommand{\Rtc}{\Tr{c}{R}{t}}
+\newcommand{\Pgc}{\Tr{c}{P}{g}}
+\newcommand{\Ptc}{\Tr{c}{P}{t}}
+
+Consider the projection of i\textsuperscript{th} corner of the car.
+\begin{align}
+  \lambda_i \mathbf{u}_i &= K(\Rgc(\Rtg C_i[h, w]^\top + \ttg) + \tgc) & \text{ or }\\
+  \lambda_i \mathbf{u}_i &= K\Rtc C_i [h, w]^\top + K\Rgc \ttg + K \tgc
+  \label{eq:vectorproj}
+\end{align}
+where $\Rtc = \Rgc\Rtg$, $\ttg = [t_x, t_y, 0]^\top$ is unknown car position in
+ground coordinates, $h$ is unknown height, $w$ is unknown width of the car,
+$\lambda$ is unknown scale factor and $\mathbf{u}_i$ is the image projection of
+i\textsuperscript{th} corner of the car.
+
+Equation \eqref{eq:vectorproj} is a set of 3 equations, the third of which allows us to eliminate $\lambda$ as it gives the $\lambda$ and as a linear combination of $t_x$, $t_y$, $h$ and $w$. Let $\Ptc = K\Rtc$ and $\Pgc = K\Rgc$.
+\begin{align}
+  \lambda_i \mathbf{u}_i &=  \Ptc C_i [h, w]^\top + \Pgc \ttg + K \tgc\\
+  \lambda_i &= \lambda_{hi}  h + \lambda_{wi}  w + \lambda_{tx}  t_x + \lambda_{ty} * t_y + \lambda_c\\
+  \text{where} & \\
+  \lambda_{hi} &= \Ptc(3, :) C_i(:, 1)\\
+  \lambda_{wi} &= \Ptc(3, :) C_i(:, 2)\\
+  \lambda_{tx} &= \Pgc(3, 1)\\
+  \lambda_{ty} &= \Pgc(3, 2)\\
+   \lambda_{c} &= K(3, :) \tgc
+\end{align}
+
+\subsubsection{Approximate solution}
+Initial approximate solution can be obtained by assuming that $\ymax$ is the projection either of point 
+\begin{align}
+  \lambda_c \mathbf{u}_c &= \Ptc[0, 0, \frac{h}{2}]^\top + \Pgc \ttg + K\tgc
+\end{align}
+
+Assuming the height to be mean height, we can solve for approximate solution
+for $\ttg$. Using this approximate solution find out the corner points that
+correspond to the bounding box. Finally \eqref{eq:vectorproj} can be used for
+the projected points to solve for exact $[h, w, t_x, t_y]$.
+
+\subsubsection{Correspondence of bounding box limits to cuboid corners}
+The $\xmin$ of bounding can be projection of either of the 8 points of the
+cuboid. Once $\xmin$ is chosen the $\xmax$ can be limited to the remain 7
+points hence $8 \times 7= 56$ possibilities and similarly $\ymin$ and $\ymax$
+lead to 56 different possibilities. In this relatively unconstrained
+configuration we have around $56 \times 56 = 3136$ possibilities, which is not
+too big but with a little more analysis we can reduce the number. To this
+effect we can use the aspect graph of a cuboid to understand the topological
+changes by change in view points. Also out of 28 possible configurations in the
+aspect graph, we can rule out the configurations that put camera below the
+ground plane and directly above the observed car itself. This leaves us with 16
+possible topological configurations, which include the symmetrical
+configurations when the car is rotated by $180^\circ$. Considering $180^\circ$ symmetry we are only left with 8 possible topological configurations.
+
+A more general way of finding the subset of aspect graph configuration that
+need to be configured is to rewrite the bounding box inequalities, 
+
+\begin{align}
+  \lambda_i \xmax &\ge \Ptc(1, :) C_i [h, w]^\top + \Pgc(1, :) \ttg + K \tgc\\
+  \label{eq:bbox-ineqst}
+  \lambda_i \xmin &\le \Ptc(1, :) C_i [h, w]^\top + \Pgc(1, :) \ttg + K \tgc\\
+  \lambda_i \ymax &\ge \Ptc(2, :) C_i [h, w]^\top + \Pgc(2, :) \ttg + K \tgc\\
+  \lambda_i \ymin &\le \Ptc(2, :) C_i [h, w]^\top + \Pgc(2, :) \ttg + K \tgc \enspace.
+  \label{eq:bbox-ineq}
+\end{align}
+Each of the above four equations is true for all 8 corners, hence there are 32 such inequalities.
+
+The aspect graph boundaries also called the view events, occur when the view
+point or the camera optical center crosses the faces of the cuboid object being
+viewed. The camera optical center $o_t$ in tracklet coordinate frame is given by.
+\begin{align}
+  \mathbf{0} &= \Rgc(\Rtg o_t + \ttg) + \tgc\\
+  o_t &= -\Rtg^\top \ttg -\Rtg^\top \Rgc^\top \tgc
+\end{align}
+
+The 6 faces of a cuboid are simple planes that can be written in terms of $h$
+and $g$. A view event occurs whenever we have $o_t$ satisfying equations of any
+one of the equations that represent the 6 faces. We have to find the number of
+distinct regions that satisfy all of Eq
+\eqref{eq:bbox-ineqst}-\eqref{eq:bbox-ineq}. Then for each distinct region we
+need to find out the topological configuration that limits the number of
+corners candidates for extrema. These can be sorted to create boundaries.
+
 
 \subsection{Numerical integration}
 Numerical integration is possible by computed by sampling. Samples need to be
