@@ -1,13 +1,12 @@
-  	  \usetikzlibrary{shadows,trees}
   	  \begin{tikzpicture}[grow cyclic,line width=1.2pt,
-variablenode/.style={circle,circular drop shadow,draw=black,fill=green,thick,minimum width=1.2cm},
+variablenode/.style={circle,circular drop shadow,draw=black,fill=green,thick,minimum width=1.0cm},
   	  factor/.style={rectangle,drop shadow,draw=black,fill=white,thick,minimum width=1.1cm},
       obs/.style={fill=gray!30},
       prev/.style={text=gray,draw=gray,fill=green!50}]
   	  \path 
 
-(0.6,2.8) node [variablenode,prev] (xt1) {$x_{t-2}$}
-(2.6,2.8) node [variablenode,prev] (theta1) {$\theta_{t-2}$}
+(0.6,2.8) node [variablenode,prev] (xt1) {$x_{t-1}$}
+(2.6,2.8) node [variablenode,prev] (theta1) {$\theta_{t-1}$}
 
 (-0.05,1.8) node [factor,draw=gray,text=gray] (fdynx) {$E_{d}$}
 (1.95,1.8) node [factor,draw=gray,text=gray,minimum width=1cm] (fdynt) {$E_{d}$}
@@ -18,8 +17,8 @@ variablenode/.style={circle,circular drop shadow,draw=black,fill=green,thick,min
    [counterclockwise from=-60,sibling angle=60]
      (2.5, 0) node [factor] (flane) {$E_{lane}$} 
     child { node [variablenode,obs] (l) { $L_t$ } }
-    child { node [ variablenode,obs] (gps) {GPS}}
-    child { node [ variablenode,obs] (gps) {Map}}
+    child { node [ variablenode,obs,font=\footnotesize] (gps) {GPS}}
+    child { node [ variablenode,obs,font=\footnotesize] (gps) {Map}}
   	(-1, 0)  node[variablenode](xt){$\mathbf{x}_t$}
 
     [counterclockwise from=60,sibling angle=60]
