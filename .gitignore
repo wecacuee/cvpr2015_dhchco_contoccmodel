@@ -8,5 +8,6 @@
 *.brf
 *.svn
 .*.swp
+*.fls
 CVPR/cvpr2015AuthorKit/
 CVPR/graphics

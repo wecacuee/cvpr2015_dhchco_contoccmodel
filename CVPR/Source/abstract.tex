@@ -1,4 +1,26 @@
 \begin{abstract}
-  TODO: Write abstract
-  \vspace{4cm}
+  %Problem:
+  3D localization in road scenes from monocular video is an important problem
+  for applications in autonomous driving. We propose a probabilistic graphical
+  model based framework to estimate 3D localization of traffic participants in
+  road scenes.  We use object detections, point tracks, egomotion, estimated
+  ground truth, GPS and map information as an input to our system.
+  Given this input we compute 6DOF 3D localization of traffic participants
+  along with their dimensions (height, width and length).
+  We also introduce a novel perspective to the soft occlusion models where a
+  region in space is viewed in terms of reflection and transmission
+  probability.
+  We test and train our model on KITTI dataset and show that our occlusion
+  model works better than the baseline method of bounding boxes. We also show
+  that our 3D localization results with monocular video input are comparable to
+  (Geiger 2014) which uses stereo input.
+
+  % Why monocular
+  % Since laser scanners are expensive, we focus on solving the problem through
+  % monocular video, GPS and maps as our input. Given the video we extract the 
+  % Methodology
+  % We formulate the problem of 3D localization in a probabilistic graphical
+  % model specifically a factor graph model. We use additional heuristic
+  % constraints like collision constraint, 
+
 \end{abstract}
