@@ -1,23 +1,22 @@
 \usetikzlibrary{trees,shadows}
 \begin{tikzpicture}[grow cyclic,line width=1.2pt,
-    variablenode/.style={circle,circular drop shadow,draw=black,fill=green,thick,minimum width=1.0cm},
-    factor/.style={rectangle,drop shadow,draw=black,fill=white,thick,minimum width=1.1cm},
-    obs/.style={fill=gray!30},
-  prev/.style={text=gray,draw=gray,fill=green!50}]
-  \path[use as bounding box] (-3, -3) rectangle (3,3);
+    variablenode/.style={circle,circular drop shadow,draw=red,fill=white,thick,minimum width=1.0cm},
+    factor/.style={rectangle,drop shadow,draw=green,fill=white,thick,minimum width=1.1cm},
+  obs/.style={fill=gray!30,draw=black}]
+  \path[use as bounding box] (-4.5, -1.5) rectangle (3,3);
   \path 
 
-  (2.4,2.4) node [variablenode,prev] (xt1) {$x_{t-1}$}
-  %(2.6,2.8) node [variablenode,prev] (theta1) {$\theta_{t-1}$}
+  (2.4,2.4) node [variablenode] (xt1) {$x_{t-1}$}
+  %(2.6,2.8) node [variablenode] (theta1) {$\theta_{t-1}$}
 
-   (.7,1.1) node [factor,draw=gray,text=gray] (fdynx) {$E_{d}$}
+   (1.0,1.5) node [factor] (fdynx) {$E_{d}$}
   %(1.95,1.8) node [factor,draw=gray,text=gray,minimum width=1cm] (fdynt) {$E_{d}$}
 
- (-0.05,1.8) node[factor](fhol) {$E_{hol}$}
+ (-0.5,1.5) node[factor](fhol) {$E_{hol}$}
 
   %(1, 0)  node[variablenode](theta){$\theta_t$}
-  [counterclockwise from=-50,sibling angle=50]
-  (1.2, 0) node [factor] (flane) {$E_{lane}$} 
+  [counterclockwise from=-45,sibling angle=45]
+  (0.0, -1.0) node [factor] (flane) {$E_{lane}$} 
   child { node [variablenode,obs] (l) { $L_t$ } }
   child { node [ variablenode,obs,font=\footnotesize] (gps) {GPS}}
   child { node [ variablenode,obs,font=\footnotesize] (gps) {Map}}
@@ -31,10 +30,10 @@
   child {           node[variablenode,obs](Det){$D_t$}
   }
 
-  (-2.0,-1.5) node[factor](fsize){$E_{size}$}
+  (-4.0,1.5) node[factor](fsize){$E_{size}$}
   (-3,0) node[variablenode](dim){$B$}
-  [counterclockwise from=-60]
-  (0, -1.5) node[factor](fpt) {$E_{pt}$}
+  [counterclockwise from=220]
+  (-2.0, -1.0) node[factor](fpt) {$E_{pt}$}
   child { node[variablenode,obs](pt){$u_t$} }
 
 
@@ -45,10 +44,10 @@
   %\path  (fpt) edge (theta);
   \draw (fdet) -- (gp);
   \draw (fhol) -- (xt);
-  \draw (fhol) -- (xt1);
+  \draw (fhol) edge [bend left] (xt1);
   %\draw (fhol) -- (theta);  	  
   \draw (dim) -- (fdet);
-  \draw (xt) -- (fsize) -- (dim);
+  \draw (fsize) -- (dim);
   %\draw (theta) -- (flane);
   \draw (xt) -- (fdynx) -- (xt1);
   %\draw (theta) -- (fdynt) -- (theta1);
