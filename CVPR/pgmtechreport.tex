@@ -1,0 +1,144 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{iccv}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{verbatim}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{shadows,trees}
+
+\newlength{\eqs}
+\setlength{\eqs}{-0.04in}
+
+\usepackage{enumitem}
+\setitemize[0]{leftmargin=15pt}
+
+\newenvironment{tight_itemize}{
+\begin{itemize}[leftmargin=10pt]
+  \setlength{\topsep}{0pt}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+% \iccvfinalcopy % *** Uncomment this line for the final submission
+
+%\newcommand{\bm}{\mathbf{}}
+\input{preamble}
+
+\def\iccvPaperID{639} % *** Enter the ICCV Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ificcvfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Continous occlusion models and traffic scene understanding}
+\author{Vikas Dhiman\\
+  University of Michigan\\
+  Ann Arbor, MI, USA\\
+  {\tt\small dhiman@umich.edu}
+  \and
+  Manmohan Chandrakar\\
+  NEC Laboratories America Ltd\\
+  Cupertino, CA, USA\\
+  {\tt\small manu@nec-labs.com}
+  \and
+  Jason J Corso\\
+  University of Michigan\\
+  Ann Arbor, MI, USA\\
+  {\tt\small jjcorso@umich.edu}
+}
+\maketitle
+%%%%%%%%% ABSTRACT
+\input{Source/abstract.tex}
+
+\input{Source/intro}
+
+% % This work is a triple dip: 
+% (1) PGM course (2) Qualifier project (3) ICCV submiission
+
+% 
+% % Message to be delivered 
+% 1. To show the work done
+% 2. Exemplify technical powress 
+% 3. understanding of graphical models
+% 4. Lessons learned: 
+%   4.a) occlusion modeling doesn't help much
+%   4.b) GPS/Map/Lane are useful
+%   4.c) Particle Belief propagation has tough competition from fminunc
+
+
+% % Course point of view (PGM)
+% What is the graphical model that we used for the problem
+% What inference method we used for the problem.
+% How did the results match to naive realization
+
+% What I did
+% GPS/Map/lane orientatio
+% Occlusion modeling
+% Particle Belief propagation
+
+% What did I learn
+% GPS is much more accurate than we would like to think
+% Occlusion modeling doesn't help much as we think
+% PBP has a surprising competitor
+
+% Outline
+% Abstract
+% 1 Introduction
+% Figure explaining the pipeline?
+
+% 1.5 Related work
+\input{Source/related}
+
+%
+% 2 Modeling
+\input{Source/setup}
+% Figure explaining the model within a car
+% Figure explaining the model within a frame
+% Figure explaining the model multiples frames
+% 2.1 GPS and Lane information
+% 2.2 Occlusion modeling
+\input{Source/occlusion}
+% 2.3 Point tracks
+% 2.4 Object detections
+\input{Source/localize}
+
+%
+% 3. Inference
+% 3.1 fminunc
+% 3.2 Particle belief propagation
+% 3.3 MCMC
+\input{Source/inference}
+%
+% 4. Experments and Results
+% 4.1 Prove that PGM is useful
+% 4.2 Prove that Adding GPS/Lane information is useful
+% 4.3 Prove that Adding Point tracks energy is useful
+% 4.4 Prove that Adding Occlusion model is useful/not useful
+\input{Source/experiments}
+% 
+% 5. Conclusion and Discussions
+\input{Source/discussions}
+
+\end{document}
+
+  
