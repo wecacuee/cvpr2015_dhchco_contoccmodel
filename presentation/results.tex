@@ -1,0 +1,45 @@
+\begin{frame}{Qualitative results}
+  % Show some impressive qualitative results that are better than naive
+  % initialization
+\end{frame}
+
+\begin{frame}{Quantitative results}
+  % Show that quantiative results are still negative but ...
+  \small{
+\begin{table}
+  \begin{tabular}{lrrr}
+    \toprule
+    Energy & t & yaw & dim \\
+    \midrule
+    lane+contPtTracksNoOcc+size+bbox+posT   & 3.80 & 0.91 & 1.58 \\
+    lane+contPtTracks+size+bboxOcc+posT+col & \textbf{3.78} & 0.91 & 1.58 \\
+    lane+contPtTracks+size+bboxOcc+posT     & 3.81 & 0.92 & 1.59 \\
+    lane+size+bboxOcc+posT+col              & 3.92 & 0.91 & 1.15 \\
+    lane+size+bboxOcc+posT                  & 3.83 & 0.90 & 1.14 \\
+    lane+size+bbox+posT                     & 3.83 & 0.90 & \textbf{1.14} \\
+    initialization                          & 3.79 & \textbf{0.86} & 1.64 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+  }
+
+\end{frame}
+
+\begin{frame}{What to do about negative results}
+  % Outliers in point tracks
+  % Outliers in detections
+  % Poor inference methods
+  % Parameter learning
+  % Simplify graphical model
+  % Approximate graphical model to a tree
+  % Use discretization for belief propagation followed by gradient descent
+\end{frame}
+
+\begin{frame}{Conclusion}
+  
+\end{frame}
+
+\begin{frame}{Thank you}
+    
+\end{frame}
+

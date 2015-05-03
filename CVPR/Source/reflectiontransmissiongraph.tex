@@ -1,0 +1,14 @@
+
+     \path [fill=blue!20,draw] (0,0) ellipse (1.2 and 0.7);
+     \path [fill=green!20,draw] (3,0) ellipse (1.2 and 0.7);
+     \coordinate (o) at (-2,-1);
+     \draw(o) edge [->,very thick] node (xa) {} +(6, 0);
+     \node at ($(xa) + (0, -0.2)$) {Depth from camera($\lambda$)};
+     \draw(o) edge [->,very thick] node (ya) {} +(0, 2);
+     \node [rotate=90]at ($(ya) + (-0.2, 0)$) {Probability};
+    \draw [thick,blue]plot [smooth] coordinates {($(o)+(0,0.2)$) ($(o)+(0.2,0.2)$) ($(o) + (0.8, 1.8)$) ($(o)+(1.6,0.2)$) ($(o)+(3.2,0.2)$) 
+      %($(o)+(3.8,1.8)$)  % Transmission prob corresponds to particular object
+    ($(o)+(4.4,0.2)$) ($(o)+(6.4,0.2)$) };
+    \draw [thick,red] plot [smooth] coordinates {($(o)+(0,1.8)$) ($(o)+(0.2,1.8)$) ($(o) + (0.8, 1.7)$) ($(o)+(1.4,0.2)$) ($(o)+(2.6,0.2)$) ($(o)+(3.2,1.8)$) ($(o)+(3.8,1.8)$) ($(o)+(4.4,0.2)$) ($(o)+(5.6,0.2)$) ($(o)+(6.1,1.8)$) };
+   \draw [thick, blue] ($(o) + (0,-0.5)$) -- +(1,0) +(2,0) node {$P_{\text{reflection}}$};
+   \draw [thick, red] ($(o) + (3,-0.5)$) -- +(1,0) +(2,0) node {$P_{\text{transmission}}$};

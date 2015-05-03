@@ -1,0 +1,205 @@
+
+\begin{frame}{Graphical Model}
+  \vspace*{-.5cm}
+  % Introduce the graphical model with a diagram and equations
+  \begin{columns}
+    \begin{column}[t]{0.4\textwidth}
+      \tikzset{/tikz/x=0.6cm,/tikz/y=0.6cm}
+      \scriptsize{
+        \input{Source/graphicalmodelTP.tex}
+      }
+    \end{column}
+    \hspace{10pt}
+    \visible<2-> {
+      \vrule{}
+    }
+    \begin{column}[t]{0.6\textwidth}
+      \visible<2->{
+        \tikzset{/tikz/x=0.7cm,/tikz/y=0.7cm}
+        \scriptsize{
+          \input{Source/graphical_model_multiple.tex}
+        }
+      }
+    \end{column}
+  \end{columns}
+  \vspace*{-0.5cm}
+  \begin{center}
+    \visible<2->{
+      \newcommand{\imagewidth}{0.9\textwidth}
+      \input{Source/scenelayoutoverlayCity0961.tex}
+    }
+  \end{center}
+  \vspace*{-.5cm}
+\end{frame}
+
+\begin{frame}{Point Tracks energy}
+  % Start with a simpler version of point track energy here
+  \centering
+  \begin{figure}
+  \input{Source/pointTracksEnergyFigure}
+  \end{figure}
+\end{frame}
+
+% \begin{frame}{Point Tracks energy }
+%   % Add the association fraction here, which requires occlusion modeling
+% \end{frame}
+% 
+\begin{frame}{Occlusion modeling}
+  Represent traffic participants as soft ellipsoids
+  \centering
+  \input{assocprobslide.tex}
+  % Transmission probability is product integral of over the depth
+  % \[P^j_{\textit{transmission}}(\lambda) = \prod_{0}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda}\]
+  Association probability for a point $j$ with object $i$: 
+  \[\assocP = \Prefl\prod_{f}^{\lambda}\Ptransarg{\lambda \ray}^{d\lambda}\]
+\end{frame}
+
+\begin{frame}
+  \centering
+  \input{preflectiontransmissioneqns.tex}
+    \begin{align}
+      f^i_{occ}(\bx) &= \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp^{i}))}} \\
+      P^{ij}_{\textit{reflection}} (\lambda) &= (\max \{0, \nabla {f^i_{occ}}(\lambda \ray)^\top \ray \})^2 \\
+      P^j_{\textit{transmission}}(\lambda) &= 1 - \occft{\lambda \ray}
+    \end{align}
+\end{frame}
+
+\begin{frame}{Application of occlusion modeling to SFM}
+  % Show association results in this slide or another slide
+\end{frame}
+
+\begin{frame}{Point tracks energy}
+  \centering
+  \small{
+  \input{pointTrackEnergyWithOccFigure.tex}
+  \begin{align*}
+    \Energy{track}(.) = 
+    \sum_{i \in \text{objects}}
+    \sum_{j \in \text{points}}
+    \int_{f}^{\infty}
+      \assocP
+      %\Ereproj(\lambda)
+      \left\|\trackpj{t+1} - \projectionOft{\invProjectionOf{\trackpj{t}, \lambda}}\right\|^2
+      d\lambda
+  \end{align*}
+}
+\end{frame}
+
+% Consider packing other energies in fewer slides 
+\begin{frame}{Bounding box energy}
+  % 
+  \centering
+  \begin{figure}
+  \input{Source/car3Ddetections.tex}
+  \end{figure}
+\end{frame}
+
+\newcommand{\carbev}{
+  \coordinate (ra) at (1,0.2);
+  \coordinate (rb) at (2,0.7);
+  \draw [thick,blue] (ra) rectangle (rb);
+  \draw [thick,black] let \p1 = (ra), \p2 = (rb) in ($.5*(\x1, \y2) + .5*(\x1, \y1) + (-0.2,0)$) -- ($.5*(ra)+.5*(rb)$);
+}
+\begin{frame}{Lane energy}
+      \centering
+  \begin{columns}
+    \begin{column}[t]{0.5\textwidth}
+      \centering
+      Low Energy
+
+      \begin{tikzpicture}
+        \path [use as bounding box] (-.5,-0.5) rectangle (2.5,1.5);
+        \draw [thick,green] (0,0) -- (2,0);
+        \carbev
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}[t]{0.5\textwidth}
+      \centering
+      High Energy
+
+      \begin{tikzpicture}
+        \path [use as bounding box] (-.5,-0.5) rectangle (2.5,1.5);
+        \draw [thick,green] (0,0) -- (2,0);
+        \begin{scope}[rotate around={60:(1.5,0.55)}]
+          \carbev
+        \end{scope}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \begin{align}
+    \label{eq:laneOrientationEnergy}
+    \Energy{lane} &= 
+    \sum_{m \in M_{\text{close}}}
+    (1 - \ori{i}{t} \cdot \text{TAN}(L_{m}(k), \pos{i}{t}) )
+    \LaneUncertainty{\pos{i}{t}}
+    \\
+    \LaneUncertainty{\pos{i}{t}} &=
+    \frac{1}{1 + exp(-q(w_{\text{road}} - \text{DIST}(L_{m}(k), \pos{i}{t})))}
+  \end{align}
+    
+\end{frame}
+
+\begin{frame}{Collision energy}
+  \begin{columns}
+    \begin{column}[t]{0.5\textwidth}
+      \centering
+      Low Energy
+
+      \begin{tikzpicture}
+        \path [use as bounding box] (-.5,-0.5) rectangle (2.5,1.5);
+        \draw [thick,green] (0,0) -- (2,0);
+        \carbev
+        \begin{scope}[shift={(0.9,-0.7)}]
+          \carbev
+        \end{scope}
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}[t]{0.5\textwidth}
+      \centering
+      High Energy
+
+      \begin{tikzpicture}
+        \path [use as bounding box] (-.5,-0.5) rectangle (2.5,1.5);
+        \draw [thick,green] (0,0) -- (2,0);
+        \carbev
+        \begin{scope}[rotate around={-30:(1.5,0.55)},shift={(0.9,0)}]
+          \carbev
+        \end{scope}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \begin{align}
+    \EnergyCol &= -\log\left(
+  A_{ij}
+  e^{-\frac{1}{8}
+    \left(\pos{i}{t} - \pos{j}{t}\right)^\top
+    P^{-1}
+    \left(\pos{i}{t} - \pos{j}{t}\right)
+    }
+    \right)
+  \end{align}
+  where 
+  \begin{align}
+    A_{ij} &= \frac{|\Sigma_i|^\frac{1}{4}|\Sigma_j|^\frac{1}{4}}
+    {|P|^\frac{1}{2}}\\
+    P &= \frac{1}{2}\Sigma_i + \frac{1}{2}\Sigma_j
+  \end{align}
+\end{frame}
+
+\begin{frame}{Size prior}
+\begin{align}
+  \label{eq:totalSizeEnergy}
+  \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
+  \expDimsn)
+\end{align}
+\end{frame}
+
+\begin{frame}{Transition energies}
+\begin{align}
+  \label{eq:totalPosTransitionEnergy}
+  \Energy{dyn-hol} &= 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1}) \\
+  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2\\ 
+  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2
+\end{align}
+    
+\end{frame}

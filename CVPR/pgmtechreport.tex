@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
+\usepackage{pbox}
 \usepackage{verbatim}
 \usepackage{bm}
 \usepackage{microtype}
@@ -37,10 +38,11 @@
 % run, let it finish, and you should be clear).
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 
-% \iccvfinalcopy % *** Uncomment this line for the final submission
+\iccvfinalcopy % *** Uncomment this line for the final submission
 
 %\newcommand{\bm}{\mathbf{}}
 \input{preamble}
+\DeclareMathOperator*{\argmin}{\arg\min}
 
 \def\iccvPaperID{639} % *** Enter the ICCV Paper ID here
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
@@ -127,7 +129,8 @@
 % 3.1 fminunc
 % 3.2 Particle belief propagation
 % 3.3 MCMC
-\input{Source/inference}
+%\input{Source/inference}
+
 %
 % 4. Experments and Results
 % 4.1 Prove that PGM is useful
@@ -139,6 +142,10 @@
 % 5. Conclusion and Discussions
 \input{Source/discussions}
 
+{\small
+  \bibliographystyle{ieee}
+  \bibliography{continuousocclusion}
+}
 \end{document}
 
   

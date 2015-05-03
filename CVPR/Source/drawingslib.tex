@@ -1,0 +1,130 @@
+
+\providecommand{\dscale}{0.5}
+% Image frame
+\newcommand{\drawframe}{
+  %\path[use as bounding box,draw] (0.5,-2) rectangle (10,2);
+
+\coordinate (A\x) at (\x*1.2,0);
+\coordinate (a\x) at (\x*1.2+0.3,0+0.5);
+
+\draw [thick,black] (A\x) -- +(0,1) -- +(1,1.5) -- +(1,.5) -- cycle;
+
+
+\draw [very thick,blue!40,fill=blue!20] (a\x) -- +($\dscale*(0,1)$) node (b\x) {} -- +($\dscale*(1,1.5)$) node (c\x) {} -- +($\dscale*(1,.5)$) node (d\x) {} -- cycle;
+
+}
+
+\newcommand{\road}{
+    % Road width
+    \newcommand{\rw}{0.15};
+    % Road slant
+    \newcommand{\rslant}{0.15};
+    % Upper coordinate of the road
+    \pgfmathsetmacro{\rup}{\rw+\rslant};
+    % Where does the road start on the left
+    \newcommand{\rxmin}{6};
+    % length of the  road
+    \newcommand{\rxlen}{5};
+    % right end of the road
+    \pgfmathsetmacro{\rxmax}{\rxmin+\rxlen};
+
+    % Draw the road
+    \filldraw[fill=black!20, draw=black!40] 
+    (3d cs:\rxmin, 0,  0) -- (3d cs:\rxmax, 0, \rslant)
+    -- (3d cs:\rxmax, 0,  \rup) -- (3d cs:\rxmin, 0, \rw) -- cycle;
+    % Middle of the road coordinates
+    \pgfmathsetmacro{\rmid}{\rw/2};
+    \pgfmathsetmacro{\rmidr}{\rslant + (\rw)/2};
+    % Dashed line in the middle of the road
+    \draw[white,very thick,dashed] (3d cs:\rxmin, 0, \rmid ) -- (3d cs:\rxmax, 0, \rmidr);
+}
+
+\newcommand{\acuboid}{
+  \newcommand{\xmin}{-2}
+  \newcommand{\xlen}{1}
+  \pgfmathsetmacro{\xmax}{\xmin+\xlen}
+  \newcommand{\ymin}{-2}
+  \newcommand{\ylen}{1}
+  \pgfmathsetmacro{\ymax}{\ymin+\ylen}
+  \newcommand{\zmin}{-2}
+  \newcommand{\zlen}{1}
+  \pgfmathsetmacro{\zmax}{\zmin+\zlen}
+  \coordinate (a) at (3d cs:\xmax,\ymax,\zmin);
+  \coordinate (b) at (3d cs:\xmax,\ymax,\zmax);
+  \coordinate (c) at (3d cs:\xmax,\ymin,\zmax);
+  \coordinate (d) at (3d cs:\xmax,\ymin,\zmin);
+  \coordinate (h) at (3d cs:\xmin,\ymin,\zmin);
+  \coordinate (e) at (3d cs:\xmin,\ymax,\zmin);
+  \coordinate (f) at (3d cs:\xmin,\ymax,\zmax);
+
+  \draw [facestyle] (a) -- (b) -- (c) -- (d) -- cycle;
+  \draw [facestyle] (a) -- (b) -- (f) -- (e) -- cycle;
+  \draw [facestyle] (a) -- (d) -- (h) -- (e) -- cycle;
+  % For debugging turn this on to see corners labeled
+  %\path (a) node {a} (b) node {b} (c) node {c} (d) node {d}  (h) node {h} (e) node {e} (f) node {f};
+}
+
+\newcommand{\car}{
+\providecommand{\cxmin}{0}
+\providecommand{\cxmax}{1}
+\providecommand{\czmin}{0}
+\providecommand{\czmax}{1}
+\providecommand{\cyzmin}{0}
+\providecommand{\cyzmax}{0}
+\providecommand{\cylen}{1}
+    \path (3d cs:\cxmin, 0, \czmin) coordinate (a)
+    (3d cs:\cxmax, 0, \czmax) coordinate (b)
+    (3d cs:\cxmax, \cylen, \czmax) coordinate (c)
+    (3d cs:\cxmin, \cylen, \czmin) coordinate (d)
+    (3d cs:\cxmax, \cylen, \cyzmax) coordinate (e)
+    (3d cs:\cxmin, \cylen, \cyzmin) coordinate (f)
+    (3d cs:\cxmin, 0, \cyzmin) coordinate (g)
+    ;
+
+  % front face
+  \filldraw[facestyle] (a) -- (b) -- (c) --  (d) -- cycle;
+  % upper face
+  \filldraw[facestyle] (c) -- (e) -- (f) --  (d) -- cycle;
+  % left (wrt viewer) face
+  \filldraw[facestyle] (a) -- (d) -- (f) --  (g) -- cycle;
+  \node (lB) at ($(e) + (0,.2)$) {$\dimsn{i}$};
+}
+
+\newcommand{\caronroad}{
+  % Draw the road and the car
+  \begin{scope}[3d/perspective eye={0,5,-1},facestyle/.style={fill=blue!20, draw=blue!40}]    
+    %\path[use as bounding box,clip] (5.5,-1) rectangle (8,3);
+    \road{}
+
+    % Displacement of car w.r.t road
+    \newcommand{\cxdisp}{1};
+    % left most coordinate of the car
+    \pgfmathsetmacro{\cxmin}{\cxdisp+\rxmin};
+    % length of car
+    \newcommand{\cxlen}{1.5};
+    % height of car
+    \newcommand{\cylen}{.8};
+    % width of car
+    \newcommand{\czlen}{.4*\rw};
+    % right most x-coordinate of car
+    \pgfmathsetmacro{\cxmax}{\cxmin+\cxlen};
+    % z-min coordinate of car
+    \pgfmathsetmacro{\czmin}{\rslant/\rxlen*\cxdisp+0.02};
+    % z-max
+    \pgfmathsetmacro{\czmax}{\rslant/\rxlen*(\cxmax-\rxmin)+0.02};
+    % z-max on the farther side
+    \pgfmathsetmacro{\cyzmax}{\czmax+\czlen};
+    % z-min on the farther side
+    \pgfmathsetmacro{\cyzmin}{\czmin+\czlen};
+
+    \car{}
+  \end{scope}
+}
+
+% Camera
+\newcommand{\camera}{
+\path (5,1) coordinate (c0) 
+ +(0.25,0.15) coordinate (c2);
+  \draw (c0) rectangle (c2);
+  \draw (c2) -- ++(0.075, 0.075) -- ++(0, -0.3) -- ++(-0.075,0.075) ;
+}

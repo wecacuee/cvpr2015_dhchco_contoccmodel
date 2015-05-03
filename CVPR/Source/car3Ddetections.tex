@@ -1,0 +1,52 @@
+\providecommand{\Energy}[1]{E_{#1}}
+\providecommand{\pEnergy}[1]{E_{#1}}
+\providecommand{\EnergyCol}{\Energy{col}}
+\providecommand{\relp}[2]{\mathbf{p}_{#1}({#2})}
+\providecommand{\dimsn}[1]{\mathbf{B}^{#1}}
+\providecommand{\projectionOf}[1]{\pi_{\relp{i}{t}}\left(#1\right)}
+\providecommand{\projectionOft}[1]{\pi_{\relp{i}{t+1}}\left(#1\right)}
+\providecommand{\bbt}[2]{\mathbf{d}^{#1}(#2)}
+
+\usetikzlibrary{calc}
+
+\begin{tikzpicture}[]
+
+\newcommand{\x}{1};
+\drawframe;
+\node (ld\x) at ($(a\x) +(0,-1)$) {$\bbt{i}{t=T}$};
+\draw[->,black!40!green,very thick] ($.5*(d\x)+.5*(a\x)$) -- (ld\x);
+
+\renewcommand{\x}{2};
+\drawframe;
+\node (ld2) at ($(a2) +(0,-1)$) {\dots};
+
+\renewcommand{\x}{3};
+\drawframe;
+\node (ld\x) at ($(a\x) +(0,-1)$) {$\bbt{i}{t=1}$};
+\draw[->,black!40!green,very thick] ($.5*(d\x)+.5*(a\x)$) -- (ld\x);
+
+
+\caronroad{}
+
+
+\camera{}
+
+% Equation
+\path ($(a) + (0,-2)$)  node (eq)  {$\Energy{bbox} = \|\projectionOf{\dimsn{i}}-\bbt{i}{t}\|^2$} 
+			+(-0.4, 0.1) node (eqp) {}
+            + (0.4, 0.2) node (eqb) {}
+            +(1.3,0.2) node (eqd) {};
+
+% Label detections
+\path (ld3) edge[->,thick,black!40!green,in=90,out=0] (eqd);
+
+% Label 3D bbox
+\path ($.5*(a)+.5*(b)$) edge[->,thick,blue,in=90,out=-90] (eqb);
+
+\draw[dashed,thick,blue] (c3) -- (f);
+\draw[dashed,thick,blue] (a3) -- (a);
+
+
+\path ($0.5*(c0)+0.5*(c2)$) edge[->,thick,black,in=90,out=-90] (eqp);
+
+\end{tikzpicture}

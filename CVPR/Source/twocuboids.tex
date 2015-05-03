@@ -1,0 +1,23 @@
+
+
+% scale = xshift / (xshift + persepective eye z)
+  \begin{scope}[shift={(1,1)},scale={10/11},facestyle/.style={fill=green!10,draw}]
+    \acuboid
+
+    \foreach \i/\j in {1/1,-2/2,-3/-3,-8/-2.7,-6/-3.1,-2.7/-6,-3.5/-9,3.5/-6,6/-3,6.2/3,4/0,0/5,-4/5,-6/3}{
+      \pgfmathsetmacro{\color}{50*(6.2 - \i)/(6.2+8)}
+      \path ($(a)+(0.1*\i,0.1*\j)$) node [ptstyle=red!\color!blue] (pta\i)   {};
+      %\path +(0, \i) node {\coeffa} +(2, \i) node {\coeffb} +(4, \i) node {\coeffc} ;
+    }
+  \path [facestyle,shift={(-.5,-3)},rotate=60] (0,0) ellipse (1.2 and 0.7);
+  \end{scope}
+  \begin{scope}[facestyle/.style={fill=blue!10,draw}]
+    \acuboid
+    \foreach \i/\j in {-2/2,-3/-3,-8/-2.7,-6.1/-8.1,-8.7/-6,-3.5/-9,3.5/-6,6/-3,6.2/3,5/6,4/0,0/5,-4/5,-6/3}{
+      \pgfmathsetmacro{\color}{50*(6.2 - \i)/(6.2+8.7) + 50}
+      \path ($(a)+(0.1*\i,0.1*\j)$) node [ptstyle=red!\color!blue] (ptb\i)   {};
+      %\path +(0, \i) node {\coeffa} +(2, \i) node {\coeffb} +(4, \i) node {\coeffc} ;
+    }
+  \path [facestyle,opacity=0.5,shift={(-.5,-3)},rotate=60] (0,0) ellipse (1.2 and 0.7);
+  \end{scope}
+

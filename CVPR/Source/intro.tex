@@ -1,14 +1,36 @@
 \section{Introduction}
 \label{sec:intro}
 
-\begin{tight_itemize}
-  \item Introduce the problem
-  \item Describe our approach
-  \item Contrast with Milan's work
-  \item Contrast with Andreas Geiger's work
-  \item Highlight the contributions
-\end{tight_itemize}
-\vspace{10cm}
+% \begin{tight_itemize}
+%   \item Introduce the problem
+%   \item Describe our approach
+%   \item Contrast with Milan's work
+%   \item Contrast with Andreas Geiger's work
+%   \item Highlight the contributions
+% \end{tight_itemize}
+% \vspace{10cm}
+
+        To accomplish fully or partial autonomous driving we need 3D
+        localization of traffic participants in the scene. 
+        Since laser scanners and stable wide--baseline stereo setups are
+        expensive, we focus on solving the problem using monocular video, GPS
+        and maps as our input. Given the video we extract detection bounding
+        boxes, ground plane and point tracks.
+        We formulate the problem of 3D localization in a probabilistic graphical
+        model specifically a factor graph model. We use additional heuristic
+        constraints like collision constraint, that leads to a global consistent solution.
+        Using these multiple sources of information that provide, possibly conflicting, evidence about
+        the location of traffic participant, a consistent meaningful solution must be estimated. 
+        We formulate the problem in factor graph
+        formalism and use off-the-shelf methods for inference.
+
+        Our work is quite similar to that of Milan et
+        al~\cite{Milan_etal_2014}, except that we provide a optics based
+        perspective to occlusion modeling and our modeling is more detailed
+        than that used in Milan et al. In terms of application we perform 3D
+        localization using monocular camera while \cite{Geiger_etal_2014} use
+        stereo for similar results.
+
 \begin{figure}[!!t]
   %\includegraphics[width=\columnwidth]{Figures/graphicalModelFrom61ConstVars.pdf}
   \begin{center}

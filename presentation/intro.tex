@@ -1,0 +1,50 @@
+% \begin{frame}{Problem}
+%   % Notes: Spend around 30 sec on this slide
+%   \centering
+%   \begin{figure}
+%     \input{Source/problemdef.tex}
+%   \end{figure}
+% \end{frame}
+% This slide doesn't make it clear what problem we are trying to solve?  May be
+% the slide that Manmohan made with an example image with cars and detections
+% is better
+
+% Should we have introduction slide that highlights our contributions?
+% but we should have contributions to highlight them. Contributions are perhaps
+% better with positive results but still. I don't think we should have negative
+% results as a surprise. (It won't as they would have read the report.)
+
+\begin{frame}{Problem}
+  % Need a flowchart that describes the input and desired output of the system
+ \tikzset{/tikz/x=0.8cm,/tikz/y=0.8cm}
+ \newlength{\units}
+ \setlength{\units}{0.8cm}
+  \scriptsize{
+    \input{Source/problemflowchart.tex}
+  }
+\end{frame}
+
+% \begin{frame}{Problem}
+%   \visible<-1>{
+%     \begin{tikzpicture}
+%       \node[anchor=south west,inner sep=0] (image) at (0,0)
+%       {\includegraphics[width=\textwidth]{graphics/0000000061_bevdown.png}};
+%       \fill[color=white] (image.south west) rectangle (image.east);
+%     \end{tikzpicture}
+%   }
+% \end{frame}
+\begin{frame}{Problem}
+
+  \def\arrow{
+    (0,0) -- ++(1,0)
+    -- ++(0,1) -- ++(0.3, 0)
+    -- ++(-0.8, 1) -- ++(-0.8, -1) -- ++(0.3, 0) -- ++(0, -1) }
+
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] (image) at (0,0)
+    {\includegraphics[width=\textwidth]{graphics/0000000061_bevdown.png}};
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+      \fill[color=red,scale=0.05,shift={(10,11)},rotate=180,]\arrow;
+    \end{scope}
+  \end{tikzpicture}
+\end{frame}

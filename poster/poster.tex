@@ -1,0 +1,393 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX poster template
+% Created by Nathaniel Johnston
+% August 2009
+% http://www.nathanieljohnston.com/2009/08/latex-poster-template/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[final]{beamer}
+\usepackage{beamerposter}
+\usepackage{graphicx}			% allows us to import images
+
+\usepackage{bm}
+\usepackage{tikz}
+
+\usetikzlibrary{trees,shadows}
+
+\tikzset{/tikz/x=2.5cm}
+\tikzset{/tikz/y=2.5cm}
+
+%-----------------------------------------------------------
+% Define the column width and poster size
+% To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
+% The separation I chose is 0.024 and I want 4 columns
+% Then set onecolwid to be (1-(4+1)*0.024)/4 = 0.22
+% Set twocolwid to be 2*onecolwid + sepwid = 0.464
+%-----------------------------------------------------------
+
+\newlength{\sepwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+\setlength{\paperwidth}{48in}
+\setlength{\paperheight}{36in}
+\setlength{\sepwid}{0.024\paperwidth}
+\setlength{\onecolwid}{0.22\paperwidth}
+\setlength{\twocolwid}{0.464\paperwidth}
+\setlength{\threecolwid}{0.708\paperwidth}
+\setlength{\topmargin}{-0.5in}
+\usetheme{confposter}
+\usepackage{exscale}
+
+\input{preamble}
+
+
+%-----------------------------------------------------------
+% The next part fixes a problem with figure numbering. Thanks Nishan!
+% When including a figure in your poster, be sure that the commands are typed in the following order:
+% \begin{figure}
+% \includegraphics[...]{...}
+% \caption{...}
+% \end{figure}
+% That is, put the \caption after the \includegraphics
+%-----------------------------------------------------------
+
+\usecaptiontemplate{
+\small
+\structure{\insertcaptionname~\insertcaptionnumber:}
+\insertcaption}
+
+%-----------------------------------------------------------
+% Define colours (see beamerthemeconfposter.sty to change these colour definitions)
+%-----------------------------------------------------------
+
+% \setbeamercolor{block title}{fg=ngreen,bg=white}
+% \setbeamercolor{block body}{fg=black,bg=white}
+% \setbeamercolor{block alerted title}{fg=white,bg=dblue!70}
+% \setbeamercolor{block alerted body}{fg=black,bg=dblue!10}
+
+%-----------------------------------------------------------
+% Name and authors of poster/paper/research
+%-----------------------------------------------------------
+
+\title{3D object localization in road scenes using graphical models}
+\author{Vikas Dhiman \and Manmohan Chandrakar \and Jason J Corso}
+\institute{University of Michigan}
+
+%-----------------------------------------------------------
+% Start the poster itself
+%-----------------------------------------------------------
+
+\begin{document}
+
+\begin{frame}[t]
+  \begin{columns}[t]												% the [t] option aligns the column's content at the top
+  \begin{column}{\sepwid}\end{column}			% empty spacer column
+    \begin{column}{\onecolwid}
+      \begin{block}{Introduction}
+        To accomplish fully or partial autonomous driving we need 3D
+        localization of traffic participants in the scene. 
+        Since laser scanners and stable wide--baseline stereo setups are
+        expensive, we focus on solving the problem using monocular video, GPS
+        and maps as our input. Given the video we extract detection bounding
+        boxes, ground plane and point tracks.
+        We formulate the problem of 3D localization in a probabilistic graphical
+        model specifically a factor graph model. We use additional heuristic
+        constraints like collision constraint, that leads to a global consistent solution.
+        Using these multiple sources of information that provide, possibly conflicting, evidence about
+        the location of traffic participant, a consistent meaningful solution must be estimated. 
+        We formulate the problem in factor graph
+        formalism and use off-the-shelf methods for inference.
+
+        % Related work
+        %One of the central goals of 3D scene understanding is to localize the 3D positions and orientations of objects in complex scenes.
+        Using
+        stereo imagery, several visual cues are combined in \cite{Geiger_etal_2014} to
+        simultaneously determine object locations and a rough intersection topology.
+        Similar to us, other works have also considered monocular frameworks. Notably,
+        occlusions are explicitly handled in \cite{Wojek_etal_2013} by considering
+        partial object detectors. A detailed part-based representation of objects based
+        on annotated CAD models is used for monocular scene understanding in
+        \cite{Zia_etal_2013,Zia_etal_2014}, which also allows reasoning about mutual
+        occlusions between objects. In contrast to these works, our monocular framework
+        uses a physical modeling of occlusion in continuous space, which makes it more
+        general, extensible and amenable for continuous optimization.
+      \end{block}
+
+      \begin{block}{Modeling}
+        \begin{figure}
+          \centering
+          \newcommand{\imagewidth}{\onecolwid}
+          \input{Source/scenelayoutoverlayCity0961}
+          \caption{A sample road scene with the unknowns of each car modeled as random variables. 
+          The relating energies are shown in Figure~\ref{fig:graphmodel}}
+        \end{figure}
+
+        \begin{figure}
+          \centering
+          \input{Source/graphical_model_multiple}%
+          \caption{Graphical model showing the factor nodes among different
+            cars in the same frame. We assume occlusion relationships between
+            different cars are known and hence the occlusion modeling can be done
+            locally. In this example, the occlusion relationship affects the
+            following pair of cars 6-2, 2-5, 5-1. Cars 3 and 4 are not occluded
+            and hence affected by only unary terms within the frame. We also avoid 
+            collision modeling between unoccluded cars to encourage sparsity.
+          }
+          \label{fig:graphmodel}
+        \end{figure}
+
+      \end{block}
+    \end{column}
+
+  \begin{column}{\sepwid}\end{column}			% empty spacer column
+
+      
+    \begin{column}{\onecolwid}
+      %\begin{block}{}
+        \begin{figure}
+          \centering
+          \input{Source/graphicalmodelTP}
+          \caption{Graphical model showing the factorization of energies for a
+            single car. The six state variables of the car can be divided into
+            pose $\pos{i}{t}$ and dimensions $\dimsn{i}$. Different energies
+          depend only on either of those.}
+        \end{figure}
+      %\end{block}
+
+      \begin{block}{Energies}
+        \begin{table}[h]
+          \begin{tabular}{|l|l|}
+            \hline
+            Symbol & Meaning \\
+            \hline
+            $\pos{i}{t}$ & Position of $i$th car at time $t$\\
+            $\ori{i}{t}$ & Orientation of $i$th car at time $t$\\
+            $\dimsn{i}$ & 3D bounding box of the car (dimensions)\\
+            $\state{i}{t}$ & State of car $=\{\pos{i}{t}, \ori{i}{t}, \dimsn{i}\}$\\
+            $\egop$ & Position of camera at time $t$\\
+            $\egoo$ & Orientation of camera at time $t$\\
+            $\relp{i}{t}$ & Relative car pose w.r.t. camera \\
+            $\tracklets$ & 3D points tracked on car $i$ in its own frame\\
+            $\trackp{t}$ & Projection of $\tracklets$ in camera\\
+            $\projectionOf{.}$ & Projection function for pose $\relp{i}{t}$\\
+            $\bb{i}$ & 2D bounding box of the car in image\\
+            \hline
+          \end{tabular}
+        \end{table}
+
+        Assume conditional independence according to graphical model in
+        Figure~\ref{fig:graphmodel}, the negative log likelihood of required
+        random variables is given by
+        \begin{multline}
+          -\log{P(\{\state{i}{t}\} | \mathbb{E})} = 
+          Z' + 
+          \left(
+            \sum_{i=1}^N \sum_{t=s_i}^{e_i}
+            \WEnergy{lane} \right.\\
+            \left.
+            + \WEnergy{size}
+            + \WEnergy{dyn}
+            + \WEnergy{prior}
+            \vphantom{ \sum_{i=1}^N \sum_{t=s_i}^{e_i} }
+          \right)\\
+          +
+          \left(
+            \sum_{i,j:i\ne j}^N \sum_{t=s_i}^{e_i}  \WEnergyCol
+            + \WpEnergy{box}
+            + \WpEnergy{track}
+          \right)
+          \enspace.
+        \end{multline}
+      \end{block}
+      \begin{block}{Point tracks with occlusion}
+        We model continuous point tracks energy with explicit occlusion reasoning as
+        the expected re-projection error over the association probability,
+
+        \begin{align}
+          \pEnergy{track}(.) =
+          %\sum_{t = s_i}^{e_i}
+          \sum_{j = 1}^{M}
+          \int_1^\infty \assocP\Ereproj(\lambda) d\lambda
+        \end{align}
+        where $\assocP$ is the association probability of
+        $j$\textsuperscript{th} point with $i$\textsuperscript{th} TP at depth $\lambda$
+        and $\Ereproj(\lambda)$ is the re-projection error given by
+        %
+        \begin{align}
+          \assocP &= \Prefl\Ptrans\\
+          \Ereproj(\lambda) &= \left\|\trackpj{t+1} - \projectionOft{\invProjectionOf{\trackpj{t}, \lambda}}\right\|^2 .
+          \label{eq:reprojerror}
+        \end{align}
+
+      \end{block}
+
+    \end{column}
+
+  \begin{column}{\sepwid}\end{column}			% empty spacer column
+
+    \begin{column}{\onecolwid}
+
+      \begin{block}{Object detection with occlusion}
+        To account for occlusion we weight the error along each side of the
+        bounding box with a visibility fraction that is proportional to
+        unoccluded area around that side:
+        \begin{align}
+          \pEnergy{occ}(.) =
+          \bm{\rho}^{ij}(t)^\top\left|\projectionOf{\dimsn{i}} - \bb{i}\right|
+          \enspace,
+          %\sum_{i=1}^N \sum_{t=s_i}^{e_i}
+          %\sum_kp_{ik}^{\text{track}}(\projectionOf{\dimsn{i}} - \bb{k})^\top \pmb{\rho}(i,j,t)
+        \end{align}
+        where $\bm{\rho}^{ij}(t)$ is the visibility fraction vector of the side
+        of the bounding box.
+        
+      \end{block}
+
+      %\begin{block}{Object detection with continuous occlusion}
+      %  The detection scores GMM with occlusion is given by replacing the covariance
+      %  matrix
+      %  %
+      %  \begin{multline}
+      %    S'(\bb{i}) =\\
+      %    \sum_j A_j \exp(-(\bb{i}-\mu^{(d)}_j)^\top \Sigma'^{(d)-1}_j
+      %    (\bb{i}-\mu^{(d)}_j))
+      %  \end{multline}
+
+      %  The energy of detection scores is simply take to be the inverse of the detection score.
+      %  \begin{align}
+      %    \Energy{detect}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
+      %  \end{align}
+      %\end{block}
+
+
+
+      \begin{block}{Other Energies}
+        \begin{description}
+          \item[Lane energy]
+            \begin{multline}
+              \label{eq:laneOrientationEnergy}
+              \Energy{lane} = 
+              \sum_{m \in M_{\text{close}}}
+              (1 - \ori{i}{t} \cdot \text{tan}(L_{m}(k), \pos{i}{t}) )
+              \LaneUncertainty{\pos{i}{t}}
+            \end{multline}
+            where $M_{\text{close}} = \{m : \text{dist}(L_{m}(k), \pos{i}{t}) < 50\} $ is
+            the set of nearby lanes and 
+            \begin{multline}
+              \LaneUncertainty{\pos{i}{t}} = 
+              \frac{1}{1 + \exp{(-q(w_{\text{road}} - \text{dist}(L_{m}(k), \pos{i}{t})))}}
+            \end{multline}
+            for some constant $w_{\text{road}}$ that represents the width of the road.
+
+          \item[Holonomic energy]
+            \begin{align}
+              \label{eq:totalPosTransitionEnergy}
+              \Energy{dyn} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1})
+            \end{align}
+
+            %\begin{align}
+            %  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2\\
+            %  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2
+            %\end{align}
+
+            %\begin{align}
+            %  \WEnergy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel}
+            %\end{align}
+
+          %\item[Collision Energy]
+          %  \begin{align}
+          %    \label{eq:collisionEnergyHellingerDistance}
+          %    \EnergyCol = -\log\left(
+          %      A_{ij}
+          %      e^{-\frac{1}{8}
+          %        \left(\pos{i}{t} - \pos{j}{t}\right)^\top
+          %        P^{-1}
+          %        \left(\pos{i}{t} - \pos{j}{t}\right)
+          %      }
+          %    \right)
+          %  \end{align}
+
+          \item[Size Prior]
+            \begin{align}
+              \label{eq:totalSizeEnergy}
+              \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
+              \expDimsn)
+            \end{align}
+
+            where $\expDimsn$ is the mean TP dimensions and
+            $\Sigma_{\expDimsn}$ is the correspondence covariance matrix.
+
+        \end{description}
+      \end{block}
+      \begin{block}{Experiments and Results}
+        We perform experiments on KITTI \cite{geiger2013vision} dataset.
+        \includegraphics[width=\onecolwid]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000061.png}\\
+        \includegraphics[width=\onecolwid]{results/Visualization/City/2011_09_26_drive_0009/single_window_lane_size_bboxOcc_yawTstepWiseInference/0000000061.png}\\
+
+        
+      \end{block}
+    \end{column}
+
+  \begin{column}{\sepwid}\end{column}			% empty spacer column
+
+    \begin{column}{\onecolwid}
+      \begin{block}{}
+        \includegraphics[width=\onecolwid]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000063.png}
+      \end{block}
+      \begin{table}
+        \begin{tabular}{|l|l|r|r|r|}
+          \hline
+          Energy & Metric & Occ & Unocc & Total\\
+          \hline
+contPtTracks+size+bboxOcc+yawT  &t  &2.636&4.499&3.351\\
+                                &yaw&0.130&0.201&0.159\\
+                                &dim&0.971&1.042&1.005\\
+          \hline
+contPtTracksNoOcc+size+bbox+yawT&t  &2.648&4.488&3.355\\
+                                &yaw&0.126&0.197&0.156\\
+                                &dim&0.964&1.051&1.006\\
+          \hline
+                  size+bbox+yawT&t  &2.616&4.501&3.349\\
+                                &yaw&0.125&0.231&0.166\\
+                                &dim&0.969&1.024&0.997\\
+          \hline
+               size+bboxOcc+yawT&t  &2.615&4.505&3.350\\
+                                &yaw&0.125&0.231&0.166\\
+                                &dim&0.969&1.008&0.991\\
+          \hline
+          (Init only)           &t  &2.583&4.486&3.321\\
+                                &yaw&0.113&0.181&0.143\\
+                                &dim&0.768&0.864&0.819\\
+          \hline
+          
+        \end{tabular}
+      \end{table}
+      \begin{block}{Conclusion}
+        We use Probablistic graphical models to deduce consistent solutions from multiple sources. The results do not match our expectations and hence need further investigation.
+      \end{block}
+      \begin{block}{References}
+        {\small
+          \bibliographystyle{ieee}
+          \bibliography{continuousocclusion}
+        }
+      \end{block}
+    \end{column}
+
+  \begin{column}{\sepwid}\end{column}			% empty spacer column
+
+  \end{columns}
+\end{frame}
+\end{document}
+
+\setbeamercolor{block alerted title}{fg=black,bg=norange}	% frame color
+\setbeamercolor{block alerted body}{fg=black,bg=white}		% body color
+\begin{alertblock}{Alert Block Colours}
+  You can similarly modify the colours for alert blocks (but try not to overdo it):\\
+  \begin{semiverbatim}
+  {\color{red}\\setbeamercolor}\{block title\}\newline \{fg=black,bg=norange\}
+  \end{semiverbatim}
+  \begin{semiverbatim}
+  {\color{red}\\setbeamercolor}\{block  body\}\newline \{fg=black,bg=white\}
+  \end{semiverbatim}
+\end{alertblock}        

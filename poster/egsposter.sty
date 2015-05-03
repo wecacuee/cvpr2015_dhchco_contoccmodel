@@ -1,0 +1,129 @@
+%%
+%% This is file `egsposter.sty.  It supplements a0poster.
+%%
+%% -----------------------------------------------------------------------------
+%%
+%% Description : LaTeX package for UMich Engineering Graduate Symposium.
+%% Maintainer  : Johann Dahm <jdahm@umich.edu>
+%% Version     : 1.0 <16 October 2014>
+%%
+
+% Required packages (should be fairly standard)
+\RequirePackage{titlesec}
+\RequirePackage{xcolor}
+\RequirePackage[font=scriptsize,labelfont=bf]{caption}
+\RequirePackage{setspace}
+\RequirePackage{caption}
+\RequirePackage{enumitem}
+\RequirePackage{array}
+
+% Caption/separation/indentation setup
+\captionsetup{justification=centering,belowskip=0.1in,aboveskip=0.1in}
+\setlength{\parindent}{0.0cm}
+\setlength{\parskip}{\medskipamount}
+\setlength{\columnsep}{1in}
+
+% UM colors
+\definecolor{umblue}{rgb}{0.105, 0.164, 0.980}
+\definecolor{ummaize}{rgb}{0.95 0.78 0.15}
+
+% Font sizes
+\newcommand{\titlesize}{\fontsize{88pt}{\baselineskip}\selectfont}
+\newcommand{\authorsize}{\fontsize{42pt}{\baselineskip}\selectfont}
+\newcommand{\headingsize}{\fontsize{54pt}{\baselineskip}\selectfont}
+\renewcommand{\normalsize}{\fontsize{34pt}{\baselineskip}\selectfont}
+\renewcommand{\scriptsize}{\fontsize{22pt}{\baselineskip}\selectfont}
+
+% 1.5 line spacing (= 1.3 in TeX)
+\linespread{1.3}
+
+% Command to make title
+\renewcommand{\maketitle}{%
+  \begin{minipage}[b]{0.15\linewidth}%
+    \includegraphics[width=0.8\linewidth]{sponsors/COE.pdf}%
+  \end{minipage}%
+  % 
+  \begin{minipage}[b]{0.85\linewidth}%
+    {\titlesize\postertitle}\par%
+    %\makebox[\linewidth]{\color{ummaize}\rule{\linewidth}{2pt}}\par%
+    \vspace{0.5em}
+    {\authorsize\textit{\authors}}\par
+    \vspace{0.5em}
+    {\authorsize\departments}%
+  \end{minipage}%
+  \vspace{3em}%
+}
+
+% Section headings
+\newcommand{\sectionheading}[1]{
+  \vspace{0.5in}%
+  {\headingsize\bfseries #1}\\[-0.5em]%
+  {\color{umblue}\rule[0em]{\linewidth}{5pt}}\vspace{0.5in}%
+}
+
+% Poster
+% Provides small border
+\newenvironment{poster}{
+  \begin{center}
+    \begin{minipage}[c]{0.99\textwidth}%
+    }{
+    \end{minipage}
+  \end{center}
+}
+
+% Packed itemize
+\newenvironment{packedItemize}{%
+  \begin{itemize}[leftmargin=*,labelsep=0.2in]%
+  }{
+  \end{itemize}%
+}
+
+% Packed enumerate
+\newenvironment{packedEnumerate}{%
+  \begin{enumerate}[leftmargin=*,labelsep=0.2in]%
+  }{
+  \end{enumerate}%
+}
+
+\newcommand{\addegssponsors}{
+  % -----------------------
+  \sectionheading{Symposium Gold Sponsors}
+  % -----------------------
+
+  \begin{tabular}{>{\centering\arraybackslash}m{0.5\linewidth} >{\centering\arraybackslash}m{0.5\linewidth}}
+    \includegraphics[width=0.6\linewidth]{figs/sponsors/Exponent.pdf}
+    &
+      \includegraphics[width=0.6\linewidth]{figs/sponsors/FedEx_Office.pdf}\\
+    \includegraphics[width=0.6\linewidth]{figs/sponsors/Rackham.png}
+    &
+      \includegraphics[width=0.6\linewidth]{figs/sponsors/Sandia_National_Laboratories.pdf}\\
+    \includegraphics[width=0.9\linewidth]{figs/sponsors/COE-CFE.pdf}
+    &
+      \includegraphics[width=0.9\linewidth]{figs/sponsors/COE-CFE-MTRAC.png}
+  \end{tabular}
+}
+
+
+% The following section removes the ``References'' header and extra whitespace
+% but leaves the bibliography alone
+\makeatletter
+\renewenvironment{thebibliography}[1]
+     {%\section*{\bibname}% <-- this line was changed from \chapter* to \section*
+      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+           \leftmargin\labelwidth
+           \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\makeatother

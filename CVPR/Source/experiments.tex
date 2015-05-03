@@ -2,9 +2,7 @@
 \label{sec:experiments}
 
 
-\paragraph{Dataset}
-
-\cite{Geiger_etal_2012}
+\paragraph{Dataset} We use KITTI dataset for our experiments.  \cite{geiger2013vision}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,3 +65,48 @@ probability are assigned to the background,
 We use bounding box based assignment of point tracks to TPs as the baseline.
 For the regions where the bounding boxes overlap, we assign the points to the
 TP that has smaller mean depth then the competing bounding box.
+
+%\subsection{Qualitative Results}
+\begin{figure}
+        \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000061.png}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_lane_size_bboxOcc_yawTstepWiseInference/0000000061.png}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000063.png}
+\end{figure}
+
+%\subsection{Quantitative results}
+
+\begin{table}[h]
+    \begin{tabular}{|l|l|r|r|r|}
+      \hline
+      Energy & Metric & Occ & Unocc & Total\\
+      \hline
+\multirow{3}{*}{\pbox{3cm}{contPtTracks+size\\+bboxOcc+yawT}}  &t  &2.636&4.499&3.351\\
+                            &yaw&0.130&0.201&0.159\\
+                            &dim&0.971&1.042&1.005\\
+      \hline
+      \multirow{3}{*}{\pbox{3cm}{contPtTracksNoOcc\\+size+bbox+yawT}}&t  &2.648&4.488&3.355\\
+                            &yaw&0.126&0.197&0.156\\
+                            &dim&0.964&1.051&1.006\\
+      \hline
+      \multirow{3}{*}{size+bbox+yawT}&t  &2.616&4.501&3.349\\
+                            &yaw&0.125&0.231&0.166\\
+                            &dim&0.969&1.024&0.997\\
+      \hline
+\multirow{3}{*}{
+size+bboxOcc+yawT}&t  &2.615&4.505&3.350\\
+                            &yaw&0.125&0.231&0.166\\
+                            &dim&0.969&1.008&0.991\\
+      \hline
+\multirow{3}{*}{
+(Init only)}           &t  &2.583&4.486&3.321\\
+                            &yaw&0.113&0.181&0.143\\
+                            &dim&0.768&0.864&0.819\\
+      \hline
+      
+    \end{tabular}
+  \end{table}
+

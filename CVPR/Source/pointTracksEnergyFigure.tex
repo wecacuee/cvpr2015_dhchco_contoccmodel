@@ -1,0 +1,49 @@
+
+
+\usetikzlibrary{calc}
+
+\begin{tikzpicture}[]
+\begin{scope}[shift={(-2,0)},scale=1.5,]
+\newcommand{\x}{1}
+\drawframe{}
+\renewcommand{\x}{2}
+\drawframe{}
+\coordinate (ut) at ($.2*(a2)+.2*(b2)+.6*(c2)$); 
+\path[fill=red,draw]  (ut) circle (0.05);
+
+\renewcommand{\x}{3}
+\drawframe{}
+\coordinate (ut1) at ($.6*(a3)+.2*(b3)+.2*(c3)$);
+\path[fill=red,draw,] (ut1) circle (0.05);
+\end{scope}
+
+\caronroad{}
+\coordinate (piinvut) at ($0.1*(a) + 0.3*(g) + 0.6*(d)$);
+\path[fill=red,draw] (piinvut) circle (0.08);
+
+\camera{}
+
+\draw [->] (ut1) -- node (piinv) {} (piinvut) -- node (pi) {}  (ut);
+
+
+% Equation
+\path ($(a) + (-2,-1.5)$)  node (eq)  {$ 
+    \Energy{track}(.) = 
+  \sum_{j \in \text{tracks}} \left\|\trackpj{t} - \projectionOft{\invProjectionOf{\trackpj{t-1}}}\right\|^2$} ;
+\coordinate (equt1) at ($0.2*(eq.north west)+0.8*(eq.north east) + (0, -0.2)$);
+\draw(ut1) edge [->,thick,black!20!red,in=120,out=-90]  (equt1);
+
+\coordinate (equt) at ($0.6*(eq.north west)+0.4*(eq.north east) + (0, -0.2)$);
+\draw(ut) edge [->,thick,black!20!red,in=90,out=-90]  (equt);
+
+\coordinate (eqpiinv) at ($0.4*(eq.north west)+0.6*(eq.north east) + (0, -0.2)$);
+%\draw(piinvut) edge [->,thick,black!20!red,in=90,out=-90]  (eqpiinv);
+
+
+
+\draw[dashed,thick,blue] (c3) -- (f);
+\draw[dashed,thick,blue] (a3) -- (a);
+
+
+
+\end{tikzpicture}

@@ -258,7 +258,7 @@
 
 
 % 3D pose of the cars and ego motion
-\newcommand{\pos}[2]{\mathbf{p}^{#1}(#2)}
+\newcommand{\pos}[2]{\mathbf{p}^{#1}({#2})}
 \newcommand{\ori}[2]{\mathbf{\omega}^{#1}(#2)}
 \newcommand{\state}[2]{\mathbf{s}^{#1}(#2)}
 
@@ -275,6 +275,7 @@
 \newcommand{\tracklets}{\mathbf{X}^{(i)}_o}
 \newcommand{\tracklet}[1]{\mathbf{x}^{(i)}_{#1}}
 % track projections on camera
+\newcommand{\trackpit}[2]{\mathbf{u}^{(#1)}(#2)}
 \newcommand{\trackp}[1]{\mathbf{u}^{(i)}(#1)}
 \newcommand{\trackpj}[1]{\mathbf{u}_j(#1)}
 % Unclassified track point projected on camera
@@ -293,12 +294,15 @@
 \newcommand{\triangleProj}[1]{\triangle^{#1}_{\relp{i}{t}}(\dimsn{i})}
 
 % bounding box corners on image
+\newcommand{\bbt}[2]{\mathbf{d}^{#1}({#2})}
 \newcommand{\bb}[1]{\mathbf{d}^{#1}(t)}
+
 
 \newcommand{\Energy}[1]{\mathcal{E}^{it}_{\text{#1}}}
 \newcommand{\pEnergy}[1]{\mathcal{E}^{ijt}_{\text{#1}}}
 % Weighted energy
 \newcommand{\WEnergy}[1]{\lambda_{\text{#1}}\Energy{#1}}
+\newcommand{\WpEnergy}[1]{\lambda_{\text{#1}}\pEnergy{#1}}
 \newcommand{\EnergyCol}{\mathcal{E}^{ijt}_{\text{col}}}
 \newcommand{\WEnergyCol}{\lambda_{\text{col}}\EnergyCol}
 
@@ -327,7 +331,8 @@
 \newcommand{\assocPk}{a^{(ij)}(\lambda_k)}
 
 \newcommand{\Ereproj}{E^{(ij)}_{\text{reproj}}}
-\newcommand{\Ptrans}{P^{(j)}_{\text{transmission}}(\lambda)}
+\newcommand{\Ptransarg}[1]{P^{(j)}_{\text{transmission}}(#1)}
+\newcommand{\Ptrans}{\Ptransarg{\lambda}}
 \newcommand{\Ptransmud}{P^{(j)}_{\text{transmission}}(\mu^{(i)}_d)}
 \newcommand{\Prefl}{P^{(ij)}_{\text{reflection}}(\lambda)}
 \newcommand{\dishort}{d_i(\mathbf{x})}
@@ -370,6 +375,6 @@
 %\DeclareMathSymbol{\Tangent}
 \DeclareMathOperator{\sech}{sech}
 \DeclareMathOperator{\poly}{poly}
-\DeclareMathOperator*{\argmin}{\arg\min}
+%\DeclareMathOperator*{\argmin}{\arg\min}
 
 
