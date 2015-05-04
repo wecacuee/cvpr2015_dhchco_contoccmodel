@@ -1,6 +1,42 @@
-\begin{frame}{Qualitative results}
+\begin{frame}{Qualitative results: Our system}
   % Show some impressive qualitative results that are better than naive
   % initialization
+  \centering
+  \includemedia[label=allenergies,
+    width=\linewidth,height=0.6\linewidth, % 16:9
+    activate=pageopen,
+  addresource=graphics/allenergies.mp4,
+  flashvars={
+    source=graphics/allenergies.mp4
+    &loop=true             % loop video
+    &scaleMode=letterbox   % preserve aspect ratio while scaling the video
+  }
+]{Video}{VPlayer.swf}
+
+
+\end{frame}
+
+\begin{frame}{Association results}
+
+\begin{align}
+  P^{(ij)}_{\text{assoc by reproj}}(\lambda) &= \frac{1}{Z}\exp(-\Ereproj(\lambda))\\
+  P^{(ij)}_{\text{assoc}} &= \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda
+  \label{eq:prob-assoc}
+\end{align}
+\begin{table}
+  \centering
+  \begin{tabular}{lrrr}
+    \toprule
+    Algorithm & Total & Unoccluded cars & Occluded cars \\
+    \midrule
+    bounding box only & 0.21 & \textbf{0.03}  & 0.36\\
+    Using $P^{(ij)}_{\text{assoc}}$ & \textbf{0.21} & 0.08 & \textbf{0.32}\\
+    Using $\assocP{}$ & 0.23 & 0.09 & 0.34 \\
+    Using $P^{(ij)}_{\text{assoc by reproj}}$ & 0.23 & 0.08 & 0.34\\
+    \bottomrule
+  \end{tabular}
+  %\caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
+\end{table}
 \end{frame}
 
 \begin{frame}{Quantitative results}
@@ -25,21 +61,33 @@
 
 \end{frame}
 
-\begin{frame}{What to do about negative results}
+\begin{frame}{What is wrong with the results?}
   % Outliers in point tracks
   % Outliers in detections
   % Poor inference methods
+  \begin{itemize}
+    \item Inference is slow
+    \item Learning parameters is difficult with slow inference
+    \item Poor parameters cause poor results
+  \end{itemize}
   % Parameter learning
   % Simplify graphical model
   % Approximate graphical model to a tree
   % Use discretization for belief propagation followed by gradient descent
 \end{frame}
-
-\begin{frame}{Conclusion}
+\begin{frame}{What to do?}
+  \begin{itemize}
+    \item Speedup inference
+    \item Simplify graph by \cite{chow1968approximating} tree approximation
+    \item Use belief propagation for faster inference on trees
+  \end{itemize}
   
 \end{frame}
 
-\begin{frame}{Thank you}
-    
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Our occlusion aware 3D modeling improves association
+    \item ... but requires more work to show improvement on localization
+  \end{itemize}
+  
 \end{frame}
-

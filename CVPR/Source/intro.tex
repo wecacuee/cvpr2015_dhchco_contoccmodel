@@ -1,5 +1,3 @@
-\section{Introduction}
-\label{sec:intro}
 
 % \begin{tight_itemize}
 %   \item Introduce the problem
@@ -19,43 +17,17 @@
         We formulate the problem of 3D localization in a probabilistic graphical
         model specifically a factor graph model. We use additional heuristic
         constraints like collision constraint, that leads to a global consistent solution.
-        Using these multiple sources of information that provide, possibly conflicting, evidence about
+        Using these multiple sources of information that provide, possibly conflicting evidence about
         the location of traffic participant, a consistent meaningful solution must be estimated. 
         We formulate the problem in factor graph
         formalism and use off-the-shelf methods for inference.
 
-        Our work is quite similar to that of Milan et
-        al~\cite{Milan_etal_2014}, except that we provide a optics based
-        perspective to occlusion modeling and our modeling is more detailed
-        than that used in Milan et al. In terms of application we perform 3D
-        localization using monocular camera while \cite{Geiger_etal_2014} use
-        stereo for similar results.
+        Our main contribution is a novel continous occlusion aware 3D object
+        modeling. This modeling is more principled than the continuous occlusion models proposed by Milan et al~\cite{Milan_etal_2014}, as our model is in 3D and derives it reasoning from fundamentals of optics. 
+         In other words, we provide a optics based
+        perspective to occlusion modeling. Also we propose a unique point
+        tracks energy that is based on reprojection error and occlusion based
+        association probability. Our experiments show that association
+        probability provides more accurate point to object association than
+        using simple bounding box based methods.
 
-\begin{figure}[!!t]
-  %\includegraphics[width=\columnwidth]{Figures/graphicalModelFrom61ConstVars.pdf}
-  \begin{center}
-  \input{Source/graphical_model_multiple}
-  \end{center}
-  \caption{Graphical model. The six numbered black circles represent the
-    unknown state variables of each car. All other nodes in the graphical model
-    are assumed
-    observed variables. Consider each energy in the model one by one. (1)
-    Bounding box energy: The bounding box energy without occlusion modeling is
-    a unary term, but with occlusion it becomes a higher order term that
-    affects the state of occluder as well. In this graphical model we assume
-    that the scene is being observed from left to right, hence "2" occludes "6"
-    and "5" and "5" occludes "1". The bounding box detection is represented by
-  $\mathbf{d}_{bb}^i(t)$ and the statistical dependencies are represented by
-  red lines. (2) Point tracks ($\Energy{track}$): Since occlusion is also
-  included in modeling point tracks energy we have similar interdependencies
-  for point tracks energy. The available point tracks are modeled by
-  $\mathbf{u}(t)$. (3) Collision ($\Energy{coll}$) : The collision energy
-  mathematically is a dense graph between all the TP but here we represent
-  collision among only those TP that are near enough to have a significant
-collision energy. (4) Orientation from detection ($\Energy{ori}$) (5) Orientation from lane (and map) information ($\Energy{lane}$)}
-  \label{fig:graphmodel}
-\end{figure}
-\begin{figure}
-  \centering
-  \include{Source/graphicalmodelTP}
-\end{figure}

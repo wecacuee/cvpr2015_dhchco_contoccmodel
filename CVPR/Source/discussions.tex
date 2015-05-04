@@ -1,4 +1,11 @@
 \section{Discussion and Future Work}
 \label{sec:discussions}
-The method is promising but we are not getting results as expected hence
-requires more investigation.
+
+Our experiments shows that our association probability produces more accurate point to object associations when compared to simple bounding box based association. This shows that our occlusion aware 3D representation of objects works. However the localization experiment results do not show significant improvements by using more complicated models. 
+
+% \section{Possible sources of error}
+Since the results are averaged over the entire KITTI dataset, there are various possible sources of error, including outliers in point tracks, outliers in detections results. By noting that the dimension error is lower for fewer energies and translation error follows a relatively unpredictable trend, we stress on the requirement of learning of energy weights $\lambda_{\text{col,bbox,track,lane,dyn,size}}$. However, because of slow inference algorithms, which take about a day to run on 300 cores for the entire KITTI dataset, learning become infeasible.
+
+%\section{Possible ways of improving the results}
+We have several ideas for speeding up inference and thereby allowing learning
+of weights to become feasible. One of them is to approximate the graph into a tree using Chow-Liu's \cite{chow1968approximating} algorithm and then using Belief Propagation which is linear in the number of edges of the tree.

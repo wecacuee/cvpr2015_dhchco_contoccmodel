@@ -317,6 +317,7 @@
 \newcommand{\face}{F^i_k(t)}
 
 \newcommand{\invProjectionOf}[1]{\pi^{-1}_{\relp{i}{t}}\left(#1\right)}
+\newcommand{\invProjectionOftm}[1]{\pi^{-1}_{\relp{i}{t-1}}\left(#1\right)}
 \newcommand{\occf}{f^i_{occ}(\mathbf{x}_j)}
 \newcommand{\occftot}{f_{occ}(\mathbf{x}_j)}
 \newcommand{\occft}[1]{f_{occ}(#1)}
@@ -348,14 +349,25 @@
 
 \newcommand{\Sigmait}{\Sigma^{(i)^{-1}}_t}
 
-\newcommand{\muit}{\mu^(i)_t}
+\newcommand{\muit}{\mu^{(i)}_t}
 \newcommand{\Sigmaic}{\Sigma'^{(i)^{-1}}_c}
 
-\newcommand{\muic}{{\mu^(i)_c}}
+\newcommand{\muic}{{\mu^{(i)}_c}}
 \newcommand{\Sigmaicf}{\Sigma^{(i)^{-1}}_c}
 
 \newcommand{\muiu}{\mu^{(i)}_t}
 \newcommand{\Sigmaiu}{\Sigma^{(i)^{-1}}_u}
+
+\newcommand{\uv}[1]{\hat{\mathbf{#1}}}
+\newcommand{\Tr}[3]{{}^{#1}{#2}_{#3}}
+\newcommand{\xymin}[1]{#1_{\text{min}}}
+\newcommand{\xymax}[1]{#1_{\text{max}}}
+% \newcommand{\xmin}{\xymin{x}}
+% \newcommand{\xmax}{\xymax{x}}
+% \newcommand{\ymin}{\xymin{y}}
+% \newcommand{\ymax}{\xymax{y}}
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\map}{\vect{x}}
 
 \newcommand{\xt}{\mathbf{x}_t}
 \newcommand{\xc}{\mathbf{x}_c}
@@ -373,6 +385,7 @@
 
 
 %\DeclareMathSymbol{\Tangent}
+\DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\sech}{sech}
 \DeclareMathOperator{\poly}{poly}
 %\DeclareMathOperator*{\argmin}{\arg\min}

@@ -1,18 +1,28 @@
-\section{Occlusion-Aware 3D Object Modeling}
-\label{sec:TPmodel}
 
-In this section, we introduce our representation of 3D traffic participants and our modeling of object-object occlusion relationships. We refer the reader to Figure [[FIGURE]] for an illustration of the proposed concepts.
+In this section, we introduce our representation of 3D traffic participants and our modeling of object-object occlusion relationships. We refer the reader to Figure~\ref{fig:reflectiontransimission} for an illustration of the proposed concepts.
+
+\begin{figure}
+  \usetikzlibrary{calc}
+  \centering
+  \begin{tikzpicture}
+    \input{Source/reflectiontransmissiongraph.tex}
+  \end{tikzpicture}
+  \caption{We represent traffic participants as soft ellipsoids which lead to formulation of transmision and reflection probability. This figure shows the reflection probability for the first car which is highest around the camera facing face of the car. Also note that transmission probability is inversly proportional to occupancy.}
+  \label{fig:reflectiontransimission}
+\end{figure}
+
+
 
 \paragraph{Occupancy model for traffic participants}
-Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whos opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at location $\bx$ corresponding to a traffic participant $i$ centered at $\bp$ as:
+Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whos opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at location $\bx$ corresponding to a traffic participant $i$ centered at $\pos{i}{t}$ as:
 \begin{align}
-  \occft{\bx} = \cL(\bx; \bp, \bSigma)
+  f_{\text{occ}}{\bx} = \cL(\bx; \pos{i}{t}, \bSigma_i)
 \end{align}
 where $\cL(\cdot)$ is the logistic function given by
 \begin{align}
   L(\bx; \bp, \bSigma) = \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp))}},
 \end{align}
-with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends of the dimensions of the traffic participant. Please refer to the additional material for computation of $\bSigma$ from object dimensions.
+with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends of the dimensions of the traffic participant. Please refer to the Appendix~\ref{sec:appendix} for computation of $\bSigma$ from object dimensions.
 
 
 \paragraph{Image formation}
@@ -25,15 +35,15 @@ The reflection probability ensures the presence of an object to constitute the o
 
 
 \paragraph{Reflection probability}
-Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\ray = \displaystyle\frac{\bK^{-1}\bu_j}{\lVert \bK^{-1}\bu_j \rVert}$ be the corresponding unit vector along the backprojected ray from the camera center. Then, the probability of reflection at depth $\lambda$ along the ray $\ray$, by an object $O_i$, is determined by the object's gradient of the occupancy function $f_{occ}^i$:
+Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let the image was formed using camera with intrinsic matrix $\bK$. Let $\ray = \frac{\bK^{-1}\bu_j}{\lVert \bK^{-1}\bu_j \rVert}$ be the corresponding unit vector along the backprojected ray from the camera center. Then, the probability of reflection at depth $\lambda$ along the ray $\ray$, by an object $O_i$, is determined by the object's gradient of the occupancy function $f_{occ}^i$:
 \begin{align}
   P^{ij}_{\textit{reflection}} (\lambda) = (\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2
 \end{align}
-The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object object, the above reverts to a (squared) Lambertian reflection.
+The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object being lambertial, the above reverts to a (squared) Lambertian reflection.
 
 
 \paragraph{Transmission probability}
-A model for transmission of light through a material of thickness $\alpha$, density $\rho$ and opacity $\beta$ is given by the Beer-Lambert Law:
+Since we are modeling occupancy as transparency, we look towards optics for modeling of translucent objects. A model for transmission of light through a material of thickness $\alpha$, density $\rho$ and opacity $\beta$ is given by the Beer-Lambert Law:
 \begin{align}
 I(x) = I_0 e^{-\beta\rho\alpha}.
 \end{align}
@@ -46,10 +56,10 @@ In our formulation of scene occupancy, both opacity and density at a scene point
 %
 For an image point $\bu_j$ to correspond to a 3D point $\bx_j$ at depth $\lambda$ along the backprojected ray $\ray$, the ray must be transmitted through space with the probability
 \begin{align}
-P^j_{\textit{transmission}}(\lambda) = \prod_{0}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda},
+P^j_{\textit{transmission}}(\lambda) = \prod_{f}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda},
 \label{eq:ptrans-integral}
 \end{align}
-where $\displaystyle\prod_{0}^{\lambda}$ represents the \emph{product integral} from $0$ to $\lambda$.\footnote{A product integral is a simple integral in log domain: 
+where $\displaystyle\prod_{f}^{\lambda}$ represents the \emph{product integral} from $f$ to $\lambda$ and $f$ is the position of camera screen which has been taken equivalent to focal length of the camera .\footnote{A product integral is a simple integral in log domain: 
 \vspace{-0.2cm}
 \begin{equation}
 \prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda} = e^{\int_{1}^{\lambda} \ln{(1 - f_{occ}(\lambda \ray))}{d\lambda}}. \nonumber
@@ -72,7 +82,6 @@ where $\cL_u(.)$ is sigmoid in image domain, with $\bmu^i_u$ and $\bGamma_i$ rep
 %
 
 Thus, we have modeled the transmission probability to effectively capture the effect of occlusion due to all traffic participants in a scene that lie along a particular ray. We reiterate that our reflection and transmission probabilities are continuous functions, which allows us to define continuous energy functions for association and 3D object localization, as described in the next section.
-
 
 %\paragraph{Probabilistic occlusion levels}
 %With the above modeling and using \eqref{eq:imgform}, 
@@ -175,3 +184,25 @@ Thus, we have modeled the transmission probability to effectively capture the ef
 %%   \end{align}
 %% \end{comment}%% Comment
 
+% \paragraph{Notation}
+% We summarize the notation used in the report for quick reference.
+% \\
+% 
+% 
+%   \begin{tabular}{|l|l|}
+%     \hline
+%     Symbol & Meaning \\
+%     \hline
+%     $\pos{i}{t}$ & Position of $i$th car at time $t$\\
+%     $\ori{i}{t}$ & Orientation of $i$th car at time $t$\\
+%      $\dimsn{i}$ & 3D bounding box of the car (dimensions)\\
+%     $\state{i}{t}$ & State of car $=\{\pos{i}{t}, \ori{i}{t}, \dimsn{i}\}$\\
+%     $\egop$ & Position of camera at time $t$\\
+%     $\egoo$ & Orientation of camera at time $t$\\
+%     $\relp{i}{t}$ & Relative car pose w.r.t. camera \\
+%     $\tracklets$ & 3D points tracked on car $i$ in its own frame\\
+%     $\trackp{t}$ & Projection of $\tracklets$ in camera\\
+%     $\projectionOf{.}$ & Projection function for pose $\relp{i}{t}$\\
+%     $\bb{i}$ & 2D bounding box of the car in image\\
+%     \hline
+%   \end{tabular}

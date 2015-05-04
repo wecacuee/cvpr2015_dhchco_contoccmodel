@@ -1,0 +1,25 @@
+We use two methods for inference, Metropolic Hastings and block coordinate descent. We briefly describe the inference algorithms for completeness.
+
+\section{Metropolis Hastings}
+Metropolis Hastings requires a \emph{transition probability} $Q(\map'|
+\map^r)$, that depends on current sample $\map^r$ and guides
+the random walk in the high-dimensional space. We randomly sample a point
+$\map'$ from from $Q(.)$ and it is either accepted or rejected based on the
+\emph{acceptance probability} $a$:
+\begin{align}
+  a = \frac{P(\map')Q(\map^r| \map')}
+  {P(\map^r)Q(\map'| \map^r)}
+  \enspace,
+\end{align}
+where $P(\map)$ is joint probability of the model at point $\map$.
+
+If $a \ge 1$, then the new point $\map'$ is accepted otherwise it is accepted
+with probability $a$. Here acceptance means that the point in the next
+iteration is taken as the sampled point otherwise the earlier point is retained.
+
+\section{Block Coordinate Descent}
+
+We use block coordinate descent algorithm on our factor graph, by iteratively
+minimizing the energy with respect to only a subset (block) of random 
+variables. We choose to divide the blocks along the
+variable types like dimension, yaw and position. Hence we iteratively minimize the energies with respect to dimension variables, then with respect to yaw variables and then with respect to position variables. Since we know the dependence of parts of our energy on specific variables, thanks to factor graph formulation, we can minimize the energies corresponding to the given set of variables.

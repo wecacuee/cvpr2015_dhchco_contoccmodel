@@ -2,7 +2,7 @@
 \label{sec:experiments}
 
 
-\paragraph{Dataset} We use KITTI dataset for our experiments.  \cite{geiger2013vision}
+\paragraph{Dataset} We use KITTI dataset for our experiments.  \cite{geiger2013vision}. KITTI dataset is a labeled video sequence of road scenes under variety of driving conditions including highways and residential areas in Karlsruhe, Germany. It provides manually labelled ground truth data for localization of cars and also uses velodyne data provide metrically accurate estimates of cars location.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,7 +51,7 @@ term as negative log of probability
 
 Using both the evidence terms we can write probability of association as
 \begin{align}
-  P^{(ij)}_{\text{assoc}} = \frac{1}{Z'}\int_0^{\infty} \assocP \frac{1}{\sqrt{2\pi}}\exp(-\Ereproj(\lambda))d\lambda
+  P^{(ij)}_{\text{assoc}} = \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda
   \label{eq:prob-assoc}
 \end{align}
 
@@ -66,47 +66,53 @@ We use bounding box based assignment of point tracks to TPs as the baseline.
 For the regions where the bounding boxes overlap, we assign the points to the
 TP that has smaller mean depth then the competing bounding box.
 
-%\subsection{Qualitative Results}
-\begin{figure}
-        \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000061.png}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_lane_size_bboxOcc_yawTstepWiseInference/0000000061.png}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000063.png}
-\end{figure}
+\begin{table}
+  \centering
+  \begin{tabular}{lrrr}
+    \toprule
+    Algorithm & Total & Unoccluded cars & Occluded cars \\
+    \midrule
+    bounding box only & 0.21 & \textbf{0.03}  & 0.36\\
+    Using $P^{(ij)}_{\text{assoc}}$ & \textbf{0.21} & 0.08 & \textbf{0.32}\\
+    Using $\assocP{}$ & 0.23 & 0.09 & 0.34 \\
+    Using $P^{(ij)}_{\text{assoc by reproj}}$ & 0.23 & 0.08 & 0.34\\
+    \bottomrule
+  \end{tabular}
+  \caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
+\end{table}
+
+
+\paragraph{Localization Experiment}
+Localization is the main goal of our project. We estimate the position, orientation and dimensions of the car with our framework and compute the error in birds eye view domain along the ground plane. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.
+
+% %\subsection{Qualitative Results}
+% \begin{figure}
+%         \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000061.png}
+% \end{figure}
+% \begin{figure}
+%   \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_lane_size_bboxOcc_yawTstepWiseInference/0000000061.png}
+% \end{figure}
+% \begin{figure}
+%   \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000063.png}
+% \end{figure}
 
 %\subsection{Quantitative results}
 
-\begin{table}[h]
-    \begin{tabular}{|l|l|r|r|r|}
-      \hline
-      Energy & Metric & Occ & Unocc & Total\\
-      \hline
-\multirow{3}{*}{\pbox{3cm}{contPtTracks+size\\+bboxOcc+yawT}}  &t  &2.636&4.499&3.351\\
-                            &yaw&0.130&0.201&0.159\\
-                            &dim&0.971&1.042&1.005\\
-      \hline
-      \multirow{3}{*}{\pbox{3cm}{contPtTracksNoOcc\\+size+bbox+yawT}}&t  &2.648&4.488&3.355\\
-                            &yaw&0.126&0.197&0.156\\
-                            &dim&0.964&1.051&1.006\\
-      \hline
-      \multirow{3}{*}{size+bbox+yawT}&t  &2.616&4.501&3.349\\
-                            &yaw&0.125&0.231&0.166\\
-                            &dim&0.969&1.024&0.997\\
-      \hline
-\multirow{3}{*}{
-size+bboxOcc+yawT}&t  &2.615&4.505&3.350\\
-                            &yaw&0.125&0.231&0.166\\
-                            &dim&0.969&1.008&0.991\\
-      \hline
-\multirow{3}{*}{
-(Init only)}           &t  &2.583&4.486&3.321\\
-                            &yaw&0.113&0.181&0.143\\
-                            &dim&0.768&0.864&0.819\\
-      \hline
-      
-    \end{tabular}
-  \end{table}
+\begin{table}
+  \centering
+  \begin{tabular}{lrrr}
+    \toprule
+    Energy & t & yaw & dim \\
+    \midrule
+    lane+contPtTracksNoOcc+size+bbox+posT   & 3.80 & 0.91 & 1.58 \\
+    lane+contPtTracks+size+bboxOcc+posT+col & \textbf{3.78} & 0.91 & 1.58 \\
+    lane+contPtTracks+size+bboxOcc+posT     & 3.81 & 0.92 & 1.59 \\
+    lane+size+bboxOcc+posT+col              & 3.92 & 0.91 & 1.15 \\
+    lane+size+bboxOcc+posT                  & 3.83 & 0.90 & 1.14 \\
+    lane+size+bbox+posT                     & 3.83 & 0.90 & \textbf{1.14} \\
+    initialization                          & 3.79 & \textbf{0.86} & 1.64 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
+\end{table}
 

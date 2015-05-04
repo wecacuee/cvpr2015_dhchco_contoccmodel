@@ -1,38 +1,35 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Continuous Energies for Object Localization}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We explain energies in this section.
+With the understanding of our occlusion aware 3D representation of objects, we are know in position to describe the energies that we defined in Chapter~\ref{sec:setup}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Point tracks energy with occlusion}
+\section{Point tracks energy with occlusion}
 \label{sec:totalContPtTracksEnergy}
 We model continuous point tracks energy with explicit occlusion reasoning as
 the expected re-projection error over the association probability,
 
-\begin{multline}
-  \Energy{traci}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \\
+\begin{align}
+  \Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = 
     \sum_{i=1}^{N} 
     %\sum_{t = s_i}^{e_i}
     \sum_{j = 1}^{M}
     \int_1^\infty \assocP\Ereproj(\lambda) d\lambda
-\end{multline}
+\end{align}
 where $\assocP$ is the association probability of
-$j$\textsuperscript{th} point with $i$\textsuperscript{th} TP at depth $\lambda$
+$j$\textsuperscript{th} point with $i$\textsuperscript{th} TP at depth $\lambda$, $\{ \relp{i}{t} \}_i$ are the poses of all occluding objects at time $t$, $ \{ \dimsn{i} \}_i$ are the dimensions of all objects that occlude $i$
 and $\Ereproj(\lambda)$ is the re-projection error given by
 %
 \begin{align}
   \assocP &= \Prefl\Ptrans\\
-  \Ereproj(\lambda) &= \left\|\trackpj{t+1} - \projectionOft{\invProjectionOf{\trackpj{t}, \lambda}}\right\|^2 .
+  \Ereproj(\lambda) &= \left\|\trackpj{t} - \projectionOf{\invProjectionOftm{\trackpj{t-1}, \lambda}}\right\|^2 .
   \label{eq:reprojerror}
 \end{align}
 
-The  $\projectionOf{.}$ and $\invProjectionOf{.}$ denote the projection and
+The  $\projectionOf{.}$ and $\invProjectionOftm{.}$ denote the projection and
 inverse projection functions that project 3D point to camera image and vice
 versa. Note that inverse projection $\invProjectionOf{.}$ depend on both the
-point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on TP pose at time $t$ while the projection depends on pose at time $t+1$ which can be different.
+point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on TP pose at time $t-1$ while the projection depends on pose at time $t$ which can be different.
 
 \begin{comment}
-  \subsubsection{Occupancy function}
+  \subsection{Occupancy function}
   Assuming occupancy to be a
   probability distribution over 3D space. For each TP the
   occupancy is modeled as a logistic function 
@@ -56,7 +53,7 @@ point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse p
 
 
 \begin{comment}
-  \subsubsection{Approximations}
+  \subsection{Approximations}
   Reflection probability of $i$th TP is easy to compute
   analytically 
   \begin{multline}
@@ -75,7 +72,7 @@ point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse p
 
   However, the transmission probability needs to be approximated.  
   %
-  % \subsubsection{Computing $\Prefl$ and $\Ptrans$}
+  % \subsection{Computing $\Prefl$ and $\Ptrans$}
   % Focusing on  $\nabla \occfxi$ 
   % 
   % \begin{multline}
@@ -176,7 +173,7 @@ point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse p
   The integral in the above expression is computed numerically.
 \end{comment}
 
-\subsection{Object detection energy with occlusion} 
+\section{Object detection energy with occlusion} 
 
 Object detection is usually followed by non-maximal suppression that results in
 discarding similar bounding boxes. When we are jointly optimizing detections
@@ -195,7 +192,7 @@ non-maximal suppressed outputs. Here $\mu^{(d)}_j$ is one of the $k$ modes as a
 \maxy]^\top$. The optimization is constrained with symmetry and positive
 definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
 
-\subsubsection{Detection scores with occlusion reasoning} 
+\subsection{Detection scores with occlusion reasoning} 
 With our model of $\Ptrans$ described in Section \ref{sec:TPmodel}, we can
 compute the probability of a point $\mathbf{u}$ on image be occluded assuming
 the point is on TP $i$ with mean depth $\mu^{(i)}_d$ as
@@ -203,14 +200,14 @@ the point is on TP $i$ with mean depth $\mu^{(i)}_d$ as
   O_{i}(\mathbf{u}, \mu^{(i)}_d) = 1 - \Ptransmud \enspace .
 \end{align}
 
-If we a portion of our proposed detection bounding box is known to be occluded,
-then we would like to decrease the confidence in the detection score about the
-localization of that end of the object. Assuming that the occlusion is often on
-the boundary of detection bounding boxes, we want to decrease our confidence on
-the mean detection boundaries around the occluded boundaries. 
+If we know a portion of our proposed detection bounding box is known to be
+occluded, then we would like to decrease the confidence in the detection score
+about the localization of that end of the object. Assuming that the occlusion
+is often on the boundary of detection bounding boxes, we want to decrease our
+confidence on the mean detection boundaries around the occluded boundaries.
 One of the simplest ways will be to scale the appropriate diagonal element of
 $\Sigma_j$ by an appropriate scaling factor proportional to occlusion. But this
-does not model appropriate how does occlusion affects the non diagonal terms.
+does not model explain the affect of occlusion on the non diagonal terms.
 Hence, we choose a covariance addition model where we compute a occlusion
 covariance matrix, that provides a measure of occlusion in each direction.
 
@@ -228,40 +225,40 @@ $\mathcal{P}_{j} = \rho_{j}\rho_{j}^\top$ where $\rho_{j} = O_{j}(\mathbf{u},
 The detection scores GMM with occlusion is given by replacing the covariance
 matrix
 %
-\begin{multline}
-  S'(\bb{i}) =\\
+\begin{align}
+  S'(\bb{i}) =
   \sum_j A_j \exp(-(\bb{i}-\mu^{(d)}_j)^\top \Sigma'^{(d)-1}_j
   (\bb{i}-\mu^{(d)}_j))
-\end{multline}
+\end{align}
 
 The energy of detection scores is simply take to be the inverse of the detection score.
 \begin{align}
   \Energy{detect}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
 \end{align}
 
-\subsection{Lane energy}
+\section{Lane energy}
 \label{sec:laneEnergy}
  The lanes are modeled as splines. Here we assume that the confidence in lane
  detection is decreases as the distance from the lane center increases.  The
  energy is given by the dot product between car orientation and tangent to the
  lane at that point.
 
-\begin{multline}
+\begin{align}
   \label{eq:laneOrientationEnergy}
-  \Energy{lane} = \\
+  \Energy{lane} = 
   \sum_{m \in M_{\text{close}}}
   (1 - \ori{i}{t} \cdot \text{TAN}(L_{m}(k), \pos{i}{t}) )
 \LaneUncertainty{\pos{i}{t}}
-\end{multline}
-where $M_{\text{close}} = \{m : \text{DIST}(L_{m}(k), \pos{i}{t}) < 50\} $ is
-the set of nearby lanes and 
-\begin{multline}
-\LaneUncertainty{\pos{i}{t}} = \\
-  \frac{1}{1 + exp(-q(w_{\text{road}} - \text{DIST}(L_{m}(k), \pos{i}{t})))}
-\end{multline}
+\end{align}
+where $M_{\text{close}} = \{m : \text{DIST}(L_{m}(k), \pos{i}{t}) < d_{\text{thresh}}\} $ is
+the set of nearby lanes close to the object by a certain distance threshold $d_{\text{thresh}}$ and 
+\begin{align}
+\LaneUncertainty{\pos{i}{t}} = 
+  \frac{1}{1 + \exp(-q(w_{\text{road}} - \text{DIST}(L_{m}(k), \pos{i}{t})))}
+\end{align}
 for some constant $w_{\text{road}}$ that represents the width of the road.
 
-\subsection{Transition probability}
+\section{Transition probability}
 Dynamics constraints should not only enforce smooth trajectories, but also the
 holonomic constraints.  The following energy adds a penalty if the change in
 position is not in direction of previous orientation.
@@ -289,7 +286,7 @@ constraint and smoothness constraints.
 \end{align}
 
  
-\subsection{Collision energy}
+\section{Collision energy}
 
 Bhattacharya coefficient $\int_a^b\sqrt{p(x)q(x)}dx$ is a measure of similarity
 of two distributions $p(x)$ and $q(x)$. If we represent TPs as gaussians in
@@ -299,9 +296,10 @@ overlapping distribution results in coefficient as 1.
 %Bhattacharya coefficient has been taken from
 %\url{http://like.silk.to/studymemo/PropertiesOfMultivariateGaussianFunction.pdf}
 
-\begin{multline}
+\begin{align}
   \label{eq:collisionEnergyHellingerDistance}
-  \EnergyCol =\\ -\log\left(
+  \EnergyCol =
+  -\log\left(
   A_{ij}
   e^{-\frac{1}{8}
     \left(\pos{i}{t} - \pos{j}{t}\right)^\top
@@ -309,18 +307,17 @@ overlapping distribution results in coefficient as 1.
     \left(\pos{i}{t} - \pos{j}{t}\right)
     }
     \right)
-\end{multline}
-where 
-\begin{align}
-  A_{ij} &= \frac{|\Sigma_i|^\frac{1}{4}|\Sigma_j|^\frac{1}{4}}
-  {|P|^\frac{1}{2}}\\
-  P &= \frac{1}{2}\Sigma_i + \frac{1}{2}\Sigma_j\\
-\Sigma_i^{-1} &= R^\top_{\ori{i}{t}} \begin{bmatrix} 2/l_i & 0 \\ 0 & 2/w_i \end{bmatrix}
-R_{\ori{i}{t}}
 \end{align}
+where 
+\begin{multline}
+  A_{ij} = \frac{|\Sigma_i|^\frac{1}{4}|\Sigma_j|^\frac{1}{4}}{|P|^\frac{1}{2}}, \hfill
+  P = \frac{1}{2}\Sigma_i + \frac{1}{2}\Sigma_j, \hfill
+\Sigma_i^{-1} = R^\top_{\ori{i}{t}} \begin{bmatrix} 2/l_i & 0 \\ 0 & 2/w_i \end{bmatrix}
+R_{\ori{i}{t}}
+\end{multline}
 
 
-\subsection{Size Prior}
+\section{Size Prior}
 
 Prior can include among many other things the size prior on the car.
 
