@@ -1,15 +1,44 @@
 \documentclass[10pt, compress]{beamer}
 \usetheme[usetitleprogressbar]{m}
-
-\usepackage{booktabs}
-\usepackage{pdfpages}
-\usepackage{natbib} 
-\usepackage{media9}
-
+ 
+ \usepackage{booktabs} % for better tables
+ \usepackage{natbib}  % for better citations
+ \usepackage{media9} % for includemedia i.e. videos
+ \usepackage{xcolor} % for more colors
+ 
 \usepackage{tikz}
 \usetikzlibrary{shadows,trees}
 \usetikzlibrary{shapes,calc,backgrounds}
+\usetikzlibrary{fadings}
 \usepackage{tikz3d}
 \usepgfplotslibrary{dateplot}
+
 \input{preamble}
 \input{Source/drawingslib}
+\input{Source/problemflowchart}
+\newcommand{\colcol}{\color{blue}}
+\newcommand{\colbbox}{\color{green!50!black}}
+\newcommand{\coltrack}{\color{red}}
+\newcommand{\collane}{\color{cyan}}
+\newcommand{\colsize}{\color{magenta}}
+\newcommand{\coldyn}{\color{orange}}
+\let\oldWEnergyCol\WEnergyCol
+\renewcommand{\WEnergyCol}{{\colcol\oldWEnergyCol}}
+\newcommand{\WEnergyBBox}{{\colbbox\WpEnergy{bbox}}}
+\newcommand{\WEnergyTrack}{{\coltrack\WpEnergy{track}}}
+\newcommand{\WEnergyTrackNoOcc}{{\coltrack\WpEnergy{trackNoOcc}}}
+\newcommand{\WEnergyLane}{{\collane\WEnergy{lane}}}
+\newcommand{\WEnergySize}{{\colsize\WEnergy{size}}}
+\newcommand{\WEnergyDyn}{{\coldyn\WEnergy{dyn}}}
+
+\let\oldEnergyCol\EnergyCol
+\renewcommand{\EnergyCol}{\colcol\oldEnergyCol}
+\newcommand{\EnergyBBox}{{\colbbox\pEnergy{bbox}}}
+\newcommand{\EnergyTrack}{{\coltrack \pEnergy{track}}}
+\newcommand{\EnergyTrackNoOcc}{{\coltrack\pEnergy{trackNoOcc}}}
+\newcommand{\EnergyLane}{{\collane\Energy{lane}}}
+\newcommand{\EnergySize}{{\colsize\Energy{size}}}
+\newcommand{\EnergyDyn}{{\coldyn\Energy{dyn}}}
+\newcommand{\EnergyDynHol}{{\coldyn\Energy{dyn-hol}}}
+\newcommand{\EnergyDynOri}{{\coldyn\Energy{dyn-ori}}}
+\newcommand{\EnergyDynVel}{{\coldyn\Energy{dyn-vel}}}

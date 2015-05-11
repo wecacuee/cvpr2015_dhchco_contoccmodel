@@ -7,15 +7,15 @@
 \newcommand{\scenegraphicalmodel}{
   \begin{scope}[grow cyclic, line width=1.2,
       variablenode/.style={circle,circular drop shadow,draw=red,fill=white,thick},
-      bboxfactor/.style= {rectangle,inner sep=2,draw=green,fill=green,thick,text=green},
-      collfactor/.style= {rectangle,inner sep=2,draw=blue,fill=blue,thick,text=blue},
-      trackfactor/.style={rectangle,inner sep=2,draw=red,fill=red,thick,text=red},
+      bboxfactor/.style= {rectangle,inner sep=2,fill=green!50!black,thick,text=green!50!black},
+      collfactor/.style= {rectangle,inner sep=2,fill=blue,thick,text=blue},
+      trackfactor/.style={rectangle,inner sep=2,fill=red,thick,text=red},
       obs/.style={fill=gray!30,draw=black,text=gray!30},
       prevf/.style={draw=green!20,text=gray},
       prevobsv/.style={draw=gray!10,fill=gray!1,text=gray},
       prevv/.style={draw=red!20,text=gray}
     ]
-    \path[use as bounding box,clip] (-2.6, -5.5) rectangle (6.0,0.5);
+    \path[use as bounding box,clip] (-2.6, -5.5) rectangle (6.1,0.5);
     \draw (-2.5,-2.65) rectangle +(0.5,0.3);
     \draw (-2.0,-2.35) -- ++(0.15, 0.15) -- ++(0, -0.6) -- (-2.0, -2.65);
     \path
@@ -72,11 +72,11 @@
     \draw (x4) edge node [bboxfactor] {\tiny{1}} (d4);
 
     % Legend
-    \path (-1.75,-4.0) node (l1s) {} (-0, -4.0) node [anchor=west] (l1e) {$\pEnergy{bbox}$};
+    \path (-1.75,-4.0) node (l1s) {} (-0, -4.0) node [anchor=west] (l1e) {$\EnergyBBox$};
     \draw (l1s) edge node [bboxfactor] {\tiny{1}} (l1e);
     \path (-1.75,-4.5) node (l2s) {} (0, -4.5) node [anchor=west] (l2e) {$\EnergyCol$};
     \draw (l2s) edge node [collfactor] {\tiny{1}} (l2e);
-    \path (-1.75,-5.0) node (l3s) {} (0, -5.0) node [anchor=west] (l3e) {$\pEnergy{track}$};
+    \path (-1.75,-5.0) node (l3s) {} (0, -5.0) node [anchor=west] (l3e) {$\EnergyTrack$};
     \draw (l3s) edge node [trackfactor] {\tiny{1}} (l3e);
 
   \end{scope}

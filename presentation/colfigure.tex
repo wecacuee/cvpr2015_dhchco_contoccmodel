@@ -1,0 +1,29 @@
+\newcommand{\carbevwithblur}{
+  \tikzfading[name=fade out, inner color=transparent!0, outer color=transparent!100]
+  \coordinate (ra) at (1,0.2);
+  \coordinate (rb) at (2,0.7);
+  \draw [thick,blue] (ra) rectangle (rb);
+  \path [carfading, path fading=fade out] ($0.5*(ra)+0.5*(rb)$) ellipse (1.618/2 and 1/2);
+  \draw [thick,black] let \p1 = (ra), \p2 = (rb) in ($.5*(\x1, \y2) + .5*(\x1, \y1) + (-0.2,0)$) -- ($.5*(ra)+.5*(rb)$);
+}
+
+\newcommand{\goodcolconfig}{
+\begin{tikzpicture}[carfading/.style={fill=blue}]
+  \draw [thick,green] (0,0) -- (2,0);
+  \carbevwithblur
+  \begin{scope}[shift={(0.9,-0.7)},carfading/.style={fill=green!60!black}]
+    \carbevwithblur
+    
+  \end{scope}
+\end{tikzpicture}
+}
+\newcommand{\badcolconfig}{
+\begin{tikzpicture}[carfading/.style={fill=blue}]
+  \draw [thick,green] (0,0) -- (2,0);
+  \carbevwithblur
+  \begin{scope}[rotate around={-30:(1.5,0.55)},shift={(0.9,0)},carfading/.style={fill=green!60!black}]
+    \carbevwithblur
+  \end{scope}
+\end{tikzpicture}
+}
+\goodcolconfig

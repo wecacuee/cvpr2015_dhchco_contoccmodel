@@ -12,7 +12,7 @@
     dynfactor/.style=  {rectangle,inner sep=2,fill=orange   ,thick,text=orange},
     lanefactor/.style= {rectangle,inner sep=2,fill=cyan    ,thick,text=cyan},
     trackfactor/.style={rectangle,inner sep=2,fill=red   ,thick,text=red},
-    bboxfactor/.style= {rectangle,inner sep=2,fill=green,thick,text=green},
+    bboxfactor/.style= {rectangle,inner sep=2,fill=green!50!black,thick,text=green!50!black},
     level distance=30,
   obs/.style={fill=gray!30,text=gray!30,draw=black},
   prevf/.style={draw=green!20,text=gray},
@@ -24,7 +24,7 @@
 
   \path
   (-2.5,0) node[variablenode](dim) {2}
-  +(-0.75, 0) node {$\dimsn{2}$}
+  +(-0.85, 0) node {$\dimsn{2}$}
   +(-0.75,0.75) node[sizefactor](fsize){\tiny{2}}
   ;
 
@@ -32,7 +32,7 @@
     \path 
     % t-1 layer
     (1.5,1.5) node [variablenode] (xt1) {2}
-    +(1.25, 0) node {$\relp{2}{t-1}$}
+    +(0.25, -0.65) node {$\relp{2}{t-1}$}
   %  [counterclockwise from=-100,sibling angle=60]
   %  +(1.0, -1.0) node [factor,prevf] (flane1) {$E_{lane}$} 
   %  child { node [variablenode,obs,prevobsv] (l1) { $L_t$ } }
@@ -67,7 +67,7 @@
   %(1, 0)  node[variablenode](theta){$\theta_t$}
   \draw
   (-1, 0)  node[variablenode](xt) {2}
-  + (1.00, 0) node {$\relp{2}{t}$}
+  + (1.10, 0) node {$\relp{2}{t}$}
   ++ (0.75, -0.75) node [lanefactor] (flane) {\tiny{2}} ;
 %--
    %+ (-10:1) node [variablenode,obs] (l) {2} 
@@ -82,10 +82,10 @@
  %++(65:1) node[variablenode,obs](gp){2} +(.75,0) node {$G_t$} ;
 \draw (fdet)
 --
-++(90:1) node[variablenode,obs](Det){2} +(-.85,0) node {$\bb{2}$};
+++(90:1) node[variablenode,obs](Det){2} +(-.95,0) node {$\bb{2}$};
   
 \draw (fpt) 
-++(-90:1) node[variablenode,obs](pt){2} +(-.85,0) node {$\trackpit{2}{t}$} 
+++(-90:1) node[variablenode,obs](pt){2} +(-.95,0) node {$\trackpit{2}{t}$} 
   ;
   \draw (xt) edge node [dynfactor] (fdynx) {\tiny{2}} (xt1);
   \draw (xt) -- (fdet) -- (Det);
@@ -105,16 +105,16 @@
 \coordinate (oneR) at (1.5,0);
   % Legend
   \path (-4.8, -3.0) node (ls) {}
-  ++(oneR) node [anchor=west] (e1e) {$\Energy{size}$}
+  ++(oneR) node [anchor=west] (e1e) {$\EnergySize$}
   ++(oneR) node [] (e2s) {}
-  ++(oneR) node [anchor=west] (e2e) {$\Energy{dyn}$}
+  ++(oneR) node [anchor=west] (e2e) {$\EnergyDyn$}
   ++(oneR) node [] (e3s) {}
-  ++(oneR) node [anchor=west] (e3e) {$\Energy{lane}$};
+  ++(oneR) node [anchor=west] (e3e) {$\EnergyLane$};
 \path (-4.8, -3.5)
   ++(oneR) node [] (e4s) {}
-  ++(oneR) node [anchor=west] (e4e) {$\pEnergy{track}$}
+  ++(oneR) node [anchor=west] (e4e) {$\EnergyTrack$}
  ++(oneR) node [] (e5s) {}
-  ++(oneR) node [anchor=west] (e5e) {$\pEnergy{bbox}$}
+  ++(oneR) node [anchor=west] (e5e) {$\EnergyBBox$}
   ;
   \draw (ls)  edge node [sizefactor] {\tiny{2}} (e1e) ;
   \draw (e2s) edge node [dynfactor] {\tiny{2}} (e2e) ;

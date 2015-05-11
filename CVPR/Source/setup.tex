@@ -19,7 +19,7 @@ We model this problem in factor graph formulation. Factor graphs are bipartite g
   \end{subfigure}
   \begin{subfigure}[b]{0.45\textwidth}
     \tikzset{/tikz/x=0.8cm,/tikz/y=0.8cm}
-    \include{Source/graphicalmodelTP}
+    \input{Source/graphicalmodelTP}
     \caption{Factor graph dependence split up by pose and dimension}
   \end{subfigure}
 \caption{Graphical model. The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables. %(1) Bounding box energy: The bounding box energy ($\Energy{bbox}$) without occlusion modeling is a unary term, but with occlusion it becomes a higher order term that affects the state of occluder as well. The bounding box detection is represented by $\mathbf{d}_{bb}^i(t)$. We can see that the bounding box energy affects both occluder and the occluded. (2) Point tracks energy ($\Energy{track}$) also exhibits occluder-occluded dependency.  The available point tracks are modeled by $\mathbf{u}(t)$. (3) Collision energy ($\Energy{coll}$) should ideally be globally dependent on all traffic participants but here we represent collision among only those TP that are near enough to have a significant collision energy. (4) Orientation from lane (and map) information ($\Energy{lane}$) depends only on single traffic participant hence show in the right subfigure. (5) Dynamic energies ($\Energy{dyn}$) also affect only one traffic participant at a time but over two frames. (6) Size prior ($\Energy{size}$) is used to enforce reasonable size of traffic participants.

@@ -1,0 +1,54 @@
+
+\newcommand{\badsizeconfig}{
+\begin{tikzpicture}[3d/perspective eye={8,4,-10}]
+\begin{scope}[facestyle/.style={draw=green!50!black,very thick}]
+  \acuboid
+  \node at ($(f)+(.0,.3)$) {\color{green!50!black}$\expDimsn$};
+\end{scope}
+\begin{scope}[shift={(0,0.3,1)},facestyle/.style={draw=red,very thick}]
+  \long\def\zlen{2.2}
+  \long\def\ylen{.5}
+  %\acuboid
+  \providecommand{\xmin}{-2}
+  \providecommand{\xlen}{1}
+  \providecommand{\ymin}{-2}
+  \providecommand{\ylen}{1}
+  \providecommand{\zmin}{-2}
+  \providecommand{\zlen}{1}
+  \pgfmathsetmacro{\ymax}{\ymin+\ylen}
+  \pgfmathsetmacro{\xmax}{\xmin+\xlen}
+  \pgfmathsetmacro{\zmax}{\zmin+\zlen}
+  \coordinate (a) at (3d cs:\xmax,\ymax,\zmin);
+  \coordinate (b) at (3d cs:\xmax,\ymax,\zmax);
+  \coordinate (c) at (3d cs:\xmax,\ymin,\zmax);
+  \coordinate (d) at (3d cs:\xmax,\ymin,\zmin);
+  \coordinate (h) at (3d cs:\xmin,\ymin,\zmin);
+  \coordinate (e) at (3d cs:\xmin,\ymax,\zmin);
+  \coordinate (f) at (3d cs:\xmin,\ymax,\zmax);
+
+  \draw [facestyle] (a) -- (b) -- (c) -- (d) -- cycle;
+  \draw [facestyle] (a) -- (b) -- (f) -- (e) -- cycle;
+  \draw [facestyle] (a) -- (d) -- (h) -- (e) -- cycle;
+
+  \node at ($(h)+(-.2,-.2)$) {\color{red}$\dimsn{i}$};
+\end{scope}
+\end{tikzpicture}
+}
+\newcommand{\goodsizeconfig}{
+\begin{tikzpicture}[3d/perspective eye={4,4,-10}]
+\begin{scope}[facestyle/.style={draw=green!50!black,very thick}]
+  \acuboid
+  \node at ($(b)+(.2,.2)$) {\color{green!50!black}$\expDimsn$};
+\end{scope}
+\begin{scope}[scale=1.08,facestyle/.style={draw=red,very thick}]
+  \acuboid
+  \node at ($(h)+(-.2,-.2)$) {\color{red}$\dimsn{i}$};
+\end{scope}
+\end{tikzpicture}
+}
+
+% \begin{document}
+% \badsizeconfig
+% \goodsizeconfig
+%   
+% \end{document}

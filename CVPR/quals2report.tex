@@ -1,4 +1,4 @@
-\documentclass[10pt,letterpaper]{report}
+\documentclass[letterpaper]{report}
 
 \usepackage[margin=1in]{geometry}
 %\usepackage{iccv}
@@ -45,6 +45,21 @@
 %\newcommand{\bm}{\mathbf{}}
 \input{preamble}
 \DeclareMathOperator*{\argmin}{\arg\min}
+
+\newcommand{\EnergyBBox}{{\pEnergy{bbox}}}
+\newcommand{\EnergyTrack}{{ \pEnergy{track}}}
+\newcommand{\EnergyTrackNoOcc}{{\pEnergy{trackNoOcc}}}
+\newcommand{\EnergyLane}{{\Energy{lane}}}
+\newcommand{\EnergySize}{{\Energy{size}}}
+\newcommand{\EnergyDyn}{{\Energy{dyn}}}
+\newcommand{\EnergyDynHol}{{\Energy{dyn-hol}}}
+\newcommand{\EnergyDynOri}{{\Energy{dyn-ori}}}
+\newcommand{\EnergyDynVel}{{\Energy{dyn-vel}}}
+
+\newcommand{\xmin}{\xymin{x}}
+\newcommand{\xmax}{\xymax{x}}
+\newcommand{\ymin}{\xymin{y}}
+\newcommand{\ymax}{\xymax{y}}
 
 \begin{document}
 
@@ -153,8 +168,74 @@
 \chapter{Discussions}
 \input{Source/discussions}
 
+\chapter{Future Work}
+
+We have come up with model of Object detection energy with occlusion, and our plan is evaluate it
+and integrate it with the model.
+
+\section{Object detection energy with occlusion} 
+
+Object detection is usually followed by non-maximal suppression that results in
+discarding similar bounding boxes. When we are jointly optimizing detections
+with other cues, it is not usually desirable to go with a single bounding box.
+Hence, we keep all the bounding box detections by approximating them with
+multi-modal sum of Gaussian like logistic functions. We fit the parametric function of the form 
+%
+\begin{align}
+  S(\bb{i}) = \sum_k A_k \exp(-(\bb{i}-\mu^{(d)}_k)^\top \Sigma^{(d)-1}_k
+  (\bb{i}-\mu^{(d)}_k))
+\end{align}
+%
+to detection scores, by non-linear error minimization with initialization from
+non-maximal suppressed outputs. Here $\mu^{(d)}_j$ is one of the $k$ modes as a
+4D vector representing a single bounding box as $[\minx, \miny, \maxx,
+\maxy]^\top$. The optimization is constrained with symmetry and positive
+definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
+
+\subsection{Detection scores with occlusion reasoning} 
+With our model of $\Ptrans$ described in Section \ref{sec:TPmodel}, we can
+compute the probability of a point $\mathbf{u}$ on image be occluded assuming
+the point is on TP $i$ with mean depth $\mu^{(i)}_d$ as
+\begin{align}
+  O_{i}(\mathbf{u}, \mu^{(i)}_d) = 1 - \Ptransmud \enspace .
+\end{align}
+
+If we know a portion of our proposed detection bounding box is known to be
+occluded, then we would like to decrease the confidence in the detection score
+about the localization of that end of the object. Assuming that the occlusion
+is often on the boundary of detection bounding boxes, we want to decrease our
+confidence on the mean detection boundaries around the occluded boundaries.
+%One of the simplest ways will be to scale the appropriate diagonal element of
+%$\Sigma_j$ by an appropriate scaling factor proportional to occlusion. But this
+%does not model explain the affect of occlusion on the non diagonal terms.
+%Hence, we choose a covariance addition model where we compute a occlusion
+%covariance matrix, that provides a measure of occlusion in each direction.
+To re-model our detection scores scaled by continuous occlusion we sample
+$O_{i}(\mathbf{u}, \mu^{(i)}_d)$ at the hypothesized detection boundaries from
+GMM $S(.)$ and we augment the detection boundary covariance matrix by
+$\mathcal{P}_{j} = \rho_{j}\rho_{j}^\top$ where $\rho_{j} = O_{j}(\mathbf{u},
+\mu^{(i)}_d)$. The new covariance matrix in detection score is given by 
+  $\Sigma'^{(d)}_j = \mathcal{P}_{j} + \Sigma^{(d)}_j$.
+%
+%\begin{align}
+%\end{align}
+%
+The detection scores GMM with occlusion is given by replacing the covariance
+matrix
+%
+\begin{align}
+  S'(\bb{i}) =
+  \sum_j A_j \exp(-(\bb{i}-\mu^{(d)}_j)^\top \Sigma'^{(d)-1}_j
+  (\bb{i}-\mu^{(d)}_j))
+\end{align}
+
+The energy of detection scores is simply take to be the inverse of the detection score.
+\begin{align}
+  \Energy{detect}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
+\end{align}
+
 \chapter{Appendix}
-\label{ref:appendix}
+\label{sec:appendix}
 \input{../Paper/suplementarymaterial.tex}
 
 {\small

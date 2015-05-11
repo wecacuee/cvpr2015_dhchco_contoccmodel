@@ -1,13 +1,20 @@
+% The preamble has been dumped out as out/presentationpreamble.fmt file. You can recreate that file by
+% xelatex -ini -jobname="presentationpreamble" -output-directory=out "&xelatex presentationpreamble.tex\dump"
+% 
+% To compile you need to load that binary file using -fmt option
+% xelatex -fmt out/presentationpreamble.fmt -output-directory=out presentation.tex
+%\input{presentationpreamble}
 
-\input{presentationpreamble}
+%\tikzset{external/system call={xelatex -fmt out/presentationpreamble.fmt \tikzexternalcheckshellescape -shell-escape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+%
 
 % transparency
 %\setbeamercovered{transparent=15}
 
-\title{Continuous occlusion models for 3D localization}
+\title{Continuous occlusion models and 3D localization}
 \subtitle{Road scene understanding for autonomous driving}
 \date{\today}
-\author{Vikas Dhiman\\ Manmohan Chandrakar\\ Jason J Corso}
+\author{Vikas Dhiman\\ Mentor: Manmohan Chandrakar\\ Advisor: Jason J Corso}
 \institute{University of Michigan}
 
 %\includeonly{model}
@@ -15,21 +22,21 @@
 \begin{document}
 
 \maketitle
-
 \include{intro}
-
+\section{What has already been done?}
 \include{related}
-
+% 
 \section{Model}
 \include{model}
-
-%\section{Inference}
-
+% 
+\section{Inference}
+\include{inference}
+% 
 \section{Results}
 \include{results}
-
-\section{Bibliography}
-\begin{frame}
+% 
+\section{Thank you}
+\begin{frame}{Bibliography}
 \bibliography{presentation}
 \bibliographystyle{plainnat}
 \end{frame}

@@ -66,19 +66,34 @@ We use bounding box based assignment of point tracks to TPs as the baseline.
 For the regions where the bounding boxes overlap, we assign the points to the
 TP that has smaller mean depth then the competing bounding box.
 
+% \begin{table}
+%   \centering
+%   \begin{tabular}{lrrr}
+%     \toprule
+%     Algorithm & Total & Unoccluded cars & Occluded cars \\
+%     \midrule
+%     bounding box only & 0.21 & \textbf{0.03}  & 0.36\\
+%     Using $P^{(ij)}_{\text{assoc}}$ & \textbf{0.21} & 0.08 & \textbf{0.32}\\
+%     Using $\assocP{}$ & 0.23 & 0.09 & 0.34 \\
+%     Using $P^{(ij)}_{\text{assoc by reproj}}$ & 0.23 & 0.08 & 0.34\\
+%     \bottomrule
+%   \end{tabular}
+%   \caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
+% \end{table}
+
 \begin{table}
   \centering
-  \begin{tabular}{lrrr}
+  \begin{tabular}{lccc}
     \toprule
-    Algorithm & Total & Unoccluded cars & Occluded cars \\
+    Algorithm & All & Unoccluded cars & Occluded cars \\
     \midrule
-    bounding box only & 0.21 & \textbf{0.03}  & 0.36\\
-    Using $P^{(ij)}_{\text{assoc}}$ & \textbf{0.21} & 0.08 & \textbf{0.32}\\
-    Using $\assocP{}$ & 0.23 & 0.09 & 0.34 \\
-    Using $P^{(ij)}_{\text{assoc by reproj}}$ & 0.23 & 0.08 & 0.34\\
+    bounding box only                         & $0.18\pm0.01$          & $\color{red}0.04\pm0.003$  & $0.41\pm0.04$\\
+    Using $\assocP{}$                         & $0.18\pm0.01$          & $0.05\pm0.003$           & $0.39\pm0.04$ \\
+    Using $P^{(ij)}_{\text{assoc by reproj}}$ & $0.18\pm0.01$          & $0.06\pm0.003$           & $0.39\pm0.04$\\
+    Using $P^{(ij)}_{\text{assoc}}$           & $\color{red}0.17\pm0.01$ & $0.05\pm0.003$           & $\color{red}0.38\pm0.04$\\
     \bottomrule
   \end{tabular}
-  \caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
+  \caption{Association Experiment results. The error is in terms of average fraction of foreground points incorrectly associated to objects per sequence. }
 \end{table}
 
 
@@ -104,13 +119,13 @@ Localization is the main goal of our project. We estimate the position, orientat
     \toprule
     Energy & t & yaw & dim \\
     \midrule
-    lane+contPtTracksNoOcc+size+bbox+posT   & 3.80 & 0.91 & 1.58 \\
-    lane+contPtTracks+size+bboxOcc+posT+col & \textbf{3.78} & 0.91 & 1.58 \\
-    lane+contPtTracks+size+bboxOcc+posT     & 3.81 & 0.92 & 1.59 \\
-    lane+size+bboxOcc+posT+col              & 3.92 & 0.91 & 1.15 \\
-    lane+size+bboxOcc+posT                  & 3.83 & 0.90 & 1.14 \\
-    lane+size+bbox+posT                     & 3.83 & 0.90 & \textbf{1.14} \\
-    initialization                          & 3.79 & \textbf{0.86} & 1.64 \\
+    initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
+    $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
+    %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
+    $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
+    $\EnergyLane+\EnergyTrack+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol   $ & \textbf{3.78} & 0.91 & 1.58 \\
     \bottomrule
   \end{tabular}
   \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}

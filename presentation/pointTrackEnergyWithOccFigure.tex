@@ -1,8 +1,8 @@
 \begin{tikzpicture}[x=0.8cm,y=0.8cm,3d/perspective eye={4,4,-10},ptstyle/.style={fill=#1,draw,circle,inner sep=1.5pt}]
     \input{Source/twocuboids.tex}
-    \draw [->, very thick, draw=blue] (pta4) --  +(90:1) node [anchor=south,align=center] {$a^1(\lambda) = 0$\\$a^2(\lambda) = 1$};
-    \draw [->, very thick, draw=red!50!blue] (pta-8) --  +(170:1.4) node [anchor=south,align=center] {$a^1(\lambda) = 0.5$\\$a^2(\lambda) = 0.5$};
-    \draw [->, very thick, draw=red] ($(ptb-8)+(.5,-.8)$) --  +(-60:.8) node [anchor=north,align=center] {$a^1(\lambda) = 1$\\$a^2(\lambda) = 0$};
+    \draw [->, very thick, draw=blue] (pta4) --  +(90:1) node [anchor=south,align=center] {$a^{1j}(\lambda) = 0$\\$a^{2j}(\lambda) = 1$};
+    \draw [->, very thick, draw=red!50!blue] (pta-8) --  +(170:1.4) node [anchor=south,align=center] {$a^{1j}(\lambda) = 0.5$\\$a^{2j}(\lambda) = 0.5$};
+    \draw [->, very thick, draw=red] ($(ptb-8)+(.5,-.8)$) --  +(-60:.8) node [anchor=north,align=center] {$a^{1j}(\lambda) = 1$\\$a^{2j}(\lambda) = 0$};
    \begin{scope}[shift={(4,-2)}]
      \path [fill=blue!20,draw] (0,0) ellipse (1.2 and 0.7);
      \path [fill=green!20,draw] (3,0) ellipse (1.2 and 0.7);

@@ -10,10 +10,13 @@
   We also introduce a novel perspective to the soft occlusion models where a
   region in space is viewed in terms of reflection and transmission
   probability.
-  We test and train our model on KITTI dataset and show that our occlusion
+  We test our model on KITTI dataset and show that our occlusion
   model works better than the baseline method of bounding boxes. We also show
-  that our 3D localization results with monocular video input are comparable to
-  (Geiger 2014) which uses stereo input.
+  3D localization qualitatively. Although our occlusion model does show 
+  improvement over baseline in case of association experiment, we are not able 
+  to achieve better results for localization experiments. We believe that 
+  the poor results are due to slow inference and poor energy weights. We plan
+  to speed up the inference and hence our results by tree approximations.
 
   % Why monocular
   % Since laser scanners are expensive, we focus on solving the problem through

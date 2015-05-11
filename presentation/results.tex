@@ -5,55 +5,36 @@
   \includemedia[label=allenergies,
     width=\linewidth,height=0.6\linewidth, % 16:9
     activate=pageopen,
-  addresource=graphics/allenergies.mp4,
-  flashvars={
-    source=graphics/allenergies.mp4
-    &loop=true             % loop video
-    &scaleMode=letterbox   % preserve aspect ratio while scaling the video
-  }
-]{Video}{VPlayer.swf}
-
-
-\end{frame}
-
-\begin{frame}{Association results}
-
-\begin{align}
-  P^{(ij)}_{\text{assoc by reproj}}(\lambda) &= \frac{1}{Z}\exp(-\Ereproj(\lambda))\\
-  P^{(ij)}_{\text{assoc}} &= \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda
-  \label{eq:prob-assoc}
-\end{align}
-\begin{table}
-  \centering
-  \begin{tabular}{lrrr}
-    \toprule
-    Algorithm & Total & Unoccluded cars & Occluded cars \\
-    \midrule
-    bounding box only & 0.21 & \textbf{0.03}  & 0.36\\
-    Using $P^{(ij)}_{\text{assoc}}$ & \textbf{0.21} & 0.08 & \textbf{0.32}\\
-    Using $\assocP{}$ & 0.23 & 0.09 & 0.34 \\
-    Using $P^{(ij)}_{\text{assoc by reproj}}$ & 0.23 & 0.08 & 0.34\\
-    \bottomrule
-  \end{tabular}
-  %\caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
-\end{table}
+    addresource=graphics/allenergies.mp4,
+    flashvars={
+      source=graphics/allenergies.mp4
+      &loop=true             % loop video
+      &scaleMode=letterbox   % preserve aspect ratio while scaling the video
+    }
+  ]{\includegraphics{graphics/0000000061_bevdown.png}}{VPlayer.swf}
 \end{frame}
 
 \begin{frame}{Quantitative results}
   % Show that quantiative results are still negative but ...
   \small{
+    t : Mean translation error in ground plane per traffic particpant per frame
+
+    yaw : Mean yaw error in ground plane per traffic particpant per frame
+
+    dim : Mean dimension error in ground plane per traffic particpant per frame
+
 \begin{table}
   \begin{tabular}{lrrr}
     \toprule
     Energy & t & yaw & dim \\
     \midrule
-    lane+contPtTracksNoOcc+size+bbox+posT   & 3.80 & 0.91 & 1.58 \\
-    lane+contPtTracks+size+bboxOcc+posT+col & \textbf{3.78} & 0.91 & 1.58 \\
-    lane+contPtTracks+size+bboxOcc+posT     & 3.81 & 0.92 & 1.59 \\
-    lane+size+bboxOcc+posT+col              & 3.92 & 0.91 & 1.15 \\
-    lane+size+bboxOcc+posT                  & 3.83 & 0.90 & 1.14 \\
-    lane+size+bbox+posT                     & 3.83 & 0.90 & \textbf{1.14} \\
-    initialization                          & 3.79 & \textbf{0.86} & 1.64 \\
+    initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
+    $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
+    %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
+    $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
+    $\EnergyLane+\EnergyTrack+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol   $ & \textbf{3.78} & 0.91 & 1.58 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -85,9 +66,6 @@
 \end{frame}
 
 \begin{frame}{Conclusion}
-  \begin{itemize}
-    \item Our occlusion aware 3D modeling improves association
-    \item ... but requires more work to show improvement on localization
-  \end{itemize}
-  
+    Our occlusion aware 3D modeling improves association\\
+    ... but requires more work to show improvement on localization
 \end{frame}

@@ -268,22 +268,22 @@
 \newcommand{\egos}[1][t]{\state{c}{#1}}
 
 % relative pose between camera and car $i$
-\newcommand{\relp}[2]{\Omega^{#1}(#2)}
-\newcommand{\relpz}[2]{\Omega_z^{#1}(#2)}
+\newcommand{\relp}[2]{\Omega^{(#1)}(#2)}
+\newcommand{\relpz}[2]{\Omega_z^{(#1)}(#2)}
 
 % 3D tracks on car $i$ in its own coordinate frame
 \newcommand{\tracklets}{\mathbf{X}^{(i)}_o}
 \newcommand{\tracklet}[1]{\mathbf{x}^{(i)}_{#1}}
 % track projections on camera
 \newcommand{\trackpit}[2]{\mathbf{u}^{(#1)}(#2)}
-\newcommand{\trackp}[1]{\mathbf{u}^{(i)}(#1)}
+\newcommand{\trackp}[1]{\mathbf{u}^{(j)}(#1)}
 \newcommand{\trackpj}[1]{\mathbf{u}_j(#1)}
 % Unclassified track point projected on camera
 \newcommand{\ucTrackp}{\mathbf{u}(t)}
 
 
 % dimensions of car $i$
-\newcommand{\dimsn}[1]{\mathbf{B}^{#1}}
+\newcommand{\dimsn}[1]{\mathbf{B}^{(#1)}}
 \newcommand{\expDimsn}{\hat{\mathbf{B}}}
 
 % projection function
@@ -294,8 +294,8 @@
 \newcommand{\triangleProj}[1]{\triangle^{#1}_{\relp{i}{t}}(\dimsn{i})}
 
 % bounding box corners on image
-\newcommand{\bbt}[2]{\mathbf{d}^{#1}({#2})}
-\newcommand{\bb}[1]{\mathbf{d}^{#1}(t)}
+\newcommand{\bbt}[2]{\mathbf{d}^{(#1)}({#2})}
+\newcommand{\bb}[1]{\mathbf{d}^{(#1)}(t)}
 
 
 \newcommand{\Energy}[1]{\mathcal{E}^{it}_{\text{#1}}}
@@ -362,10 +362,6 @@
 \newcommand{\Tr}[3]{{}^{#1}{#2}_{#3}}
 \newcommand{\xymin}[1]{#1_{\text{min}}}
 \newcommand{\xymax}[1]{#1_{\text{max}}}
-% \newcommand{\xmin}{\xymin{x}}
-% \newcommand{\xmax}{\xymax{x}}
-% \newcommand{\ymin}{\xymin{y}}
-% \newcommand{\ymax}{\xymax{y}}
 \newcommand{\vect}[1]{\mathbf{#1}}
 \newcommand{\map}{\vect{x}}
 

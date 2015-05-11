@@ -40,14 +40,14 @@
 }
 
 \newcommand{\acuboid}{
-  \newcommand{\xmin}{-2}
-  \newcommand{\xlen}{1}
-  \pgfmathsetmacro{\xmax}{\xmin+\xlen}
-  \newcommand{\ymin}{-2}
-  \newcommand{\ylen}{1}
+  \providecommand{\xmin}{-2}
+  \providecommand{\xlen}{1}
+  \providecommand{\ymin}{-2}
+  \providecommand{\ylen}{1}
+  \providecommand{\zmin}{-2}
+  \providecommand{\zlen}{1}
   \pgfmathsetmacro{\ymax}{\ymin+\ylen}
-  \newcommand{\zmin}{-2}
-  \newcommand{\zlen}{1}
+  \pgfmathsetmacro{\xmax}{\xmin+\xlen}
   \pgfmathsetmacro{\zmax}{\zmin+\zlen}
   \coordinate (a) at (3d cs:\xmax,\ymax,\zmin);
   \coordinate (b) at (3d cs:\xmax,\ymax,\zmax);

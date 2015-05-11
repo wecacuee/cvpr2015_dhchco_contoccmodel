@@ -39,8 +39,11 @@
 
 %{{{ --- Packages ---------------------
 
-\RequirePackage[no-math]{fontspec}
 \RequirePackage{etoolbox}
+\AtEndPreamble{
+  \usepackage[no-math]{fontspec}
+  \usefonttheme{metropolis}
+}
 \RequirePackage{tikz}
 \RequirePackage{pgfplots}
 
@@ -48,7 +51,6 @@
 \usetikzlibrary{calc}
 
 \usecolortheme{metropolis}
-\usefonttheme{metropolis}
 
 %}}}
 %{{{ --- Titlepage --------------------
@@ -153,6 +155,7 @@
 \def\progressbar@titleprogressbar{%
   \progressbar@tmpcounta=\insertframenumber
   \progressbar@tmpcountb=\inserttotalframenumber
+  %\advance\progressbar@tmpcountb by 1
   \progressbar@tmpdim=\paperwidth
   \divide\progressbar@tmpdim by 100
   \multiply\progressbar@tmpdim by \progressbar@tmpcounta

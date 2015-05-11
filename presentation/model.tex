@@ -1,38 +1,121 @@
-
+\begin{frame}{Problem definition}
+  \vspace{-0.5cm}
+  \scriptsize{
+    \problemflowchartnoraw{$\{\bb{i}\}_{i,t}$}{$\{\trackp{t}\}_{j,t}$}{$\{(\hat{\mathbf{n}}_t, h_t)\}_t$}{$\{c_t\}_{t}$}{$\{L_m(t)\}_{m,t}$}{\\$\{\state{i}{t}\}^*_{i,t} = \{\dimsn{i}, \relp{i}{t}\}_{i,t}$}{$\mathbb{E}$}{}
+  }
+\end{frame}
 \begin{frame}{Graphical Model}
   \vspace*{-.5cm}
+  \begin{center}
+      \newcommand{\imagewidth}{0.9\textwidth}
+      \input{Source/scenelayoutoverlayCity0961.tex}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Graphical Model}
   % Introduce the graphical model with a diagram and equations
   \begin{columns}
+  \hskip-2cm
+    \begin{column}[t]{0.9\textwidth}
+      \tikzset{/tikz/x=0.9cm,/tikz/y=0.9cm}
+      \input{Source/graphical_model_multiple.tex}
+    \end{column}
+    \hspace{-2cm}
     \begin{column}[t]{0.4\textwidth}
-      \tikzset{/tikz/x=0.6cm,/tikz/y=0.6cm}
-      \scriptsize{
-        \input{Source/graphicalmodelTP.tex}
+      \vspace{-5cm}
+      \scalebox{0.45}{
+        \newcommand{\imagewidth}{2.125\textwidth}
+        \input{Source/scenelayoutoverlayCity0961.tex}
       }
     \end{column}
-    \hspace{10pt}
-    \visible<2-> {
-      \vrule{}
-    }
-    \begin{column}[t]{0.6\textwidth}
-      \visible<2->{
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Graphical Model}
+  % Introduce the graphical model with a diagram and equations
+  \begin{columns}
+  \hskip-2cm
+    \begin{column}[c]{0.7\textwidth}
         \tikzset{/tikz/x=0.7cm,/tikz/y=0.7cm}
         \scriptsize{
           \input{Source/graphical_model_multiple.tex}
         }
-      }
     \end{column}
+    \hspace{-1.5cm}
+    \vrule{}
+    \begin{column}[c]{0.6\textwidth}
+      \vspace{-1cm}
+      \begin{center}
+        \scalebox{0.45}{
+          \newcommand{\imagewidth}{2.125\textwidth}
+          \input{Source/scenelayoutoverlayCity0961.tex}
+        }
+      \end{center}
+      \tikzset{/tikz/x=0.8cm,/tikz/y=0.8cm}
+      \input{Source/graphicalmodelTP.tex}
+      \end{column}
   \end{columns}
-  \vspace*{-0.5cm}
-  \begin{center}
-    \visible<2->{
-      \newcommand{\imagewidth}{0.9\textwidth}
-      \input{Source/scenelayoutoverlayCity0961.tex}
-    }
-  \end{center}
-  \vspace*{-.5cm}
 \end{frame}
 
-\begin{frame}{Point Tracks energy}
+\begin{frame}{Factorization}
+
+\begin{align*}
+  P(\{\state{i}{t}\} | \mathbb{E}) =
+  \frac{1}{Z}P( \mathbb{E} | \{\state{i}{t}\})P(\{\state{i}{t}\})&.
+\end{align*}
+\begin{multline*}
+  P(\{\state{i}{t}\} | \mathbb{E}) = \\
+  \frac{1}{Z}
+  \prod_{t=s}^{e}
+  \left(
+    \prod_{i,j: i \text{ occludes } j}
+    {\colcol\underbrace{P(\state{i}{t}, \state{j}{t})}_{\text{col}}}
+    {\colbbox\underbrace{P(\bb{i} | \state{i}{t}, \state{j}{t})}_{\text{bbox}}}
+    {\coltrack\underbrace{P(\trackp{t} | \state{i}{t}, \state{j}{t})}_{\text{track}}}
+\right)
+\\
+\left(
+  \prod_{i=1}^{N}
+  {\collane\underbrace{P(L_m(t) | \state{i}{t})}_{\text{lane}}}
+  {\coldyn\underbrace{P(\state{i}{t} | \state{i}{t-1})}_{\text{dyn}}}
+  {\colsize\underbrace{P(\state{i}{t})}_{\text{size}}}
+\right)
+  \enspace .
+\end{multline*}
+%
+
+\end{frame}
+
+
+\begin{frame}{Energy domain}
+
+\begin{multline*}
+  \hspace{-1cm}
+  -\log{P(\{\state{i}{t}\} | \mathbb{E})} = 
+  -Z' 
+  + \sum_{t=s}^{e}
+  \left(
+    \sum_{i,j:i \text{ occludes } j}   
+  \WEnergyCol 
+   + \WEnergyBBox
+   + \WEnergyTrack
+\right)
+  \\
+  + \left(
+  \sum_{i=1}^N 
+  \WEnergyLane
+  + \WEnergyDyn
+  + \WEnergySize
+\right)
+  \enspace.
+\end{multline*}
+\begin{align*}
+  \{\state{i}{t}\}^* &= \arg \min_{\{\state{i}{t}\}} - \log P(\{\state{i}{t}\} | \mathbb{E})\enspace.
+\end{align*}
+  
+\end{frame}
+
+\begin{frame}{Point Tracks energy (No Occlusion)}
   % Start with a simpler version of point track energy here
   \centering
   \begin{figure}
@@ -58,18 +141,18 @@
   \centering
   \input{preflectiontransmissioneqns.tex}
     \begin{align}
-      f^i_{occ}(\bx) &= \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp^{i}))}} \\
-      P^{ij}_{\textit{reflection}} (\lambda) &= (\max \{0, \nabla {f^i_{occ}}(\lambda \ray)^\top \ray \})^2 \\
-      P^j_{\textit{transmission}}(\lambda) &= 1 - \occft{\lambda \ray}
+      f^i_{\text{occ}}(\bx) &= \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp^{i}))}} \\
+      P^{ij}_{\textit{reflection}} (\lambda) &= (\max \{0, \nabla {f^i_{\text{occ}}}(\lambda \ray)^\top \ray \})^2 \\
+      P^j_{\textit{transmission}}(\lambda) &= \prod_i (1 - f^i_{\text{occ}}({\lambda \ray}))
     \end{align}
 \end{frame}
 
-\begin{frame}{Point tracks energy}
+\begin{frame}{Point tracks energy (With occlusion)}
   \centering
   \small{
   \input{pointTrackEnergyWithOccFigure.tex}
   \begin{align*}
-    \Energy{track}(.) = 
+    \EnergyTrack = 
     \sum_{i \in \text{objects}}
     \sum_{j \in \text{points}}
     \int_{f}^{\infty}
@@ -81,6 +164,31 @@
 }
 \end{frame}
 
+\begin{frame}{Association Experiment results}
+
+\begin{align}
+  P^{(ij)}_{\text{assoc by reproj}}(\lambda) &= \frac{1}{Z}\int_0^{\infty}\exp(-\Ereproj(\lambda))\\
+  P^{(ij)}_{\text{assoc}} &= \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda
+  \label{eq:prob-assoc}
+\end{align}
+
+\begin{table}
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    Algorithm & All & Unoccluded cars & Occluded cars \\
+    \midrule
+    bounding box only                         & $0.18\pm0.01$          & $\color{red}0.04\pm0.003$  & $0.41\pm0.04$\\
+    Using $\assocP{}$                         & $0.18\pm0.01$          & $0.05\pm0.003$           & $0.39\pm0.04$ \\
+    Using $P^{(ij)}_{\text{assoc by reproj}}$ & $0.18\pm0.01$          & $0.06\pm0.003$           & $0.39\pm0.04$\\
+    Using $P^{(ij)}_{\text{assoc}}$           & $\color{red}0.17\pm0.01$ & $0.05\pm0.003$           & $\color{red}0.38\pm0.04$\\
+    \bottomrule
+  \end{tabular}
+  \caption{Error Metric: Average fraction of foreground points incorrectly associated to objects per sequence}
+  %\caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
+\end{table}
+\end{frame}
+
 % Consider packing other energies in fewer slides 
 \begin{frame}{Bounding box energy}
   % 
@@ -88,6 +196,25 @@
   \begin{figure}
   \input{Source/car3Ddetections.tex}
   \end{figure}
+\end{frame}
+
+\begin{frame}{Lane information}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Use OpenStreetMaps to extract lane geometry
+          \begin{itemize}
+            \item Use GPS coordinates aligned with SFM egomotion
+            \item Automatically filter out small lanes and side streets
+          \end{itemize}
+        \item Annotated lanes (to be replaced by lane detector)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\columnwidth]{graphics/mapimg.png}
+    \end{column}
+  \end{columns}
+
 \end{frame}
 
 \newcommand{\carbev}{
@@ -124,7 +251,7 @@
   \end{columns}
   \begin{align}
     \label{eq:laneOrientationEnergy}
-    \Energy{lane} &= 
+    \EnergyLane &= 
     \sum_{m \in M_{\text{close}}}
     (1 - \ori{i}{t} \cdot \text{TAN}(L_{m}(k), \pos{i}{t}) )
     \LaneUncertainty{\pos{i}{t}}
@@ -182,20 +309,61 @@
   \end{align}
 \end{frame}
 
-\begin{frame}{Size prior}
+\begin{frame}{Transition energies}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \centering
+      Low Energy\\
+      \begin{tikzpicture}
+        \draw [thick,green] (0.5,0) -- (3.5,0);
+        \begin{scope}[shift={(0,0.1)},rotate around={-10:(1.5,0.55)}]
+          \carbev
+        \end{scope}
+        \begin{scope}[shift={(1.2,0)},every path/.style={dotted}]
+          \carbev
+        \end{scope}
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      High Energy\\
+      \begin{tikzpicture}
+        \draw [thick,green] (0.5,0) -- (3,0);
+        \carbev
+        \begin{scope}[shift={(0.3,-0.4)},every path/.style={dotted}]
+          \carbev
+        \end{scope}
+      \end{tikzpicture}
+      
+    \end{column}
+  \end{columns}
 \begin{align}
-  \label{eq:totalSizeEnergy}
-  \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
-  \expDimsn)
+  \label{eq:totalPosTransitionEnergy}
+  \EnergyDynHol &= 1 - \left(\ori{i}{t-1} \cdot \frac{\pos{i}{t} - \pos{i}{t-1}}{\|\pos{i}{t} - \pos{i}{t-1}\|})\right)^2 \\
+  \EnergyDynOri &= \|\ori{i}{t} - \ori{i}{t-1}\|^2\\ 
+  \EnergyDynVel &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2
 \end{align}
 \end{frame}
 
-\begin{frame}{Transition energies}
+
+\begin{frame}{Size prior}
+  \input{sizefigures}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \centering
+      Low Energy\\
+      \goodsizeconfig
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+      \centering
+      High Energy\\
+      \badsizeconfig
+    \end{column}
+  \end{columns}
 \begin{align}
-  \label{eq:totalPosTransitionEnergy}
-  \Energy{dyn-hol} &= 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1}) \\
-  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2\\ 
-  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2
+  \label{eq:totalSizeEnergy}
+  \EnergySize &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
+  \expDimsn)
 \end{align}
-    
 \end{frame}

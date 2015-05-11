@@ -173,68 +173,48 @@ point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse p
   The integral in the above expression is computed numerically.
 \end{comment}
 
-\section{Object detection energy with occlusion} 
+\section{Object detection energy}
 
-Object detection is usually followed by non-maximal suppression that results in
-discarding similar bounding boxes. When we are jointly optimizing detections
-with other cues, it is not usually desirable to go with a single bounding box.
-Hence, we keep all the bounding box detections by approximating them with
-multi-modal sum of Gaussian like logistic functions. We fit the parametric function of the form 
-%
+We model object detection energy as the norm of difference in the coordinates
+of the projected bounding box and detected bounding box. The detected bounding
+box is represented by the extrema along X and Y dimensions $\bb{i} = [\xmin,
+\ymin, \xmax, \ymax]^\top$. If $\dimsn{i} = [l, w, h]^\top$ represent the 3D
+dimensions of the traffic participant along the X, Y and Z dimensions then we 
+can compute the eight corners of the cuboid model in the tracklet coordinate transform as
+
 \begin{align}
-  S(\bb{i}) = \sum_k A_k \exp(-(\bb{i}-\mu^{(d)}_k)^\top \Sigma^{(d)-1}_k
-  (\bb{i}-\mu^{(d)}_k))
+  X^{(i)}_{\text{cuboid}} &= \dimsn{i}{}^\top C_u \\
+  \text{where} &\\
+  C_u &= 
+  \begin{bmatrix}
+  0.5 & 0.5 & -0.5 & -0.5 & 0.5 & 0.5 & -0.5 & -0.5 \\
+    0.5 & -0.5 & -0.5 & 0.5 & 0.5 & -0.5 & -0.5 & 0.5 \\
+    0 & 0 & 0 & 0 & 1  & 1 & 1 & 1
+  \end{bmatrix} \enspace .
 \end{align}
-%
-to detection scores, by non-linear error minimization with initialization from
-non-maximal suppressed outputs. Here $\mu^{(d)}_j$ is one of the $k$ modes as a
-4D vector representing a single bounding box as $[\minx, \miny, \maxx,
-\maxy]^\top$. The optimization is constrained with symmetry and positive
-definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
-
-\subsection{Detection scores with occlusion reasoning} 
-With our model of $\Ptrans$ described in Section \ref{sec:TPmodel}, we can
-compute the probability of a point $\mathbf{u}$ on image be occluded assuming
-the point is on TP $i$ with mean depth $\mu^{(i)}_d$ as
+These cuboid points can be projected to the camera image plane to get the projected bounding box,
+\newcommand{\ucub}{U^{(i)}(t)}
+\newcommand{\ucubx}{U_{(1,:)}^{(i)}(t)}
+\newcommand{\ucuby}{U_{(2,:)}^{(i)}(t)}
+\newcommand{\estbb}{\hat{\mathbf{d}}^{(i)}(t)}
 \begin{align}
-  O_{i}(\mathbf{u}, \mu^{(i)}_d) = 1 - \Ptransmud \enspace .
+  \ucub &= \projectionOf{\dimsn{i}{}^\top C_u}\\
+  \estbb &= [\min \ucubx, \min \ucuby, \max \ucubx, \max \ucuby]^\top \enspace .
 \end{align}
-
-If we know a portion of our proposed detection bounding box is known to be
-occluded, then we would like to decrease the confidence in the detection score
-about the localization of that end of the object. Assuming that the occlusion
-is often on the boundary of detection bounding boxes, we want to decrease our
-confidence on the mean detection boundaries around the occluded boundaries.
-One of the simplest ways will be to scale the appropriate diagonal element of
-$\Sigma_j$ by an appropriate scaling factor proportional to occlusion. But this
-does not model explain the affect of occlusion on the non diagonal terms.
-Hence, we choose a covariance addition model where we compute a occlusion
-covariance matrix, that provides a measure of occlusion in each direction.
-
-
-To re-model our detection scores scaled by continuous occlusion we sample
-$O_{i}(\mathbf{u}, \mu^{(i)}_d)$ at the hypothesized detection boundaries from
-GMM $S(.)$ and we augment the detection boundary covariance matrix by
-$\mathcal{P}_{j} = \rho_{j}\rho_{j}^\top$ where $\rho_{j} = O_{j}(\mathbf{u},
-\mu^{(i)}_d)$. The new covariance matrix in detection score is given by 
-%
+We take $\estbb$ as the projected bounding box. The object detection energy is
+taken to be the euclidean distance between projected and detected bounding box.
 \begin{align}
-  \Sigma'^{(d)}_j = \mathcal{P}_{j} + \Sigma^{(d)}_j
+  \EnergyBBox &= \| \estbb - \bb{i}\|^2_2
 \end{align}
-%
-The detection scores GMM with occlusion is given by replacing the covariance
-matrix
-%
+With slight abuse of notation for projection operator we write this energy as
 \begin{align}
-  S'(\bb{i}) =
-  \sum_j A_j \exp(-(\bb{i}-\mu^{(d)}_j)^\top \Sigma'^{(d)-1}_j
-  (\bb{i}-\mu^{(d)}_j))
+  \EnergyBBox &= \left\| \projectionOf{\dimsn{i}} - \bb{i}\right\|^2_2 \enspace.
 \end{align}
 
-The energy of detection scores is simply take to be the inverse of the detection score.
-\begin{align}
-  \Energy{detect}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
-\end{align}
+For object detections we use object detector by \cite{Felzenszwalb_etal_2010}
+which is detector by parts model and we use eight parts to train the car model 
+on half of the KITTI dataset \cite{geiger2013vision}. The trained modeled is 
+used to get detections for the other half of the dataset and vice versa.
 
 \section{Lane energy}
 \label{sec:laneEnergy}
