@@ -5,9 +5,9 @@
   \includemedia[label=allenergies,
     width=\linewidth,height=0.6\linewidth, % 16:9
     activate=pageopen,
-    addresource=graphics/allenergies.mp4,
+    addresource=graphics/allenergies_2.mp4,
     flashvars={
-      source=graphics/allenergies.mp4
+      source=graphics/allenergies_2.mp4
       &loop=true             % loop video
       &scaleMode=letterbox   % preserve aspect ratio while scaling the video
     }
@@ -33,13 +33,41 @@
     %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
     %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
     %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
-    $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
+    $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBoxNoOcc+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
     $\EnergyLane+\EnergyTrack+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol   $ & \textbf{3.78} & 0.91 & 1.58 \\
     \bottomrule
   \end{tabular}
 \end{table}
   }
 
+\end{frame}
+
+\begin{frame}{Quantitative results}
+  \cite{geiger_etal_2012}
+  \begin{tikzpicture}
+    \node (img) [inner sep=0,anchor=south west] at (0,0) 
+    {\includegraphics[width=\textwidth]{graphics/geigerresults.png}};
+    \begin{scope}[x=(img.south east),y=(img.north west)]
+      \draw [red,thick] (0.01,0.6) rectangle (0.79,0.7);
+      \draw [red,thick] (0.01,0.2) rectangle (0.79,0.3);
+    \end{scope}
+  \end{tikzpicture}
+
+  Ours
+
+  \begin{tabular}{lrrr}
+    \toprule
+    Energy & t & yaw & dim \\
+    \midrule
+    initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
+    $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
+    %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
+    $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBoxNoOcc+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
+    $\EnergyLane+\EnergyTrack+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol   $ & \textbf{3.78} & 0.91 & 1.58 \\
+    \bottomrule
+  \end{tabular}
 \end{frame}
 
 \begin{frame}{What is wrong with the results?}

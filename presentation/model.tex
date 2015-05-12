@@ -18,7 +18,7 @@
   \hskip-2cm
     \begin{column}[t]{0.9\textwidth}
       \tikzset{/tikz/x=0.9cm,/tikz/y=0.9cm}
-      \input{Source/graphical_model_multiple.tex}
+      \input{Source/graphical_model_multiple_with_overlay.tex}
     \end{column}
     \hspace{-2cm}
     \begin{column}[t]{0.4\textwidth}
@@ -190,12 +190,21 @@
 \end{frame}
 
 % Consider packing other energies in fewer slides 
-\begin{frame}{Bounding box energy}
+\begin{frame}{Bounding box energy (No Occlusion)}
   % 
   \centering
   \begin{figure}
-  \input{Source/car3Ddetections.tex}
+    \input{Source/car3Ddetections.tex}
   \end{figure}
+\end{frame}
+
+\begin{frame}{Bounding box energy with occlusion}
+  \centering
+  \input{bboxoccfigure}
+  \begin{align}
+    \mathcal{V} &= \text{diag}([v_{AB}, v_{BC}, v_{CD}, v_{DA}])\\
+    \EnergyBBox &= \left\| \mathcal{V} \left(\projectionOf{\dimsn{i}}-\bbt{i}{t}\right) \right\|^2
+  \end{align}
 \end{frame}
 
 \begin{frame}{Lane information}

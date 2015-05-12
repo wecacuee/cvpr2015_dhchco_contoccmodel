@@ -24,15 +24,19 @@
 
   \path
   (-2.5,0) node[variablenode](dim) {2}
-  +(-0.85, 0) node {$\dimsn{2}$}
-  +(-0.75,0.75) node[sizefactor](fsize){\tiny{2}}
-  ;
+  +(-0.85, 0) node {$\dimsn{2}$};
+  \visible<4->{
+    \path (dim)
+    +(-0.75,0.75) node[sizefactor](fsize){\tiny{2}}
+    ;
+    \draw (fsize) -- (dim);
+  }
 
   \begin{scope}[line width=0.5]
     \path 
     % t-1 layer
     (1.5,1.5) node [variablenode] (xt1) {2}
-    +(0.25, -0.65) node {$\relp{2}{t-1}$}
+    +(-0.20, 0.20) node[anchor=south east] {$\relp{2}{t-1}$}
   %  [counterclockwise from=-100,sibling angle=60]
   %  +(1.0, -1.0) node [factor,prevf] (flane1) {$E_{lane}$} 
   %  child { node [variablenode,obs,prevobsv] (l1) { $L_t$ } }
@@ -67,58 +71,75 @@
   %(1, 0)  node[variablenode](theta){$\theta_t$}
   \draw
   (-1, 0)  node[variablenode](xt) {2}
-  + (1.10, 0) node {$\relp{2}{t}$}
-  ++ (0.75, -0.75) node [lanefactor] (flane) {\tiny{2}} ;
-%--
-   %+ (-10:1) node [variablenode,obs] (l) {2} 
-   % +(-10:1.8) node { $L_t$ } ;
-\draw (flane) --
- + (-45:1) node [ variablenode,obs,font=\footnotesize] (gps) {2} +(-60:1.7) node {Lane};
-%\draw (flane) -- +(-110:1)node [ variablenode,obs,font=\footnotesize] (map) {2} +(-110:1.7) node {Map};
- \path 
-  (-1.75, .75) node[bboxfactor](fdet){\tiny{2}} 
-  (-1.75, -.75) node[trackfactor] (fpt) {\tiny{2}};
+  + (1.10, 0) node {$\relp{2}{t}$};
+  \path 
+  (-1.75, .75) node[bboxfactor](fdet){\tiny{2}} ;
+  \path (-1.75, -.75) node[trackfactor] (fpt) {\tiny{2}};
 
- %++(65:1) node[variablenode,obs](gp){2} +(.75,0) node {$G_t$} ;
-\draw (fdet)
---
-++(90:1) node[variablenode,obs](Det){2} +(-.95,0) node {$\bb{2}$};
-  
-\draw (fpt) 
-++(-90:1) node[variablenode,obs](pt){2} +(-.95,0) node {$\trackpit{2}{t}$} 
+  \draw (fpt) 
+  ++(-90:1) node[variablenode,obs](pt){2} +(-.95,0) node {$\trackpit{2}{t}$} 
   ;
-  \draw (xt) edge node [dynfactor] (fdynx) {\tiny{2}} (xt1);
-  \draw (xt) -- (fdet) -- (Det);
   \draw (xt) -- (fpt) -- (dim);
   \draw (fpt) -- (pt);
+  \draw (fpt) edge [out=10,in=-110,gray] (xt1);
+  \visible<3->{
+    \draw (xt) edge node [dynfactor] (fdynx) {\tiny{2}} (xt1);
+    \draw (xt) -- (fdynx) -- (xt1);
+  }
+
+  \visible<2->{
+    \path (xt)
+    ++ (0.75, -0.75) node [lanefactor] (flane) {\tiny{2}} ;
+    %--
+    %+ (-10:1) node [variablenode,obs] (l) {2} 
+    % +(-10:1.8) node { $L_t$ } ;
+    \draw (flane) --
+    + (-45:1) node [ variablenode,obs,font=\footnotesize] (gps) {2} +(-60:1.7) node {$\{L_m\}$};
+    %\draw (flane) -- +(-110:1)node [ variablenode,obs,font=\footnotesize] (map) {2} +(-110:1.7) node {Map};
+    \draw (xt) -- (flane);
+  }
+
+
+ %++(65:1) node[variablenode,obs](gp){2} +(.75,0) node {$G_t$} ;
+  \draw (fdet)
+  --
+  ++(90:1) node[variablenode,obs](Det){2} +(-.95,0) node {$\bb{2}$};
+  \draw (xt) -- (fdet) -- (Det);
+  
   %\path  (fpt) edge (theta);
   %\draw (fdet) -- (gp);
  %(0.2,2.0) node[factor](fhol) {$E_{hol}$}
   %\draw (xt) edge [bend left=40] node[factor] (fhol) {$E_{hol}$} (xt1);
   %\draw (fhol) -- (theta);  	  
   \draw (dim) -- (fdet);
-  \draw (fsize) -- (dim);
   %\draw (theta) -- (flane);
-  \draw (xt) -- (fdynx) -- (xt1);
   %\draw (theta) -- (fdynt) -- (theta1);
-  \draw (xt) -- (flane);
 \coordinate (oneR) at (1.5,0);
+\coordinate (oneRs) at (1,0);
   % Legend
-  \path (-4.8, -3.0) node (ls) {}
-  ++(oneR) node [anchor=west] (e1e) {$\EnergySize$}
-  ++(oneR) node [] (e2s) {}
-  ++(oneR) node [anchor=west] (e2e) {$\EnergyDyn$}
-  ++(oneR) node [] (e3s) {}
-  ++(oneR) node [anchor=west] (e3e) {$\EnergyLane$};
-\path (-4.8, -3.5)
-  ++(oneR) node [] (e4s) {}
-  ++(oneR) node [anchor=west] (e4e) {$\EnergyTrack$}
- ++(oneR) node [] (e5s) {}
-  ++(oneR) node [anchor=west] (e5e) {$\EnergyBBox$}
+  \visible<4->{
+    \path (-3.8, -3.0) node (ls) {}
+    ++(oneRs) node [anchor=west] (e1e) {$\EnergySize$};
+    \draw (ls)  edge node [sizefactor] {\tiny{2}} (e1e) ;
+  }
+  \visible<3->{
+    \path (e1e)
+    ++(oneRs) node [] (e2s) {}
+    ++(oneRs) node [anchor=west] (e2e) {$\EnergyDyn$};
+    \draw (e2s) edge node [dynfactor] {\tiny{2}} (e2e) ;
+  }
+  \visible<2->{
+    \path (e2e)
+    ++(oneRs) node [] (e3s) {}
+    ++(oneRs) node [anchor=west] (e3e) {$\EnergyLane$};
+    \draw (e3s) edge node [lanefactor] {\tiny{2}} (e3e) ;
+  }
+\path (-3.8, -3.5)
+  ++(oneRs) node [] (e4s) {}
+  ++(oneRs) node [anchor=west] (e4e) {$\EnergyTrack$}
+ ++(oneRs) node [] (e5s) {}
+  ++(oneRs) node [anchor=west] (e5e) {$\EnergyBBox$}
   ;
-  \draw (ls)  edge node [sizefactor] {\tiny{2}} (e1e) ;
-  \draw (e2s) edge node [dynfactor] {\tiny{2}} (e2e) ;
-  \draw (e3s) edge node [lanefactor] {\tiny{2}} (e3e) ;
   \draw (e4s) edge node [trackfactor] {\tiny{2}} (e4e) ;
   \draw (e5s) edge node [bboxfactor] {\tiny{2}} (e5e) ;
 \end{tikzpicture}
