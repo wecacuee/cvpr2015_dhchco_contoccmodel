@@ -5,7 +5,7 @@
 % http://www.nathanieljohnston.com/2009/08/latex-poster-template/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[final]{beamer}
+\documentclass[handout,final]{beamer}
 \usepackage{beamerposter}
 \usepackage{graphicx}			% allows us to import images
 
@@ -368,7 +368,6 @@ contPtTracksNoOcc+size+bbox+yawT&t  &2.648&4.488&3.355\\
       \end{block}
       \begin{block}{References}
         {\small
-          \bibliographystyle{ieee}
           \bibliography{continuousocclusion}
         }
       \end{block}
@@ -378,6 +377,8 @@ contPtTracksNoOcc+size+bbox+yawT&t  &2.648&4.488&3.355\\
 
   \end{columns}
 \end{frame}
+
+\bibliographystyle{ieee}
 \end{document}
 
 \setbeamercolor{block alerted title}{fg=black,bg=norange}	% frame color

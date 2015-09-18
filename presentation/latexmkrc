@@ -1,6 +1,0 @@
-$texprefix = 'presentation';
-$pdf_mode = 1;
-$dvi_mode = 0;
-$out_dir = "out";
-$postscript_mode = 0;
-$pdflatex = 'xelatex -fmt presentationpreamble.fmt -shell-escape %O %S';

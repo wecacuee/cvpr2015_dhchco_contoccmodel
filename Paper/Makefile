@@ -1,33 +1,34 @@
-.PHONY: all clean view
 
-LATEXCMD=latexmk -pdf -pdflatex="pdflatex -interactive=nonstopmode" -use-make
-all: model.pdf 
-#densecrf.pdf presentation.pdf
+.PHONY: all clean
 
-view: model.pdf
-	xdg-open $< 2>/dev/null&
+BASENAMES=model supplementary
+TARGETS=$(foreach var,$(BASENAMES),out/$(var).pdf)
 
-presentation.pdf: presentation.tex graphics/61.png graphics/61WithGraphicalModel.pdf graphics/graphicalModelFrom61.pdf graphics/graphicalModelFrom61ConstVars.pdf graphics/graphicalModelFrom61withConstNodes.pdf graphics/graphicalModelFrom61withConstNodesDirections.pdf model.bib
-	$(LATEXCMD) $< model.bib
+# http://stackoverflow.com/questions/18136918/how-to-get-current-directory-of-your-makefile
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-model.pdf: model.tex model.bib graphics/maxFacesVisible.pdf graphics/ourGraphicalModel2.pdf
-	$(LATEXCMD) $< model.bib
+OUT_DIR = out
+DEPS_DIR = out/deps
+LATEXMK = latexmk -recorder -use-make -deps
+PDFLATEX=pdflatex# -interaction=nonstopmode
 
-densecrf.pdf: densecrf.tex densecrf.bib graphics/gaussianLinear1D.png graphics/gaussian2D.png
-	$(LATEXCMD) $<
+all : $(TARGETS)
 
-graphics/%.pdf: graphics/%.svg
-	inkscape $< --export-pdf=$@
+# Include the dependency makefile produced by latexmk
+# latexmk -deps-out= is used to record the dependencies
+$(foreach file,$(TARGETS),$(eval -include $(DEPS_DIR)/$(notdir file)P))
 
-graphics/gaussianLinear1D.png: plot_linear_and_real_gaussian.py
-	python plot_linear_and_real_gaussian.py $@
 
-graphics/gaussian2D.png: plot_linear_and_real_gaussian.py
-	python plot_linear_and_real_gaussian.py $@
+$(OUT_DIR)/.touch:
+	mkdir -p $(dir $@) 
+	touch $@
 
-plot_linear_and_real_gaussian.py:
+$(DEPS_DIR)/.touch:
+	mkdir -p $(dir $@)
+	touch $@
 
-graphics/61.png:
+out/%.pdf : %.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch
+	$(LATEXMK) -pdf -dvi- -ps- -output-directory=out -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
 
 clean:
-	latexmk -CA
+	latexmk -C -output-directory=out

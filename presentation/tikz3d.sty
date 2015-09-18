@@ -1,0 +1,605 @@
+%%
+%% This is file `tikz3d.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% tikz3d.dtx  (with options: `package')
+%% ----------------------------------------------------------------
+%% tikz3d --- More general 3d capabilities for TikZ
+%% E-mail: stacey@math.ntnu.no
+%% Released under the LaTeX Project Public License v1.3c or later
+%% See http://www.latex-project.org/lppl.txt
+%% ----------------------------------------------------------------
+%% 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tikz3d}[2011/06/03 v1.0 TikZ with extended 3D]
+
+\long\def\ge@addto@macro#1#2{%
+  \begingroup
+  \toks@\expandafter\expandafter\expandafter{\expandafter#1#2}%
+  \xdef#1{\the\toks@}%
+  \endgroup}
+
+\newif\ifthd@save@point
+\thd@save@pointtrue
+
+\newif\ifthd@save@this@point
+\thd@save@this@pointtrue
+
+\newdimen\thd@x
+\newdimen\thd@y
+\newdimen\thd@z
+\newdimen\thd@thisx
+\newdimen\thd@thisy
+\newdimen\thd@thisz
+\newdimen\thd@xa
+\newdimen\thd@ya
+\newdimen\thd@za
+\newdimen\thd@xb
+\newdimen\thd@yb
+\newdimen\thd@zb
+\newdimen\thd@xc
+\newdimen\thd@yc
+\newdimen\thd@zc
+\newdimen\thd@lastxsaved
+\newdimen\thd@lastysaved
+\newdimen\thd@lastzsaved
+\newdimen\thd@curvebx
+\newdimen\thd@curveby
+\newdimen\thd@curvebz
+
+\tikzset{
+  every node/.style={3d/coordinate/save node},
+  3d rectangle/.style={%
+    3d/rectangle
+  },
+  3d arc/.style={%
+    3d/arc
+  },
+  3d circle/.style={%
+    3d/circle
+  },
+  3d/.is family,
+  3d,
+  3d projection/.is choice,
+  3d projection/project from point/.code={%
+    \let\thd@to@twd=\thd@persp@proj
+  },
+  perspective eye/x/.initial={10cm},
+  perspective eye/y/.initial={5cm},
+  perspective eye/z/.initial={20cm},
+  perspective eye/.code={
+    \thd@split@xyz#1\relax
+    \edef\thd@temp{\the\thd@x}%
+    \pgfkeyslet{/tikz/3d/perspective eye/x}{\thd@temp}%
+    \edef\thd@temp{\the\thd@y}%
+    \pgfkeyslet{/tikz/3d/perspective eye/y}{\thd@temp}%
+    \edef\thd@temp{\the\thd@z}%
+    \pgfkeyslet{/tikz/3d/perspective eye/z}{\thd@temp}%
+  },
+  rectangle/direction/.initial={1,0,0},
+  rectangle/.style={
+    to path={%
+      \pgfextra{\thd@rectangle\tikztotarget}%
+      \thd@path@cmd
+    },
+    3d/rectangle/.cd
+  },
+  circle/x axis/.initial={1,0,0},
+  circle/y axis/.initial={0,1,0},
+  circle/.code={%
+    \let\pgfsyssoftpath@curveto=\thd@circle@pathcurveto
+    \let\pgfsyssoftpath@moveto=\thd@circle@pathmoveto
+  },
+  arc/.code={%
+    \let\pgfsyssoftpath@curveto=\thd@arc@pathcurveto
+    \let\tikz@@@arcfinal=\thd@@@arcfinal
+  },
+  coordinate/.is family,
+  coordinate,
+  x length/.initial={1cm},
+  y length/.initial={1cm},
+  z length/.initial={1cm},
+  x/.code={%
+    \tikz@checkunit{#1}%
+    \iftikz@isdimension
+     \pgfmathsetlength{\thd@x}{#1}%
+    \else
+     \pgfmathsetlength{\thd@x}{#1 * \pgfkeysvalueof{/tikz/3d/coordinate/x length}}%
+    \fi
+  },
+  y/.code={%
+    \tikz@checkunit{#1}%
+    \iftikz@isdimension
+     \pgfmathsetlength{\thd@y}{#1}%
+    \else
+     \pgfmathsetlength{\thd@y}{#1 * \pgfkeysvalueof{/tikz/3d/coordinate/y length}}%
+    \fi
+  },
+  z/.code={%
+    \tikz@checkunit{#1}%
+    \iftikz@isdimension
+     \pgfmathsetlength{\thd@z}{#1}%
+    \else
+     \pgfmathsetlength{\thd@z}{#1 * \pgfkeysvalueof{/tikz/3d/coordinate/z length}}%
+    \fi
+  },
+  save node/.code={%
+    \tikz@addoption{%
+      \expandafter\global\expandafter\let\csname thd@node@\tikz@fig@name\endcsname\thd@this@node
+    }
+  },
+  new/.code={%
+    \def\thd@next@coord{x}%
+  },
+  .unknown/.code={%
+    \tikz@checkunit{\pgfkeyscurrentname}%
+    \iftikz@isdimension
+      \expandafter\pgfmathsetlength\csname thd@\thd@next@coord\endcsname{\pgfkeyscurrentname}%
+    \else
+      \expandafter\pgfmathsetlength\csname thd@\thd@next@coord\endcsname{\pgfkeyscurrentname * \pgfkeysvalueof{/tikz/3d/coordinate/\thd@next@coord\space length}}%
+    \fi
+    \edef\thd@next@coord{\csname thd@next@coord@\thd@next@coord\endcsname}%
+  },
+}
+
+\def\thd@next@coord@x{y}
+\def\thd@next@coord@y{z}
+\def\thd@next@coord@z{x}
+
+\def\thd@split@xyz#1,#2,#3\relax{%
+  \tikz@checkunit{#1}%
+  \iftikz@isdimension
+   \pgfmathsetlength{\thd@x}{#1}%
+  \else
+   \pgfmathsetlength{\thd@x}{#1 *     \pgfkeysvalueof{/tikz/3d/coordinate/x length}}%
+  \fi
+  \tikz@checkunit{#2}%
+  \iftikz@isdimension
+   \pgfmathsetlength{\thd@y}{#2}%
+  \else
+   \pgfmathsetlength{\thd@y}{#2 *     \pgfkeysvalueof{/tikz/3d/coordinate/y length}}%
+  \fi
+  \tikz@checkunit{#3}%
+  \iftikz@isdimension
+   \pgfmathsetlength{\thd@z}{#3}%
+  \else
+   \pgfmathsetlength{\thd@z}{#3 *     \pgfkeysvalueof{/tikz/3d/coordinate/z length}}%
+  \fi
+}
+
+\newcommand{\thdset}[1]{%
+  \tikzset{3d/.cd,#1}%
+}
+
+\def\thd@save@point{%
+  \ifthd@save@point
+  \global\thd@lastxsaved=\thd@x%
+  \global\thd@lastysaved=\thd@y%
+  \global\thd@lastzsaved=\thd@z%
+  \fi
+}
+
+\def\thd@save@this@point{%
+  \ifthd@save@this@point
+  \global\thd@thisx=\thd@x%
+  \global\thd@thisy=\thd@y%
+  \global\thd@thisz=\thd@z%
+  \fi
+}
+
+\def\thd@this@point{%
+  \thd@x=\thd@thisx%
+  \thd@y=\thd@thisy%
+  \thd@z=\thd@thisz%
+}
+
+\def\thd@lastsaved@point{%
+  \thd@x=\thd@lastxsaved%
+  \thd@y=\thd@lastysaved%
+  \thd@z=\thd@lastzsaved%
+}
+
+\def\thd@save@curveB{%
+  \global\thd@curvebx=\thd@thisx%
+  \global\thd@curveby=\thd@thisy%
+  \global\thd@curvebz=\thd@thisz%
+}
+
+\def\thd@curveB{%
+  \thd@x=\thd@curvebx%
+  \thd@y=\thd@curveby%
+  \thd@z=\thd@curvebz%
+}
+
+\def\thd@make@global{%
+  \global\thd@x=\thd@x%
+  \global\thd@y=\thd@y%
+  \global\thd@z=\thd@z%
+}
+
+\def\thd@point@origin{%
+  \thd@x=0pt%
+  \thd@y=0pt%
+  \thd@z=0pt%
+}
+
+\def\thd@add#1#2{%
+  #1%
+  \thd@xa=\thd@x
+  \thd@ya=\thd@y
+  \thd@za=\thd@z
+  #2%
+  \advance\thd@x by \thd@xa
+  \advance\thd@y by \thd@ya
+  \advance\thd@z by \thd@za
+}
+
+\def\thd@diff#1#2{%
+  #2%
+  \thd@xa=\thd@x
+  \thd@ya=\thd@y
+  \thd@za=\thd@z
+  #1%
+  \advance\thd@x by -\thd@xa
+  \advance\thd@y by -\thd@ya
+  \advance\thd@z by -\thd@za
+}
+
+\def\thd@scale#1#2{%
+  #1%
+  \thd@x=#2\thd@x
+  \thd@y=#2\thd@y
+  \thd@z=#2\thd@z
+}
+
+\def\thd@proj#1#2{%
+  #1%
+  \thd@xa=\thd@x
+  \thd@ya=\thd@y
+  \thd@za=\thd@z
+  #2%
+  \thd@xb=\thd@x
+  \thd@yb=\thd@y
+  \thd@zb=\thd@z
+  \pgfmathsetlength{\pgfutil@tempdima}{(\thd@xa * \thd@xb + \thd@ya * \thd@yb + \thd@za * \thd@zb) / (\thd@xa^2 + \thd@ya^2 + \thd@za^2)}%
+  \pgfmathsetlength{\thd@x}{\thd@xa * \pgfutil@tempdima}%
+  \pgfmathsetlength{\thd@y}{\thd@ya * \pgfutil@tempdima}%
+  \pgfmathsetlength{\thd@z}{\thd@za * \pgfutil@tempdima}%
+}
+
+\def\thd@pt#1#2#3{%
+  \pgfmathsetlength{\thd@x}{#1}%
+  \pgfmathsetlength{\thd@y}{#2}%
+  \pgfmathsetlength{\thd@z}{#3}%
+}
+
+\def\thd@qpt#1#2#3{%
+  \thd@x=#1\relax%
+  \thd@y=#2\relax%
+  \thd@z=#3\relax%
+}
+
+\def\thd@process#1{%
+  \begingroup
+  #1%
+  \global\thd@x=\thd@x
+  \global\thd@y=\thd@y
+  \global\thd@z=\thd@z
+  \endgroup
+}
+
+\def\thd@persp@proj{%
+  \pgfmathsetmacro{\thd@t}{\pgfkeysvalueof{/tikz/3d/perspective eye/z}/(\pgfkeysvalueof{/tikz/3d/perspective eye/z} - \thd@z)}%
+  \pgfmathsetlength{\pgf@x}{(1 - \thd@t) * \pgfkeysvalueof{/tikz/3d/perspective eye/x} + \thd@t * \thd@x}%
+  \pgfmathsetlength{\pgf@y}{(1 - \thd@t) * \pgfkeysvalueof{/tikz/3d/perspective eye/y} + \thd@t * \thd@y}%
+}
+
+\let\thd@to@twd=\thd@persp@proj
+
+\tikzdeclarecoordinatesystem{3d}{%
+  \thd@point@origin
+  \thdset{coordinate,new,#1}%
+  \thd@make@global
+  \thd@to@twd
+  \thd@save@point
+  \thd@save@node
+  \thd@save@this@point
+  \global\let\tikz@curveB=\thd@orig@tikz@curveB
+}
+
+\tikzdeclarecoordinatesystem{+3d}{%
+  \thd@point@origin
+  \thdset{coordinate,new,#1}%
+  \thd@save@this@point
+  \thd@add{\thd@qpt{\thd@x}{\thd@y}{\thd@z}}{\thd@lastsaved@point}%
+  \thd@make@global
+  \thd@to@twd
+  \thd@save@node
+  \global\let\tikz@curveB=\thd@tikz@curveB
+}
+
+\tikzdeclarecoordinatesystem{++3d}{%
+  \thd@point@origin
+  \thdset{coordinate,new,#1}%
+  \thd@save@this@point
+  \thd@add{\thd@qpt{\thd@x}{\thd@y}{\thd@z}}{\thd@lastsaved@point}%
+  \thd@make@global
+  \thd@to@twd
+  \thd@save@point
+  \thd@save@node
+  \global\let\tikz@curveB=\thd@tikz@curveB
+}
+
+\def\thd@nodename#1.#2\relax{#1}
+
+\tikzdeclarecoordinatesystem{3d n}{%
+  \thd@point@origin
+  \pgfutil@in@.{#1}% Ok, flag this
+  \ifpgfutil@in@
+    \tikz@calc@anchor#1\tikz@stop%
+    \pgf@xa=\pgf@x
+    \pgf@ya=\pgf@y
+    \expandafter\tikz@calc@anchor\thd@nodename#1\relax.center\tikz@stop%
+    \advance\pgf@xa by -\pgf@x
+    \advance\pgf@ya by -\pgf@y
+    \csname thd@node@\thd@nodename#1\relax\endcsname
+    \thd@to@twd
+    \advance\pgf@x by \pgf@xa
+    \advance\pgf@y by \pgf@ya
+  \else%
+    \csname thd@node@#1\endcsname
+    \tikz@calc@anchor#1.center\tikz@stop%
+    \expandafter\ifx\csname pgf@sh@ns@#1\endcsname\tikz@coordinate@text%
+    \else
+      \tikz@shapebordertrue%
+      \def\tikz@shapeborder@name{#1}%
+    \fi%
+    \thd@to@twd
+  \fi%
+  \thd@make@global
+  \thd@save@point
+  \thd@save@this@point
+  \thd@save@node
+}
+
+\def\thd@save@node{%
+  \xdef\thd@this@node{\noexpand\thd@qpt{\the\thd@x}{\the\thd@y}{\the\thd@z}}%
+}
+
+\let\thd@orig@tikz@curveC=\tikz@curveC
+
+\def\thd@tikz@curveC#1{%
+  \thd@add{\thd@curveB}{\thd@lastsaved@point}%
+  \thd@to@twd
+  \xdef\tikz@curve@second{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \global\let\tikz@curveC=\thd@orig@tikz@curveC
+  \tikz@curveC{#1}%
+}
+
+\let\thd@orig@tikz@curveB=\tikz@curveB
+
+\def\thd@tikz@curveB#1{%
+  \global\let\tikz@curveC=\thd@tikz@curveC
+  \global\let\tikz@curveB=\thd@orig@tikz@curveB
+  \thd@save@curveB
+  \tikz@curveB{#1}%
+}
+
+\def\thd@rectangle#1{%
+  \let\thd@path@cmd=\pgfutil@empty
+  \thd@xc=\thd@x
+  \thd@yc=\thd@y
+  \thd@zc=\thd@z
+  \thd@save@pointfalse
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@gobble\expandafter(#1)\relax%
+  \edef\thd@marshal{%
+    \noexpand\thd@diff{\noexpand\thd@qpt{\the\thd@x}{\the\thd@y}{\the\thd@z}}{\noexpand\thd@qpt{\the\thd@xc}{\the\thd@yc}{\the\thd@zc}}}%
+  \thd@process{\thd@marshal}%
+  \thd@xa=\thd@x
+  \thd@ya=\thd@y
+  \thd@za=\thd@z
+  \edef\thd@rect@dir{(3d cs:\pgfkeysvalueof{/tikz/3d/rectangle/direction})}
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\thd@rect@dir\relax
+  \edef\thd@marshal{%
+    \noexpand\thd@proj{\noexpand\thd@qpt{\the\thd@x}{\the\thd@y}{\the\thd@z}}{\noexpand\thd@qpt{\the\thd@xa}{\the\thd@ya}{\the\thd@za}}}%
+  \thd@process{\thd@marshal}%
+  \thd@xb=\thd@x
+  \thd@yb=\thd@y
+  \thd@zb=\thd@z
+  \edef\thd@temp{ (+3d cs:0pt,0pt,0pt) -- (+3d cs:\the\thd@x,\the\thd@y,\the\thd@z) -- (+3d cs:\the\thd@xa,\the\thd@ya,\the\thd@za)}%
+  \ge@addto@macro\thd@path@cmd\thd@temp
+  \edef\thd@marshal{%
+    \noexpand\thd@diff{\noexpand\thd@qpt{\the\thd@xa}{\the\thd@ya}{\the\thd@za}}{\noexpand\thd@qpt{\the\thd@xb}{\the\thd@yb}{\the\thd@zb}}}%
+  \thd@process{\thd@marshal}%
+  \edef\thd@temp{ -- (+3d cs:\the\thd@x,\the\thd@y,\the\thd@z) -- cycle (\tikztotarget)}%
+  \ge@addto@macro\thd@path@cmd\thd@temp
+  \thd@save@pointtrue
+}
+
+\let\thd@orig@pgfsyssoftpath@curveto=\pgfsyssoftpath@curveto
+\let\thd@orig@pgfsyssoftpath@moveto=\pgfsyssoftpath@moveto
+\def\thd@arc@pathcurveto#1#2#3#4#5#6{%
+  \begingroup
+  \thd@this@point
+  \thd@xc=\thd@x
+  \thd@yc=\thd@y
+  \thd@zc=\thd@z
+  \edef\thd@rect@dir{(3d cs:\pgfkeysvalueof{/tikz/3d/circle/x axis})}
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\thd@rect@dir\relax
+  \thd@xa=\thd@x
+  \thd@ya=\thd@y
+  \thd@za=\thd@z
+  \edef\thd@rect@dir{(3d cs:\pgfkeysvalueof{/tikz/3d/circle/y axis})}
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\thd@rect@dir\relax
+  \thd@xb=\thd@x
+  \thd@yb=\thd@y
+  \thd@zb=\thd@z
+  \pgfmathsetlength{\thd@x}{\thd@xc + (#1 - \pgf@path@lastx)/1cm * \thd@xa + (#2 - \pgf@path@lasty)/1cm * \thd@xb}
+  \pgfmathsetlength{\thd@y}{\thd@yc + (#1 - \pgf@path@lastx)/1cm * \thd@ya + (#2 - \pgf@path@lasty)/1cm * \thd@yb}
+  \pgfmathsetlength{\thd@z}{\thd@zc + (#1 - \pgf@path@lastx)/1cm * \thd@za + (#2 - \pgf@path@lasty)/1cm * \thd@zb}
+  \thd@to@twd
+  \pgfmathsetlength{\pgf@x}{\pgf@x/1cm}%
+  \pgfmathsetlength{\pgf@y}{\pgf@y/1cm}%
+  \pgfpointtransformed{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \pgf@xa=\pgf@x
+  \pgf@ya=\pgf@y
+  \pgfmathsetlength{\thd@x}{\thd@xc + (#3 - \pgf@path@lastx)/1cm * \thd@xa + (#4 - \pgf@path@lasty)/1cm * \thd@xb}
+  \pgfmathsetlength{\thd@y}{\thd@yc + (#3 - \pgf@path@lastx)/1cm * \thd@ya + (#4 - \pgf@path@lasty)/1cm * \thd@yb}
+  \pgfmathsetlength{\thd@z}{\thd@zc + (#3 - \pgf@path@lastx)/1cm * \thd@za + (#4 - \pgf@path@lasty)/1cm * \thd@zb}
+  \thd@to@twd
+  \pgfmathsetlength{\pgf@x}{\pgf@x/1cm}%
+  \pgfmathsetlength{\pgf@y}{\pgf@y/1cm}%
+  \pgfpointtransformed{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \pgf@xc=\pgf@x
+  \pgf@yc=\pgf@y
+  \pgfmathsetlength{\thd@x}{\thd@xc + (#5 - \pgf@path@lastx)/1cm * \thd@xa + (#6 - \pgf@path@lasty)/1cm * \thd@xb}
+  \pgfmathsetlength{\thd@y}{\thd@yc + (#5 - \pgf@path@lastx)/1cm * \thd@ya + (#6 - \pgf@path@lasty)/1cm * \thd@yb}
+  \pgfmathsetlength{\thd@z}{\thd@zc + (#5 - \pgf@path@lastx)/1cm * \thd@za + (#6 - \pgf@path@lasty)/1cm * \thd@zb}
+  \thd@save@point
+  \thd@save@this@point
+  \thd@to@twd
+  \pgfmathsetlength{\pgf@x}{\pgf@x/1cm}%
+  \pgfmathsetlength{\pgf@y}{\pgf@y/1cm}%
+  \pgfpointtransformed{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \pgf@xb=\pgf@x
+  \pgf@yb=\pgf@y
+  \thd@orig@pgfsyssoftpath@curveto{\the\pgf@xa}{\the\pgf@ya}{\the\pgf@xc}{\the\pgf@yc}{\the\pgf@xb}{\the\pgf@yb}%
+  \endgroup
+}
+
+\def\thd@circle@pathmoveto#1#2{%
+  \begingroup
+  \thd@save@pointfalse
+  \thd@save@this@pointfalse
+  \edef\thd@temp{%
+    \noexpand\pgf@xa=#1\relax
+    \noexpand\pgf@ya=#2\relax
+  }%
+  \thd@temp
+  \thd@this@point% Corresponds to the centre of the circle in 3D-space
+  \thd@xc=\thd@x
+  \thd@yc=\thd@y
+  \thd@zc=\thd@z
+  \thd@to@twd
+  \pgf@xb=\pgf@x
+  \pgf@yb=\pgf@y
+  \edef\thd@rect@dir{(3d cs:\pgfkeysvalueof{/tikz/3d/circle/x axis})}
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\thd@rect@dir\relax
+  \thd@xa=\thd@x
+  \thd@ya=\thd@y
+  \thd@za=\thd@z
+  \edef\thd@rect@dir{(3d cs:\pgfkeysvalueof{/tikz/3d/circle/y axis})}
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\thd@rect@dir\relax
+  \thd@xb=\thd@x
+  \thd@yb=\thd@y
+  \thd@zb=\thd@z
+  \pgfmathsetlength{\thd@x}{\thd@xc + (\pgf@xa - \pgf@xc)/1cm * \thd@xa + (\pgf@ya - \pgf@yc)/1cm * \thd@xb}
+  \pgfmathsetlength{\thd@y}{\thd@yc + (\pgf@xa - \pgf@xc)/1cm * \thd@ya + (\pgf@ya - \pgf@yc)/1cm * \thd@yb}
+  \pgfmathsetlength{\thd@z}{\thd@zc + (\pgf@xa - \pgf@xc)/1cm * \thd@za + (\pgf@ya - \pgf@yc)/1cm * \thd@zb}
+  \thd@to@twd
+  \pgfpointtransformed{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \advance\pgf@x by -\pgf@xb
+  \advance\pgf@y by -\pgf@yb
+  \thd@orig@pgfsyssoftpath@moveto{\the\pgf@x}{\the\pgf@y}%
+  \endgroup
+}
+
+\def\thd@circle@pathcurveto#1#2#3#4#5#6{%
+  \begingroup
+  \thd@save@pointfalse
+  \thd@save@this@pointfalse
+  \edef\thd@temp{%
+    \noexpand\pgf@xa=#1\relax
+    \noexpand\pgf@ya=#2\relax
+    \noexpand\pgf@xc=#3\relax
+    \noexpand\pgf@yc=#4\relax
+    \noexpand\pgf@xb=#5\relax
+    \noexpand\pgf@yb=#6\relax
+    \noexpand\pgfutil@tempdima=\the\pgf@xc\relax
+    \noexpand\pgfutil@tempdimb=\the\pgf@yc\relax
+  }%
+  \thd@temp
+  \thd@this@point% Centre of the circle in 3D-space
+  \thd@xc=\thd@x\relax
+  \thd@yc=\thd@y\relax
+  \thd@zc=\thd@z\relax
+  \edef\thd@rect@dir{(3d cs:\pgfkeysvalueof{/tikz/3d/circle/x axis})}
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\thd@rect@dir\relax
+  \thd@xa=\thd@x
+  \thd@ya=\thd@y
+  \thd@za=\thd@z
+  \edef\thd@rect@dir{(3d cs:\pgfkeysvalueof{/tikz/3d/circle/y axis})}
+  \expandafter\tikz@scan@one@point\expandafter\pgfutil@firstofone\thd@rect@dir\relax
+  \thd@xb=\thd@x
+  \thd@yb=\thd@y
+  \thd@zb=\thd@z
+  \pgfmathsetlength{\thd@x}{\thd@xc + (\pgf@xa - \pgfutil@tempdima)/1cm * \thd@xa + (\pgf@ya - \pgfutil@tempdimb)/1cm * \thd@xb}
+  \pgfmathsetlength{\thd@y}{\thd@yc + (\pgf@xa - \pgfutil@tempdima)/1cm * \thd@ya + (\pgf@ya - \pgfutil@tempdimb)/1cm * \thd@yb}
+  \pgfmathsetlength{\thd@z}{\thd@zc + (\pgf@xa - \pgfutil@tempdima)/1cm * \thd@za + (\pgf@ya - \pgfutil@tempdimb)/1cm * \thd@zb}
+  \thd@to@twd
+  \pgfpointtransformed{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \pgf@xa=\pgf@x
+  \pgf@ya=\pgf@y
+  \thd@this@point% Centre of the circle in 3D-space
+  \thd@to@twd
+  \advance\pgf@xa by -\pgf@x
+  \advance\pgf@ya by -\pgf@y
+  \pgfmathsetlength{\thd@x}{\thd@xc + (\pgf@xc - \pgfutil@tempdima)/1cm * \thd@xa + (\pgf@yc - \pgfutil@tempdimb)/1cm * \thd@xb}
+  \pgfmathsetlength{\thd@y}{\thd@yc + (\pgf@xc - \pgfutil@tempdima)/1cm * \thd@ya + (\pgf@yc - \pgfutil@tempdimb)/1cm * \thd@yb}
+  \pgfmathsetlength{\thd@z}{\thd@zc + (\pgf@xc - \pgfutil@tempdima)/1cm * \thd@za + (\pgf@yc - \pgfutil@tempdimb)/1cm * \thd@zb}
+  \thd@to@twd
+  \pgfpointtransformed{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \pgf@xc=\pgf@x
+  \pgf@yc=\pgf@y
+  \thd@this@point% Centre of the circle in 3D-space
+  \thd@to@twd
+  \advance\pgf@xc by -\pgf@x
+  \advance\pgf@yc by -\pgf@y
+  \pgfmathsetlength{\thd@x}{\thd@xc + (\pgf@xb - \pgfutil@tempdima)/1cm * \thd@xa + (\pgf@yb - \pgfutil@tempdimb)/1cm * \thd@xb}
+  \pgfmathsetlength{\thd@y}{\thd@yc + (\pgf@xb - \pgfutil@tempdima)/1cm * \thd@ya + (\pgf@yb - \pgfutil@tempdimb)/1cm * \thd@yb}
+  \pgfmathsetlength{\thd@z}{\thd@zc + (\pgf@xb - \pgfutil@tempdima)/1cm * \thd@za + (\pgf@yb - \pgfutil@tempdimb)/1cm * \thd@zb}
+  \thd@to@twd
+  \pgfpointtransformed{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+  \pgf@xb=\pgf@x
+  \pgf@yb=\pgf@y
+  \thd@this@point% Centre of the circle in 3D-space
+  \thd@to@twd
+  \advance\pgf@xb by -\pgf@x
+  \advance\pgf@yb by -\pgf@y
+  \edef\thd@temp{%
+    \noexpand\thd@orig@pgfsyssoftpath@curveto{\the\pgf@xa}{\the\pgf@ya}{\the\pgf@xc}{\the\pgf@yc}{\the\pgf@xb}{\the\pgf@yb}}%
+  \thd@temp
+  \endgroup
+}
+
+\def\thd@@@arcfinal#1#2#3{%
+  #1%
+  \xdef\tikz@arc@save@first{\pgfqpoint{\the\tikz@lastx}{\the\tikz@lasty}}%
+  \thd@lastsaved@point%
+  \thd@to@twd%
+  \xdef\tikz@arc@save@second{\pgfqpoint{\the\pgf@x}{\the\pgf@y}}%
+}
+
+
+%% 
+%% Copyright (C) 2011 by Andrew Stacey <stacey@math.ntnu.no>
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License (LPPL), either
+%% version 1.3c of this license or (at your option) any later
+%% version.  The latest version of this license is in the file:
+%% 
+%% http://www.latex-project.org/lppl.txt
+%% 
+%% This work is "maintained" (as per LPPL maintenance status) by
+%% Andrew Stacey.
+%% 
+%% This work consists of the file  tikz3d.dtx
+%% and the derived files           tikz3d.ins,
+%%                                 tikz3d.pdf, and
+%%                                 tikz3d.sty.
+%% 
+%%
+%% End of file `tikz3d.sty'.

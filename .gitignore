@@ -9,5 +9,11 @@
 *.svn
 .*.swp
 *.fls
+*.dvi
+*.toc
 CVPR/cvpr2015AuthorKit/
 CVPR/graphics
+CVPR/out/
+Paper/out/
+poster/out/
+presentation/out/

@@ -19,6 +19,8 @@
 \usepackage{tikz}
 \usetikzlibrary{shadows,trees}
 
+\usepackage{subcaption}
+
 \newlength{\eqs}
 \setlength{\eqs}{-0.04in}
 
@@ -45,21 +47,14 @@
 %\newcommand{\bm}{\mathbf{}}
 \input{preamble}
 \DeclareMathOperator*{\argmin}{\arg\min}
-
-\newcommand{\EnergyBBox}{{\pEnergy{bbox}}}
-\newcommand{\EnergyTrack}{{ \pEnergy{track}}}
-\newcommand{\EnergyTrackNoOcc}{{\pEnergy{trackNoOcc}}}
-\newcommand{\EnergyLane}{{\Energy{lane}}}
-\newcommand{\EnergySize}{{\Energy{size}}}
-\newcommand{\EnergyDyn}{{\Energy{dyn}}}
-\newcommand{\EnergyDynHol}{{\Energy{dyn-hol}}}
-\newcommand{\EnergyDynOri}{{\Energy{dyn-ori}}}
-\newcommand{\EnergyDynVel}{{\Energy{dyn-vel}}}
-
 \newcommand{\xmin}{\xymin{x}}
 \newcommand{\xmax}{\xymax{x}}
 \newcommand{\ymin}{\xymin{y}}
 \newcommand{\ymax}{\xymax{y}}
+% Some diagrams have "visble" macro from beamer. Everything should be visible in paper mode.
+\makeatletter
+\def\visible<#1>#2{#2}
+\makeatother
 
 \begin{document}
 

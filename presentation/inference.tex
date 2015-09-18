@@ -13,6 +13,32 @@
           Optimize dimension variables only 
       \end{itemize}
   \end{itemize}
-  \includegraphics[width=0.5\textwidth, trim=4.5cm 7cm 4.5cm 7cm, clip]{graphics/mcmc_vs_coordinate_descent_60.pdf}
-  \includegraphics[width=0.5\textwidth, trim=4.5cm 7cm 4.5cm 7cm, clip]{graphics/mcmc_vs_coordinate_descent_192.pdf}
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[xlabel=CPU time (sec),ylabel=Energy,
+          legend entries={Coordinate Descent,Metropolic Hastings},
+          legend columns=-1,
+          legend to name=convergencelegend,
+          legend style={draw=none,fill=none},
+          width=0.5\textwidth,
+          y post scale=0.8,
+        name=plot1]
+        \addplot table [x index=0,y index=1,header=false] {graphics/mcmc_inference_cputime_0000000060.txt};
+        \addplot table [x index=0,y index=1,header=false] {graphics/stepWiseInference_cputime_0000000060.txt};
+      \end{axis}
+      %\includegraphics[width=0.5\textwidth, trim=4.5cm 7cm 4.5cm 7cm, clip]{graphics/mcmc_vs_coordinate_descent_60.pdf}
+      \begin{axis}[at={(plot1.south east)},
+          xlabel=CPU time (sec),xshift=0.5cm,
+          width=0.5\textwidth,
+          y post scale=0.8,
+        ]
+        \addplot table [x index=0,y index=1,header=false] {graphics/mcmc_inference_cputime_0000000192.txt};
+        \addplot table [x index=0,y index=1,header=false] {graphics/stepWiseInference_cputime_0000000192.txt};
+      \end{axis}
+    \end{tikzpicture}
+
+      \ref{convergencelegend}
+  \end{center}
+  %\includegraphics[width=0.5\textwidth, trim=4.5cm 7cm 4.5cm 7cm, clip]{graphics/mcmc_vs_coordinate_descent_192.pdf}
 \end{frame}

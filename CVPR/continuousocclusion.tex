@@ -14,6 +14,8 @@
 \usepackage{microtype}
 \usepackage{url}
 \usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{booktabs} % for better tables
 
 \newlength{\eqs}
 \setlength{\eqs}{-0.04in}
@@ -38,6 +40,16 @@
 
 
 \input{preamble}
+\newcommand{\xmin}{x_\text{min}}
+\newcommand{\ymin}{y_\text{min}}
+\newcommand{\xmax}{x_\text{max}}
+\newcommand{\ymax}{y_\text{max}}
+\DeclareMathOperator*{\argmin}{\arg\min}
+
+% Some diagrams have "visble" macro from beamer. Everything should be visible in paper mode.
+\makeatletter
+\def\visible<#1>#2{#2}
+\makeatother
 
 
 %\cvprfinalcopy % *** Uncomment this line for the final submission

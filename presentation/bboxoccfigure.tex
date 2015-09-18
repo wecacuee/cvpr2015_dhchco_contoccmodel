@@ -5,10 +5,10 @@
 
   \end{scope}
 
-    \draw [draw=green!50!black,very thick] (b) rectangle (h);
-   \path  [name path=gbbox] (b) |- (h);
-    \draw [name path=cross1,draw=green!50!black,very thick] (b) -- (h) ;
-    \draw [name path=cross2,draw=green!50!black,very thick] (d-| b) -- (b -| h) ;
+  \draw [draw=green!50!black,very thick] (b) rectangle (h);
+  \path  [name path=gbbox] (b) |- (h);
+  \draw [name path=cross1,draw=green!50!black,very thick] (b) -- (h) ;
+  \draw [name path=cross2,draw=green!50!black,very thick] (d-| b) -- (b -| h) ;
    \coordinate (gh) at (h);
    \coordinate (gb) at (b);
    \coordinate (gdpb) at (d-|b);
@@ -17,16 +17,16 @@
     \acuboid
   \end{scope}
 
-    \draw [name path=bbbox,draw=blue!50!black,very thick] (b) rectangle (h) ;
+  \draw [name path=bbbox,draw=blue!50!black,very thick] (b) rectangle (h) ;
 
    \path [name intersections={of=cross1 and bbbox,by=E}];
    \path [name intersections={of=gbbox and bbbox,by=F}];
    \path [name intersections={of=cross1 and cross2,by=C}];
    \node [anchor=north east] at (gh) {A};
-   \node [anchor=north west] at (gdpb) {B};
+   \node [anchor=north west] at (gdpb) {D};
    \node [anchor=south west] at (gb) {C};
-   \node [anchor=south east] at (gb -| gh) {D};
+   \node [anchor=south east] at (gb -| gh) {B};
    \node [anchor=south] at (C) {E};
    \fill [red!30] (gh) -- (E) -- (b) -- (F) -- cycle;
-   \node [anchor=west] at ($(C) + (1,0)$) {$v_{AB} = \frac{\text{area(\tikz \node [rectangle,inner sep=0,fill=red!30,text=red!30] {0};)}}{\text{area}(\bigtriangleup ABE)}$};
+   \node [anchor=west] at ($(C) + (1,0)$) {$v_{AB} = \frac{\text{area(\tikz \node [rectangle,inner sep=0,fill=red!30,text=red!30] {0};)}}{\text{area}(\bigtriangleup ABD)}$};
 \end{tikzpicture}

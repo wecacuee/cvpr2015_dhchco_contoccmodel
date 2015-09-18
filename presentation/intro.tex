@@ -51,7 +51,7 @@
     \end{column}
   \end{columns}
 
-  Stereo cameras neeed to be recaliberated
+  Stereo cameras need to be recaliberated
 
   And the depth range of stereo cameras are limited
 
@@ -109,6 +109,21 @@
   \scriptsize{
     \problemflowchart{}{}{}{}{}
   }
+\end{frame}
+
+\begin{frame}{Point tracks example}
+
+  \includemedia[label=pointtracks,
+    width=\textwidth,
+    activate=pageopen,
+    addresource=graphics/pointtracksvideo.mp4,
+    flashvars={
+      source=graphics/pointtracksvideo.mp4
+      &loop=true             % loop video
+      &autoPlay=true
+      &scaleMode=letterbox   % preserve aspect ratio while scaling the video
+    }
+  ]{\includegraphics[width=\textwidth]{graphics/object_flow_tracks_4_000033.jpg}}{VPlayer.swf}
 \end{frame}
 
 % \begin{frame}{Problem}

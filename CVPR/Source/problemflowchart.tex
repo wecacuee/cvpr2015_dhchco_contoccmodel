@@ -68,22 +68,6 @@
     %\path[use as bounding box,draw] (map.south west) rectangle ($(out.east |- det.north)+(0.25,0.25)$);
     \systemandout{}
 
-    \visible<2->{ 
-      \path ($(out) - 2*(vgap) - (1cm, 0)$) node (ptvid) {
-        \includemedia[label=pointtracks,
-          width=5cm,
-          activate=pageopen,
-          addresource=graphics/pointtracksvideo.mp4,
-          flashvars={
-            source=graphics/pointtracksvideo.mp4
-            &loop=true             % loop video
-            &scaleMode=letterbox   % preserve aspect ratio while scaling the video
-          }
-        ]{\includegraphics[width=\textwidth]{graphics/object_flow_tracks_4_000033.jpg}}{VPlayer.swf}
-      };
-
-      \draw[->,very thick,green!50!black] (pt) -- (ptvid);
-    }
 
     \rawtointerm
     \intermtosys
