@@ -5,14 +5,14 @@ BASENAMES=model supplementary
 TARGETS=$(foreach var,$(BASENAMES),out/$(var).pdf)
 
 # http://stackoverflow.com/questions/18136918/how-to-get-current-directory-of-your-makefile
-ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+ROOT_DIR:=$(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 OUT_DIR = out
 DEPS_DIR = out/deps
 LATEXMK = latexmk -recorder -use-make -deps
 PDFLATEX=pdflatex# -interaction=nonstopmode
 
-all : $(TARGETS)
+all : out/model.pdf out/supplementary.pdf
 
 # Include the dependency makefile produced by latexmk
 # latexmk -deps-out= is used to record the dependencies

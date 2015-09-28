@@ -26,10 +26,12 @@ ground plane coordinates.
 \end{align}
 
 \subsection{System of equations}
-Let the detected bounding box be represented by $[\xmin, \ymin, \xmax, \ymax]^T$. Let $^cT_t$ be the transformation from tracklet to camera.
+Let the detected bounding box be represented by $B$. Let $^cT_t$ be the transformation from tracklet to camera.
 \newcommand{\Cu}{C_u}
 \newcommand{\Cc}{C_c}
 \begin{align}
+  B &= [\xmin, \ymin, \xmax, \ymax]^T
+  \\
   \Cu &= \begin{bmatrix}
     0.5 & 0.5 & 0\\
     0.5 & -0.5 & 0\\
@@ -138,16 +140,17 @@ the point $j$ from projection of ellipsoid centre i.e.
 \begin{align}
   A_{ij} = \frac{1}{Z_j}\exp(-(\trackpj{t} - \mu^i_u)^\top\Sigma_u^i(\trackpj{t} - \mu^i_u))
 \end{align}
-where $Z_j = \sum_{i=1}^N A_{ij}$ and $\mu^i_u$ and $\Sigma_u^i$ are described in \eqref{eq:muiudef} and \eqref{eq:sigmauidef} respectively.
+where $Z_j = \sum_{i=1}^N A_{ij}$ and $\mu^i_u$ and $\Sigma_u^i$ are described in %\eqref{eq:muiudef} and \eqref{eq:sigmauidef} respectively.
 The range of Gaussian $G_i$
 must be in the interval $[\|\relp{i}{t}\|, \|\relp{i}{t}\| -
 \sqrt{3}\max(\dimsn{i})]$. Hence we take the mean as $\|\relp{i}{t}\| -
 \frac{\sqrt{3}}{2}\max(\dimsn{i})$ and variance as
 $\frac{1}{3}\max(\dimsn{i})^2$. The distribution from which we sample is 
-\begin{align}
-  \PropDist(\lambda) = \sum_i A_{ij} \Gauss(\lambda; \|\relp{i}{t}\| -
+\begin{multline}
+  \PropDist(\lambda) = \sum_i A_{ij} \\
+  \Gauss(\lambda; \|\relp{i}{t}\| -
   \frac{\sqrt{3}}{2}\max(\dimsn{i}), \frac{1}{\sqrt{3}}\max(\dimsn{i}))
-\end{align}
+\end{multline}
 And the numerical integral with $K$ samples is computed by
 \begin{align}
     \int_1^{\infty}
@@ -189,16 +192,18 @@ Let $\tcmut = \tctot - \muit$
 \begin{align}
   (\Rctot \xc + \tcmut)^\top \Sigmait (\Rctot \xc + \tcmut) = 1
 \end{align}
-\begin{align}
+\begin{multline}
   \xc^\top \Rctot^\top \Sigmait \Rctot \xc + 2 (\Rctot^\top \tcmut)^\top  \Rctot^\top\Sigmait \Rctot \xc
+  \\
   + \tcmut^\top \Sigmait \tcmut = 1
-\end{align}
+\end{multline}
 Let $\Sigmaic = \Rctot^\top \Sigmait \Rctot$ and $\muic = - \Rctot^\top
 \tcmut$
-\begin{align}
-  (\xc - \muic)^\top\Sigmaic(\xc - \muic) - \muic^\top\Sigmaic\muic +
-  \tcmut^\top \Sigmait \tcmut = 1
-\end{align}
+\begin{multline}
+  (\xc - \muic)^\top\Sigmaic(\xc - \muic) - \muic^\top\Sigmaic\muic 
+  \\
+  + \tcmut^\top \Sigmait \tcmut = 1
+\end{multline}
 Let $\Sigmaicf = \frac{\Sigmaic}{1 - \tcmut^\top \Sigmait \tcmut +
 \muic^\top\Sigmaic\muic}$
 \begin{align}
@@ -218,25 +223,85 @@ Hence, we have following expression for mean and sigma of ellipsoid:
 \newcommand{\mubar}{\bar{\mu}_i}
 The perspective projection of an ellipsoid in general is not an ellipsoid in
 general. We approximate the projection of ellipsoid by projecting a slice
-through the ellipsoid. We choose the slice as the plane perpendicular to the
+through the ellipsoid.
+
+\subsection{Tangent planes method}
+\newcommand{\nx}{\hat{n}_x}
+We chose the slice as the plane passing through the four points that touch 
+the tangent planes through the origin.
+Let the normal to plane representing $\xmin$, $\xmax$ be $\nx = [\cot(\alpha),
+0, 1]^\top$. The tangent point lies on the plane, ellipsoid and at
+the tangent point the gradient of ellipsoid is parallel to the plane normal.
+%
+\begin{align}
+  x^\top \nx = \nx^\top x &= 0\\
+  (x-\muic)^\top\Sigmaicf(x-\muic) &= 1 \\
+  2\Sigmaicf (x - \muic) &= \lambda \nx \enspace .
+\end{align}%
+%
+Eliminating $x$ from the three equations we get,
+%
+\begin{align}
+  \frac{ \lambda^2 }{ 4 } \nx^\top \Sigmaicfinv \nx &= 1\\
+  \frac{ \lambda }{ 2 } \nx^\top \Sigmaicfinv \nx - \muic^\top \nx &= 0
+\end{align}%
+%
+Solving for $\lambda$ we get $\lambda = \frac{ 2 \muic^\top \nx }{ \nx^\top \Sigmaicfinv \nx }$ or
+%
+\begin{align}
+  \nx^\top \muic \muic^\top \nx &= \nx^\top \Sigmaicfinv \nx\\
+  \nx^\top (\Sigmaicfinv - \muic \muic^\top) \nx &= 0
+\end{align}%
+%
+Let $C := \Sigmaicfinv - \muic \muic^\top$ and the quadratic equation can be solved by
+%
+\begin{align}
+  \cot(\alpha) &= \frac{ - C_{13} \pm \sqrt{ C^2_{13} - C_{11}C_{33} } }{ C_{11}  }
+\end{align}%
+%
+Similarly for $\beta_y$
+
+\begin{align}
+  \cot(\beta) &= \frac{ - C_{23} \pm \sqrt{ C^2_{23} - C_{22}C_{33} } }{ C_{22}  }
+\end{align}%
+
+%
+\begin{align}
+  \lambda &= \frac{ 2 } { [\cot(\alpha), 0, 1] \muic}\\
+  x &= \frac{ 1 } { [\cot(\alpha), 0, 1] \muic } \Sigmaicfinv [\cot(\alpha), 0, 1]^\top + \muic
+\end{align}%
+%
+Once we have four such points $[x_1, x_2, x_3, x_4]$, we can solve for the plane which is given by the null space of $A = \begin{bmatrix}
+  x_1^\top & 1\\
+  x_2^\top & 1\\
+  x_3^\top & 1\\
+  x_4^\top & 1
+\end{bmatrix}$
+\newcommand{\np}{\hat{n}_p}
+Let $\np$ be the normal of the derived plane such that the equation of plane is $\np^\top x = 1$.
+
+\subsection{Perpendicular plane method}
+ We choose the slice as the plane perpendicular to the
 line joining the center of ellipsoid to the optical center of camera. Let
 $\muic$ and $\Sigmaicf$ be the parameters of ellipsoid describing the ellipsoid
 in camera coordinates. The any point $x$ on the plane satisfies
 $x^\top\frac{\muic}{\|\muic\|} = \|\muic\|$. We introduce 
-$\mubar = \frac{\muic}{\|\muic\|^2}$ for notational simplicity. Hence, we want
+$\np = \mubar = \frac{\muic}{\|\muic\|^2}$ for notational simplicity. Hence, we want
 to project the points that satisfy both the equation of chosen plane and the 
 ellipsoid i.e.
+
+\subsection{Projection of the ellipsoid slice}
 \begin{align}
-  \mubar^\top x = x^\top\mubar &= 1\\ 
+  \np^\top x = x^\top\np &= 1\\ 
   (x-\muic)^\top\Sigmaicf(x-\muic) &= 1 \enspace.
 \end{align}
-We rewrite $\muic = \muic\mubar^\top x$, and $1 = x^\top\mubar \mubar^\top x$
+We rewrite $\muic = \muic\np^\top x$, and $1 = x^\top\np \np^\top x$
 \begin{align}
-  (x-\muic\mubar^\top x)^\top\Sigmaicf(x-\muic\mubar^\top x) &= x^\top\mubar \mubar^\top x \enspace,
+  (x-\muic\np^\top x)^\top\Sigmaicf(x-\muic\np^\top x) &= x^\top\np \np^\top x \enspace,
 \end{align}
 which is equivalent to 
 \begin{align}
-  x^\top\left((I-\muic\mubar^\top)^\top\Sigmaicf(I-\muic\mubar^\top) - \mubar \mubar^\top\right)x &= 0\enspace.
+  x^\top\left((I-\muic\np^\top)^\top\Sigmaicf(I-\muic\np^\top) - \np \np^\top\right)x &= 0\enspace.
 \end{align}
 
 Note that if $u$ is a projection of $x$ to camera with intrinsic parameters
@@ -248,8 +313,31 @@ $K$, then $x = K^{-1}u$ where $u$ is in homgeneous coordinates. Hence the above 
 \end{align}
 where $\Sproj = K^{-\top}\Sperpcut K^{-1}$ and 
 \begin{align}
-  \Sperpcut = (I-\muic\mubar^\top)^\top\Sigmaicf(I-\muic\mubar^\top) - \mubar \mubar^\top \enspace.
+  \Sperpcut = (I-\muic\np^\top)^\top\Sigmaicf(I-\muic\np^\top) - \np \np^\top \enspace.
 \end{align}
+If $u = [v^\top, 1]^\top$, $A = \Sproj(1:2, 1:2)$, $b = \Sproj(1:2, 3)$, $b^\top = \Sproj(3, 1:2)$ and $d = \Sproj(3,3)$ the equation can be expanded as
+%
+\begin{align}
+[v^\top, 1]\begin{bmatrix} A & b\\ b^\top & d \end{bmatrix}[v^\top, 1]^\top &= 0\\
+v^\top A v + 2 b^\top v + d &= 0
+\end{align}
+\begin{multline}
+  v^\top A v + 2 b^\top A^{-\top} A v + b^\top A^{-\top} A A^{-1}b \\
+  = b^\top A^{-\top} b - d
+\end{multline}
+\begin{multline}
+  \left(v + A^{-1} b\right)^\top A \left( v + A^{-1} b\right) \\
+  = b^\top A^{-\top}b - d
+\end{multline}%
+%
+The mean and sigma of the projected ellipse can be computed by
+
+%
+\begin{align}
+  \mu_{\text{2D}} &= A^{-1} b\\
+  \Sigma^{-1}_{\text{2D}} &= \frac{1}{b^\top A^{-\top} b - d} A
+\end{align}%
+%
 
 \begin{comment}
   \section{Bounding box energy}
@@ -496,10 +584,11 @@ TODO: Write Introduction
   affect of uncertainty on mean and variance of existing observations. On adding
   noise $[\Delta x, \Delta y]^\top$ with zero mean and covariance $\Delta
   \Sigma = E(\Delta x \Delta x^\top)$ the covariance of new data is given by
-  \begin{align}
-    E((x + \Delta x)(x+\Delta x)^\top) = E(xx^\top) + E(x \Delta x^\top) %\\
+  \begin{multline}
+    E((x + \Delta x)(x+\Delta x)^\top) = E(xx^\top) + E(x \Delta x^\top) 
+    \\
     + E(\Delta x x^\top) + E(\Delta x \Delta x^\top)
-  \end{align}
+  \end{multline}
   where the terms $E(x \Delta x^\top)$ denote the correlation between the data
   vector and the uncertainty in the data. Although we understand that in our case
   the data is the appearance based detection score and uncertainty because of

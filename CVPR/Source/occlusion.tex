@@ -69,7 +69,7 @@ where $\displaystyle\prod_{f}^{\lambda}$ represents the \emph{product integral} 
 In practice, the integral for transmission probability \eqref{eq:ptrans-integral} is difficult to compute even numerically. So we choose a parameterization in the form of a product of sigmoid functions, which is a reasonable approximation to the behaviour of the transmission probability:
 %
 \begin{align}
-P^j_{\textit{transmission}}(\lambda) = 1 - \prod_i \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \nu_i),
+  P^j_{\textit{transmission}}(\lambda) = \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \nu_i)),
 \label{eq:evalCumulativePtrans}
 \end{align}
 %
