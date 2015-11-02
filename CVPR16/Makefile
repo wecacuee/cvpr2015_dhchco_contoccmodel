@@ -33,11 +33,15 @@ results/0013_0000000060_%-small.png: results/0013_0000000060_%.png
 results/0009_0000000060_%-small.png: results/0009_0000000060_%.png
 	convert -crop 600x180+0+150 $< $@
 
-cvpr2016AuthorKit/latex/cvpr.sty:
-	wget http://www.pamitc.org/cvpr16/files/cvpr2016AuthorKit.tgz -O - | tar xzvf -
 
-out/%.pdf : %.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch cvpr2016AuthorKit/latex/cvpr.sty
-	TEXINPUTS=cvpr2016AuthorKit/latex/: $(LATEXMK) -pdf -dvi- -ps- -output-directory=out -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+cvprlatexdir:= cvpr2016AuthorKit/latex
+$(cvprlatexdir)/cvpr.sty $(cvprlatexdir)/eso-pic.sty.bak ieee.bst:
+	wget http://www.pamitc.org/cvpr16/files/cvpr2016AuthorKit.tgz -O - | tar xzvf -
+	mv $(cvprlatexdir)/eso-pic.sty $(cvprlatexdir)/eso-pic.sty.bak
+	ln -sf $(cvprlatexdir)/ieee.bst
+
+out/%.pdf : %.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(cvprlatexdir)/cvpr.sty $(wildcard Source/*.tex)
+	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -output-directory=out -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
 
 clean:
 	latexmk -C -output-directory=out

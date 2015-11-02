@@ -96,9 +96,14 @@ TP that has smaller mean depth then the competing bounding box.
 %  \caption{Association Experiment results. The error is in terms of average fraction of foreground points incorrectly associated to objects per sequence. }
 %\end{table}
 \begin{figure*}
+  \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_static_and_dynamic.pdf}\\
+  \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_occ_50.pdf}\\
+  \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_50.pdf}\\
   \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_occ_50.pdf}
-  \caption{Association Experiment results. The error is in terms of average fraction of foreground points incorrectly associated to objects per sequence. }
-  \label{fig:assoc-occ-results}
+  \caption{From top: (1)Association Experiment results on all points. %} \label{fig:assoc-results}
+    (2) Association Experiment results on occluded points. %} \label{fig:assoc-occ-results}
+    (3) Association Experiment results on dynamic points. %} \label{fig:assoc-dynamic-results}
+    (4) Association Experiment results on dynamic  and occluded points. The error is in terms of average fraction of foreground points incorrectly associated to objects per sequence. } \label{fig:assoc-occ-results}
 \end{figure*}
 
 
@@ -137,20 +142,33 @@ Localization is the main goal of our project. We estimate the position, orientat
 % \end{table}
 
 \newpage
+\newlength{\tblimgwidth}
+\setlength{\tblimgwidth}{0.40\textwidth}
 \begin{table*}
+  \centering
   \begin{tabular}{ccc}
     & Assignments & Error in assignment\\
-    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=0.48\textwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png} &%
-    \includegraphics[width=0.48\textwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{05pt} Brox and Malik} & \includegraphics[width=0.48\textwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010-small.png} &%
-    \includegraphics[width=0.48\textwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=0.48\textwidth]{results/0009_0000000060_point_assign_contPtTracks-small.png} &%
-    \includegraphics[width=0.48\textwidth]{results/0009_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=0.48\textwidth]{results/0013_0000000060_point_assign_bbox2D_model-small.png} &%
-    \includegraphics[width=0.48\textwidth]{results/0013_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{05pt} Brox and Malik} & \includegraphics[width=0.48\textwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010-small.png} &%
-    \includegraphics[width=0.48\textwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=0.48\textwidth]{results/0013_0000000060_point_assign_contPtTracks-small.png} &%
-    \includegraphics[width=0.48\textwidth]{results/0013_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}
+    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{2em} Brox} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{2em} RAS} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_RAS-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_RAS_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{2em} Brox} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{2em} RAS} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_RAS-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_RAS_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks-small.png} &%
+    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}
   \end{tabular}
+  \caption{Qualitative results for association experiment. The left column
+  shows the point tracks assignment to appropriate track. Each color represents
+a different track to which the point is associated to. Right column shows the
+probablistic error in association: red is low error and blue is high error.
+Note that our method changes smoothly at the boundary of the objects with
+intermediate probabilities, while the baseline methods have only 0-1 error.} 
 \end{table*}

@@ -22,7 +22,7 @@ where $\cL(\cdot)$ is the logistic function given by
 \begin{align}
   L(\bx; \bp, \bSigma) = \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp))}},
 \end{align}
-with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends of the dimensions of the traffic participant. Please refer to the Chapter~\ref{sec:appendix} for computation of $\bSigma$ from object dimensions.
+with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends of the dimensions of the traffic participant. Please refer to the supplementary material for computation of $\bSigma_i$ from object dimensions.
 
 
 \paragraph{Image formation}
@@ -62,15 +62,15 @@ P^j_{\textit{transmission}}(\lambda) = \prod_{f}^{\lambda} (1 - \occft{\lambda \
 where $\displaystyle\prod_{f}^{\lambda}$ represents the \emph{product integral} from $f$ to $\lambda$ and $f$ is the position of camera screen which has been taken equivalent to focal length of the camera .\footnote{A product integral is a simple integral in log domain: 
 \vspace{-0.2cm}
 \begin{equation}
-\prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda} = e^{\int_{1}^{\lambda} \ln{(1 - f_{occ}(\lambda \ray))}{d\lambda}}. \nonumber
+\prod_{f}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda} = e^{\int_{f}^{\lambda} \ln{(1 - f_{occ}(\lambda \ray))}{d\lambda}}. \nonumber
 \end{equation}
 }
 
 In practice, the integral for transmission probability \eqref{eq:ptrans-integral} is difficult to compute even numerically. So we choose a parameterization in the form of a product of sigmoid functions, which is a reasonable approximation to the behaviour of the transmission probability:
 %
-%\newcommand{\Ptrans}{P_{\textit{transmission}}}%
+\newcommand{\Ptransmission}{P_{\textit{transmission}}}%
 \begin{align}
-  \Ptrans^j(\lambda) = \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \nu_i)),
+  \Ptransmission^j(\lambda) = \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \nu_i)),
 \label{eq:evalCumulativePtrans}
 \end{align}
 %
@@ -81,7 +81,13 @@ where $\cL_u(.)$ is sigmoid in image domain, with $\bmu^i_u$ and $\bGamma_i$ rep
 \cL_{\lambda}(\lambda; \nu_i) &= \frac{1}{1 + e^{-k_d(\lambda - \nu_i)}}
 \end{align}
 %
-We compare the exact and relative formulation of transmission probability in Fig~\ref{fig:compare:exact:approx:ptrans}.
+We compare the exact and relative formulation of transmission probability in
+Fig~\ref{fig:compare:exact:approx:ptrans}. Note that the choice of mean depth
+of object causes deviation from the exact transmission probability. However,
+the computation of ray intersection with ellipsoid is expensive to compute for 
+every ray and the shift of transmission probability anywhere through the object 
+is a reasonable approximation as the occluded points can only lie outside the
+object.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{results/plotPtransmission_exact_vs_approx.pdf}
