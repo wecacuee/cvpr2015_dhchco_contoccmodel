@@ -1,0 +1,95 @@
+We are given video feed from a front facing monocular camera. We assume that features like car detections, point tracks, lane detections, ground plane and ego-motion are already available. We also use GPS and Map as a given input to the system. With this available information our goal is to find position, orientation and dimensions different participants in the scene.
+
+We model this problem in factor graph formulation. Factor graphs are bipartite graphs containing factor node and variable nodes that describe the factorization of the joint probability over the random variables in the graph. Each factor node is connected to a variable node if and only if the corresponding function depends on the corresponding random variable node.
+
+\begin{figure*}
+  \centering
+  \newcommand{\imagewidth}{\textwidth}
+  \input{Source/scenelayoutoverlayCity0961}
+  \caption{A sample road scene with the unknowns of each car modeled as random variables. 
+  The relating energies are shown in Figure~\ref{fig:graphmodel}}
+\end{figure*}
+\begin{figure}
+  %\includegraphics[width=\columnwidth]{Figures/graphicalModelFrom61ConstVars.pdf}
+    %\tikzset{/tikz/x=0.8cm,/tikz/y=0.8cm}
+  \begin{subfigure}[b]{0.55\textwidth}
+    \input{Source/graphical_model_multiple}
+    \caption{Graphical model for a single frame with state of car represented
+    as single node.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \tikzset{/tikz/x=0.8cm,/tikz/y=0.8cm}
+    \input{Source/graphicalmodelTP}
+    \caption{Factor graph dependence split up by pose and dimension}
+  \end{subfigure}
+\caption{Graphical model. The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables. %(1) Bounding box energy: The bounding box energy ($\Energy{bbox}$) without occlusion modeling is a unary term, but with occlusion it becomes a higher order term that affects the state of occluder as well. The bounding box detection is represented by $\mathbf{d}_{bb}^i(t)$. We can see that the bounding box energy affects both occluder and the occluded. (2) Point tracks energy ($\Energy{track}$) also exhibits occluder-occluded dependency.  The available point tracks are modeled by $\mathbf{u}(t)$. (3) Collision energy ($\Energy{coll}$) should ideally be globally dependent on all traffic participants but here we represent collision among only those TP that are near enough to have a significant collision energy. (4) Orientation from lane (and map) information ($\Energy{lane}$) depends only on single traffic participant hence show in the right subfigure. (5) Dynamic energies ($\Energy{dyn}$) also affect only one traffic participant at a time but over two frames. (6) Size prior ($\Energy{size}$) is used to enforce reasonable size of traffic participants.
+}
+  \label{fig:graphmodel}
+\end{figure}
+\begin{figure}
+  \centering
+\end{figure}
+
+
+%%%%%%%%% BODY TEXT
+\paragraph{The Model}
+
+The objective is to find the most likely traffic participant (TP) state $\state{i}{t}$ given
+various evidences $\mathbb{E} = \{\{\trackp{t}\}, \{\bb{i}\}, \{L_m\}\}$. This problem can be formulated as to find the states that maximize the conditional probability given the evidence,
+%
+\begin{align}
+  \{\state{i}{t}\}^* &= \arg \max P(\{\state{i}{t}\} | \mathbb{E})\enspace.
+\end{align}
+%
+By applying Bayes rule we get
+\begin{align}
+  P(\{\state{i}{t}\} | \mathbb{E}) &=
+  \frac{1}{Z}P( \mathbb{E} | \{\state{i}{t}\})P(\{\state{i}{t}\}).
+\end{align}
+%
+Assume conditional independence according to graphical model in Figure~\ref{fig:graphmodel}, we get an equivalant factorization of the joint probability distribution
+%
+\begin{multline}
+  P(\{\state{i}{t}\} | \mathbb{E}) =
+  \frac{1}{Z}
+  \prod_{t=s_i}^{e_i}
+  \left(
+  \prod_{i,j: i \ne j}
+  P(\state{i}{t}, \state{j}{t})
+  P(\bb{i} | \state{i}{t}, \state{j}{t})
+  P(\trackp{t} | \state{i}{t}, \state{j}{t})
+\right)
+\\
+\left(
+  \prod_{i=1}^{N}
+  P(L_m(t) | \state{i}{t})
+  P(\state{i}{t} | \state{i}{t-1})
+  P(\state{i}{t})
+\right)
+  \enspace ,
+\end{multline}
+where $\bb{i}$ are the car detections, $\trackp{t}$ are the point tracks, $L_m(t)$ is the lane information from lane detection or GPS and Map information.
+For computational reason it is common to work on factor graphs in log domain
+and for historical reasons the negative log of probability is also called the energy of the system. In energy domain our factorization simplifies to
+%
+\begin{multline}
+  -\log{P(\{\state{i}{t}\} | \mathbb{E})} = 
+  -Z' 
+  + \sum_{t=s_i}^{e_i}
+  \left(
+  \sum_{i,j:i\ne j}   
+  \WEnergyCol 
+   + \WpEnergy{bbox}
+   + \WpEnergy{track}
+\right)
+  \\
+  + \left(
+  \sum_{i=1}^N 
+  \WEnergy{lane}
+  + \WEnergy{dyn}
+  + \WEnergy{size}
+\right)
+  \enspace.
+\end{multline}
+%
+Here $\WEnergyCol = -\log P(\state{i}{t}, \state{j}{t})$ is collision energy which penalizes localization of cars that are too close together, $\WpEnergy{bbox} = -\log P(\bb{i} | \state{i}{t}, \state{j}{t})$ is bounding box energy that encourages the alignment of projected bounding box with the detected bounding box, $\WpEnergy{track} = -\log P(\trackp{t} | \state{i}{t}, \state{j}{t})$ is the point tracks energy which encourages the alignment of re-projected point tracks with ones that are detected, $\WEnergy{lane} = - \log P(L_m(t) | \state{i}{t})$ is lane energy which encourages cars to be along the direction of lanes, $\WEnergy{dyn} = - \log P( \state{i}{t} | \state{i}{t-1} ) $ is dynamic energy which captures the motion model of the cars and finally $\WEnergy{size} = - \log P (\state{i}{t})$ is the size prior over the cars. $\lambda_{\text{\{col,bbox,track,lane,dyn,size\}}}$ are unknown parameters that weight different energies. For now we set them empirically, but eventually they need to be learned from the data.

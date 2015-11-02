@@ -3,7 +3,6 @@
 *.blg
 *.fdb_latexmk
 *.log
-*.pdf
 *.snm
 *.brf
 *.svn
@@ -12,6 +11,7 @@
 *.dvi
 *.toc
 CVPR/cvpr2015AuthorKit/
+CVPR16/cvpr2016AuthorKit/
 CVPR/graphics
 CVPR/out/
 Paper/out/

@@ -1,0 +1,183 @@
+>> evalAssociationCoeffAllSequence
+                Name    SeqNum  baseline        Full    NoOcc   NoReproj        Brox
+
+                City    1       0.050465        0.069385        0.069374        0.078612        0.241700
+           NoOccCity    1       0.034722        0.070017        0.069997        0.086100        0.224537
+             OccCity    1       0.071651        0.068536        0.068536        0.068536        0.264798
+                City    2       0.000000        0.000000        0.000000        0.000000        0.000000
+           NoOccCity    2
+
+             OccCity    2
+
+                City    5       0.190175        0.193444        0.199360        0.191977        0.490711
+           NoOccCity    5       0.061677        0.100173        0.111128        0.075044        0.309419
+             OccCity    5       0.336969        0.299995        0.300155        0.325560        0.697818
+                City    9       0.191885        0.197768        0.205167        0.190954        0.483315
+           NoOccCity    9       0.076331        0.109580        0.117686        0.074915        0.256636
+             OccCity    9       0.260205        0.249908        0.256889        0.259560        0.617336
+                City    11      0.102922        0.098475        0.098475        0.102922        0.280178
+           NoOccCity    11      0.007937        0.007937        0.007937        0.007937        0.284722
+             OccCity    11      0.272085        0.259717        0.259717        0.272085        0.272085
+                City    13      0.046319        0.040891        0.040635        0.040918        0.080184
+           NoOccCity    13      0.004658        0.000003        0.000115        0.000090        0.038245
+             OccCity    13      0.387550        0.375800        0.372530        0.375334        0.423695
+                City    14      0.120456        0.120998        0.121541        0.119196        0.328269
+           NoOccCity    14      0.040816        0.000000        0.000000        0.040816        0.040816
+             OccCity    14      0.124928        0.127794        0.128367        0.123598        0.344413
+                City    17      0.017060        0.031496        0.031496        0.017060        0.215223
+           NoOccCity    17      0.000000        0.029650        0.029650        0.000000        0.000000
+             OccCity    17      0.033248        0.033248        0.033248        0.033248        0.419437
+                City    18      0.034314        0.044118        0.044118        0.034314        0.034314
+           NoOccCity    18      NaN     NaN     NaN     NaN     NaN
+             OccCity    18      0.034314        0.044118        0.044118        0.034314        0.034314
+                City    48      0.247863        0.247863        0.247863        0.247863        0.299145
+           NoOccCity    48      0.000000        0.000000        0.000000        0.000000        0.068182
+             OccCity    48      1.000000        1.000000        1.000000        1.000000        1.000000
+                City    51      0.149912        0.145726        0.145726        0.149576        0.250759
+           NoOccCity    51      0.021490        0.025430        0.025430        0.021490        0.021490
+             OccCity    51      0.253391        0.242658        0.242657        0.252785        0.435498
+                City    56      0.123519        0.104774        0.104404        0.110949        0.279188
+           NoOccCity    56      0.004219        0.004232        0.004496        0.011637        0.181435
+             OccCity    56      0.606838        0.512095        0.509157        0.513289        0.675214
+                City    59      0.156719        0.145877        0.148139        0.152219        0.467667
+           NoOccCity    59      0.036929        0.045855        0.047243        0.039958        0.306417
+             OccCity    59      0.331190        0.291557        0.295093        0.315724        0.702525
+                City    60      0.000000        0.000000        0.000000        0.000000        0.000000
+           NoOccCity    60      NaN     NaN     NaN     NaN     NaN
+             OccCity    60      NaN     NaN     NaN     NaN     NaN
+                City    91      0.000000        0.000000        0.000000        0.000000        0.000000
+           NoOccCity    91
+
+             OccCity    91
+
+                City    93      0.235116        0.258544        0.259871        0.224337        0.456996
+           NoOccCity    93      0.106699        0.184930        0.174070        0.119653        0.355950
+             OccCity    93      0.361850        0.331195        0.344549        0.327650        0.556717
+         Residential    19      0.180868        0.175720        0.175841        0.161367        0.227528
+    NoOccResidential    19      0.037139        0.038689        0.041047        0.032038        0.017802
+      OccResidential    19      0.329524        0.317449        0.315255        0.295129        0.444444
+         Residential    20      0.081519        0.073890        0.073904        0.082213        0.135374
+    NoOccResidential    20      NaN     NaN     NaN     NaN     NaN
+      OccResidential    20      0.081519        0.073890        0.073904        0.082213        0.135374
+         Residential    23      0.190855        0.178110        0.178482        0.185029        0.374433
+    NoOccResidential    23      0.009891        0.017415        0.020772        0.013146        0.144588
+      OccResidential    23      0.374450        0.341143        0.338485        0.359411        0.607622
+         Residential    35      0.221565        0.215479        0.228281        0.215172        Creating conf file /tmp/tpe37a2029_d5fe_46d5_91e2_9aaf2c245917
+Creating bmf file: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/2011_09_26_drive_0035_sync//2011_09_26_drive_0035_sync.bmf
+Running: LD_LIBRARY_PATH=/home/vikasdhi/wrk/sceneunderstanding/source/dependencies/moseg/ /home/vikasdhi/wrk/sceneunderstanding/source/dependencies/moseg/MoSeg /tmp/tpe37a2029_d5fe_46d5_91e2_9aaf2c245917 2011_09_26_drive_0035_sync 120 11 8
+mInputDir = /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/2011_09_26_drive_0035_sync/
+
+Motion Segmentation: parameter setting:
+---------------------------------------
+    input directory: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/2011_09_26_drive_0035_sync/
+   result directory: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/OchsBroxMalik8_0120_0011_0000060.00/2011_09_26_drive_0035_sync/
+     starting frame: 120
+    sequence length: 11
+ trajectory spacing: 8
+
+
+input directory flow: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/2011_09_26_drive_0035_sync/FlowFiles/
+result directory flow: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/2011_09_26_drive_0035_sync/FlowFiles/
+result directory tracking: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/OchsBroxMalik8_0120_0011_0000060.00/2011_09_26_drive_0035_sync/Tracking/
+result directory sparse segmentation: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/OchsBroxMalik8_0120_0011_0000060.00/2011_09_26_drive_0035_sync/SparseSegmentation/
+
+Tracking: parameter setting:
+----------------------------
+   result directory: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/OchsBroxMalik8_0120_0011_0000060.00/2011_09_26_drive_0035_sync/Tracking/
+     starting frame: 120
+    sequence length: 11
+
+Tracking: parameter setting MoSeg:
+----------------------------------
+ trajectory spacing: 8
+     flow input dir: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/2011_09_26_drive_0035_sync/FlowFiles/
+
+Clustering: parameter setting:
+------------------------------
+   result directory: /home/vikasdhi/mid/KITTI_RAW/SFM_Outputs/broxAndMalik2010/Residential/OchsBroxMalik8_0120_0011_0000060.00/2011_09_26_drive_0035_sync/SparseSegmentation/
+ auto. model select
+
+Clustering: parameter setting MoSeg:
+------------------------------------
+       merge affine: on
+                 nu: 60.000000
+
+^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OA^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OB^[OBrm /tmp/tpe37a2029_d5fe_46d5_91e2_9aaf2c245917
+0.597504
+    NoOccResidential    35      0.036454        0.062573        0.066861        0.077896        0.674701
+      OccResidential    35      0.299739        0.280053        0.296450        0.273145        0.564903
+         Residential    36      0.242088        0.228076        0.239565        0.222266        0.525374
+    NoOccResidential    36      0.148033        0.125206        0.137294        0.125298        0.349157
+      OccResidential    36      0.280427        0.270009        0.281252        0.261792        0.597203
+         Residential    39      0.138921        0.138226        0.139936        0.136174        0.377986
+    NoOccResidential    39      0.026622        0.033834        0.036659        0.025647        0.288963
+      OccResidential    39      0.364344        0.347776        0.347250        0.358042        0.556685
+         Residential    46      0.074985        0.074985        0.074985        0.074985        0.074985
+    NoOccResidential    46      0.000000        0.000000        0.000000        0.000000        0.000000
+      OccResidential    46      0.219178        0.219178        0.219178        0.219178        0.219178
+         Residential    61      0.190110        0.197466        0.197539        0.175503        0.300447
+    NoOccResidential    61      0.056120        0.094450        0.094603        0.043064        0.104806
+      OccResidential    61      0.367017        0.333477        0.333445        0.350361        0.558750
+         Residential    64      0.178532        0.167111        0.167502        0.163739        0.346930
+    NoOccResidential    64      0.001026        0.001026        0.001026        0.001026        0.148163
+      OccResidential    64      0.235601        0.220508        0.221024        0.216051        0.410833
+         Residential    79      0.000000        0.000000        0.000000        0.000000        0.000000
+    NoOccResidential    79      NaN     NaN     NaN     NaN     NaN
+      OccResidential    79      NaN     NaN     NaN     NaN     NaN
+         Residential    86      0.180233        0.180233        0.180233        0.180233        0.180233
+    NoOccResidential    86      0.000000        0.000000        0.000000        0.000000        0.000000
+      OccResidential    86      1.000000        1.000000        1.000000        1.000000        1.000000
+         Residential    87      0.000000        0.000000        0.000000        0.000000        0.000000
+    NoOccResidential    87      0.000000        0.000000        0.000000        0.000000        0.000000
+      OccResidential    87      NaN     NaN     NaN     NaN     NaN
+                Road    15      0.320433        0.205882        0.205882        0.320433        0.320433
+           NoOccRoad    15      0.317431        0.181651        0.181651        0.317431        0.317431
+             OccRoad    15      0.336634        0.336634        0.336634        0.336634        0.336634
+                Road    27      0.000000        0.000000        0.000000        0.000000        0.000000
+           NoOccRoad    27      NaN     NaN     NaN     NaN     NaN
+             OccRoad    27      NaN     NaN     NaN     NaN     NaN
+                Road    28      0.000000        0.031250        0.031250        0.000000        0.000000
+           NoOccRoad    28      0.000000        0.000000        0.000000        0.000000        0.000000
+             OccRoad    28      0.000000        0.222222        0.222222        0.000000        0.000000
+                Road    29      0.031480        0.031480        0.031480        0.031480        0.031480
+           NoOccRoad    29      0.001629        0.001629        0.001629        0.001629        0.001629
+             OccRoad    29      0.085546        0.085546        0.085546        0.085546        0.085546
+                Road    32      0.116926        0.117633        0.117633        0.116926        0.170674
+           NoOccRoad    32      0.003038        0.003038        0.003038        0.003038        0.054070
+             OccRoad    32      0.511579        0.514737        0.514737        0.511579        0.574737
+                Road    52      0.157647        0.157647        0.157647        0.157647        0.157647
+           NoOccRoad    52      0.000000        0.000000        0.000000        0.000000        0.000000
+             OccRoad    52      0.186630        0.186630        0.186630        0.186630        0.186630
+                Road    70      0.015152        0.015152        0.015152        0.015152        0.015152
+           NoOccRoad    70      0.000000        0.000000        0.000000        0.000000        0.000000
+             OccRoad    70      1.000000        1.000000        1.000000        1.000000        1.000000        No grouping
+
+err_overall =
+
+    0.1834    0.1808    0.1846    0.1753    0.3983
+
+
+err_overall_var =
+
+    0.1498    0.1465    0.1480    0.1402    0.2397
+
+
+err_unoccluded =
+
+    0.0492    0.0666    0.0686    0.0506    0.2332
+
+
+err_unoccluded_var =
+
+    0.0468    0.0609    0.0622    0.0443    0.1788
+
+
+err_occluded =
+
+    0.2951    0.2759    0.2812    0.2791    0.5358
+
+
+err_occluded_var =
+
+    0.2080    0.1977    0.1988    0.1963    0.2487
+
