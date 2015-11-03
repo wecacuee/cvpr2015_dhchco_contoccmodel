@@ -47,11 +47,15 @@ For the regions where the bounding boxes overlap, we assign the points to the
 TP that has smaller mean depth then the competing bounding box.
 
 \begin{figure*}
-\includegraphics[trim=1.0in 0.2in 1.0in 0.2in, clip, width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
-  \caption{From top: (1)Association Experiment results on dynamic and occluded tracks. %} \label{fig:assoc-results}
-    (2) Association Experiment results on occluded points. %} \label{fig:assoc-occ-results}
-    (3) Association Experiment results on dynamic points. %} \label{fig:assoc-dynamic-results}
-    (4) Association Experiment results on all points. The error is in terms of average fraction of foreground points incorrectly associated to objects per sequence. Occluded points are chosen because our method is especially helpful in occlusion cases while dynamic points are chosen for fair comparison against motion segmentation methods.} \label{fig:assoc-occ-results}
+\includegraphics[trim=1.0in 0.4in 1.0in 0.2in, clip, width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
+  \caption{Association error evaluation on different selection of tracks. The
+    numbers on y-axis represent the data sequence number in KITTI dataset. The
+    first set of bars in each plot correspond to the mean across all sequences.
+    The error is in terms of average fraction of foreground points incorrectly
+    associated to objects per sequence. Occluded points are chosen because our
+    method is especially helpful in occlusion cases while dynamic points are
+    chosen for fair comparison against motion segmentation methods.}
+\label{fig:assoc-occ-results}
 \end{figure*}
 
 
