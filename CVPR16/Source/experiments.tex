@@ -96,10 +96,7 @@ TP that has smaller mean depth then the competing bounding box.
 %  \caption{Association Experiment results. The error is in terms of average fraction of foreground points incorrectly associated to objects per sequence. }
 %\end{table}
 \begin{figure*}
-  \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_static_and_dynamic.pdf}\\
-  \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_occ_50.pdf}\\
-  \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_50.pdf}\\
-  \includegraphics[width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence_occ_50.pdf}
+\includegraphics[trim=1.0in 0.2in 1.0in 0.2in, clip, width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
   \caption{From top: (1)Association Experiment results on all points. %} \label{fig:assoc-results}
     (2) Association Experiment results on occluded points. %} \label{fig:assoc-occ-results}
     (3) Association Experiment results on dynamic points. %} \label{fig:assoc-dynamic-results}
@@ -147,7 +144,7 @@ Localization is the main goal of our project. We estimate the position, orientat
 \begin{table*}
   \centering
   \begin{tabular}{ccc}
-    & Assignments & Error in assignment\\
+    & Associations & Error in association\\
     \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png} &%
     \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
     \rotatebox{90}{\hspace{2em} Brox} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010-small.png} &%
