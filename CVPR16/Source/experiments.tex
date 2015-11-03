@@ -6,31 +6,11 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Association error evaluation}
+\subsection{Association error evaluation}
 
 To verify the correctness of our association probability $\assocP$ we perform
 association error experiment that compare the accuracy of point track
 association with TPs with that of bounding box baseline method.
-
-% \begin{align}
-%   f^{i}_{reproj}&(\trackpj{t-1}, \lambda) =
-%   \projectionOf{\invProjectionOf{\trackpj{t-1}}}\\
-%   %&= K(R^i_t ((R^i_{t-1})^\top\lambda \ray - (R^i_{t-1})^\top T_{t-1}) + T_{t})\\
-%   &= \frac
-%   {p_{1:2}\lambda + q_{1:2}}
-%   {p_{3}\lambda + q_{3}}
-% \end{align}
-% where $p_{1:3} = KR^i_t(R^i_{t-1})^\top\ray$ and
-% $q_{1:3} = KR^i_t(R^i_{t-1})^\top T_{t-1} + KT_t$
-% 
-% Now that we have an association from TP $i$ to point track $j$ through
-% $\lambda$, we can come up with an association probability
-% \begin{align}
-%    \assocP &= \frac{(\max \{ 0, \nabla \occf^\top
-% \ray \})^2 }{P_{\text{reflection}}}\lambdadist\\
-% &=(\max \{ 0, \nabla \occf^\top \ray \})^2
-%   \prod_{0}^{\lambda} (1 - f_{occ}(\lambda \ray))^{d\lambda}
-% \end{align}
 
 Note that the fraction $\assocP$ although called association probability does
 not capture the entire information that we have available for compute
@@ -66,35 +46,6 @@ We use bounding box based assignment of point tracks to TPs as the baseline.
 For the regions where the bounding boxes overlap, we assign the points to the
 TP that has smaller mean depth then the competing bounding box.
 
-% \begin{table}
-%   \centering
-%   \begin{tabular}{lrrr}
-%     \toprule
-%     Algorithm & Total & Unoccluded cars & Occluded cars \\
-%     \midrule
-%     bounding box only & 0.21 & \textbf{0.03}  & 0.36\\
-%     Using $P^{(ij)}_{\text{assoc}}$ & \textbf{0.21} & 0.08 & \textbf{0.32}\\
-%     Using $\assocP{}$ & 0.23 & 0.09 & 0.34 \\
-%     Using $P^{(ij)}_{\text{assoc by reproj}}$ & 0.23 & 0.08 & 0.34\\
-%     \bottomrule
-%   \end{tabular}
-%   \caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
-% \end{table}
-
-%\begin{table}
-%  \centering
-%  \begin{tabular}{lccc}
-%    \toprule
-%    Algorithm & All & Unoccluded cars & Occluded cars \\
-%    \midrule
-%    bounding box only                         & $0.18\pm0.01$          & $\color{red}0.04\pm0.003$  & $0.41\pm0.04$\\
-%    Using $\assocP{}$                         & $0.18\pm0.01$          & $0.05\pm0.003$           & $0.39\pm0.04$ \\
-%    Using $P^{(ij)}_{\text{assoc by reproj}}$ & $0.18\pm0.01$          & $0.06\pm0.003$           & $0.39\pm0.04$\\
-%    Using $P^{(ij)}_{\text{assoc}}$           & $\color{red}0.17\pm0.01$ & $0.05\pm0.003$           & $\color{red}0.38\pm0.04$\\
-%    \bottomrule
-%  \end{tabular}
-%  \caption{Association Experiment results. The error is in terms of average fraction of foreground points incorrectly associated to objects per sequence. }
-%\end{table}
 \begin{figure*}
 \includegraphics[trim=1.0in 0.2in 1.0in 0.2in, clip, width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
   \caption{From top: (1)Association Experiment results on dynamic and occluded tracks. %} \label{fig:assoc-results}
@@ -104,41 +55,6 @@ TP that has smaller mean depth then the competing bounding box.
 \end{figure*}
 
 
-\paragraph{Localization Experiment}
-Localization is the main goal of our project. We estimate the position, orientation and dimensions of the car with our framework and compute the error in birds eye view domain along the ground plane. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.
-
-% %\subsection{Qualitative Results}
-% \begin{figure}
-%         \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000061.png}
-% \end{figure}
-% \begin{figure}
-%   \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_lane_size_bboxOcc_yawTstepWiseInference/0000000061.png}
-% \end{figure}
-% \begin{figure}
-%   \includegraphics[width=\columnwidth]{results/Visualization/City/2011_09_26_drive_0009/single_window_contPtTracks_size_bboxOcc_yawTstepWiseInference/0000000063.png}
-% \end{figure}
-
-%\subsection{Quantitative results}
-
-% \begin{table}
-%   \centering
-%   \begin{tabular}{lrrr}
-%     \toprule
-%     Energy & t & yaw & dim \\
-%     \midrule
-%     initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
-%     $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
-%     %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
-%     %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
-%     %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
-%     $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
-%     $\EnergyLane+\EnergyTrack+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol   $ & \textbf{3.78} & 0.91 & 1.58 \\
-%     \bottomrule
-%   \end{tabular}
-%   \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
-% \end{table}
-
-\newpage
 \newlength{\tblimgwidth}
 \setlength{\tblimgwidth}{0.40\textwidth}
 \begin{table*}
@@ -169,3 +85,190 @@ probablistic error in association: red is low error and blue is high error.
 Note that our method changes smoothly at the boundary of the objects with
 intermediate probabilities, while the baseline methods have only 0-1 error.} 
 \end{table*}
+
+
+\subsection{Localization Experiment}
+To prove the effectiveness of our method we apply it to the localization
+problem. We estimate the position, orientation and dimensions of the car with
+our framework and compute the error in birds eye view domain along the ground
+plane. We report error in three metrics translation error (t) in meters per
+car, yaw error (yaw) in radians per car and dimension error is again meters per
+car.
+
+We build the graphical model as shown in Fig~\ref{fig:graphmodel} that 
+allows us to factorize the intractable probability distribution into following form
+%
+\begin{multline}
+  -\log{P(\{\state{i}{t}\} | \mathbb{E})} = 
+  -Z' 
+  \\
+  + \sum_{t=s_i}^{e_i}
+  \left(
+  \sum_{i,j:i\ne j}   
+  \WEnergyCol 
+   + \WpEnergy{bbox}
+   + \WpEnergy{track}
+\right)
+  \\
+  + \left(
+  \sum_{i=1}^N 
+  \WEnergy{lane}
+  + \WEnergy{dyn}
+  + \WEnergy{size}
+\right)
+  \enspace.
+\end{multline}
+%
+We use the following energies in our graphical model.
+
+\subsubsection{Point tracks energy with occlusion}
+\label{sec:totalContPtTracksEnergy}
+We model continuous point tracks energy with explicit occlusion reasoning as
+the expected re-projection error over the association probability,
+
+\begin{multline}
+  \Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = 
+  \\
+    \sum_{i=1}^{N} 
+    %\sum_{t = s_i}^{e_i}
+    \sum_{j = 1}^{M}
+    \int_1^\infty \assocP\Ereproj(\lambda) d\lambda
+\end{multline}
+where $\assocP$ is the association probability of
+$j$\textsuperscript{th} point with $i$\textsuperscript{th} TP at depth $\lambda$, $\{ \relp{i}{t} \}_i$ are the poses of all occluding objects at time $t$, $ \{ \dimsn{i} \}_i$ are the dimensions of all objects that occlude $i$
+and $\Ereproj(\lambda)$ is the re-projection error given by
+%
+\begin{align}
+  \assocP &= \Prefl\Ptrans\\
+  \Ereproj(\lambda) &= \left\|\trackpj{t} - \projectionOf{\invProjectionOftm{\trackpj{t-1}, \lambda}}\right\|^2 .
+  \label{eq:reprojerror}
+\end{align}
+
+The  $\projectionOf{.}$ and $\invProjectionOftm{.}$ denote the projection and
+inverse projection functions that project 3D point to camera image and vice
+versa. Note that inverse projection $\invProjectionOf{.}$ depend on both the
+point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on TP pose at time $t-1$ while the projection depends on pose at time $t$ which can be different.
+
+\subsubsection{Object detection energy}
+
+We model object detection energy as the norm of difference in the coordinates
+of the projected bounding box and detected bounding box. The detected bounding
+box is represented by the extrema along X and Y dimensions $\bb{i} = [\xmin,
+\ymin, \xmax, \ymax]^\top$. If $\dimsn{i} = [l, w, h]^\top$ represent the 3D
+then we can compute the eight corners of the cuboid model in the tracklet
+coordinate transform as
+
+With slight abuse of notation for projection operator we write this energy as
+\begin{align}
+  \EnergyBBox &= \left\| \projectionOf{\dimsn{i}} - \bb{i}\right\|^2_2 \enspace.
+\end{align}
+
+For object detections we use object detector by \cite{Felzenszwalb_etal_2010}
+which is detector by parts model and we use eight parts to train the car model 
+on half of the KITTI dataset \cite{geiger2013vision}. The trained modeled is 
+used to get detections for the other half of the dataset and vice versa.
+
+\subsubsection{Lane energy}
+\label{sec:laneEnergy}
+ The lanes are modeled as splines. Here we assume that the confidence in lane
+ detection is decreases as the distance from the lane center increases.  The
+ energy is given by the dot product between car orientation and tangent to the
+ lane at that point.
+
+\begin{align}
+  \label{eq:laneOrientationEnergy}
+  \Energy{lane} = 
+  \sum_{m \in M_{\text{close}}}
+  (1 - \ori{i}{t} \cdot \text{TAN}(L_{m}(k), \pos{i}{t}) )
+\LaneUncertainty{\pos{i}{t}}
+\end{align}
+where $M_{\text{close}} = \{m : \text{DIST}(L_{m}(k), \pos{i}{t}) < d_{\text{thresh}}\} $ is
+the set of nearby lanes close to the object by a certain distance threshold $d_{\text{thresh}}$ and 
+\begin{align}
+\LaneUncertainty{\pos{i}{t}} = 
+  \frac{1}{1 + \exp(-q(w_{\text{road}} - \text{DIST}(L_{m}(k), \pos{i}{t})))}
+\end{align}
+for some constant $w_{\text{road}}$ that represents the width of the road.
+
+\subsubsection{Transition probability}
+Dynamics constraints should not only enforce smooth trajectories, but also the
+holonomic constraints.  The following energy adds a penalty if the change in
+position is not in direction of previous orientation.
+
+\begin{align}
+  \label{eq:totalPosTransitionEnergy}
+  \Energy{dyn-hol} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1})
+\end{align}
+
+The following energy adds a penalty for change in position and orientation
+but a penalty for change in velocity is much better approximation. However, in
+a Markovian setting that would mean extending the state space of the car to
+include velocity.
+
+\begin{align}
+  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2\\
+  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2
+\end{align}
+
+As a result the dynamics are modeled by weighted combination of holonomic
+constraint and smoothness constraints.
+
+\begin{align}
+  \WEnergy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel}
+\end{align}
+
+\subsubsection{Size Prior}
+
+Prior can include among many other things the size prior on the car.
+
+\begin{align}
+  \label{eq:totalSizeEnergy}
+  \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
+  \expDimsn)
+\end{align}
+
+where $\expDimsn$ is the mean TP dimensions and
+$\Sigma_{\expDimsn}$ is the correspondence covariance matrix.
+
+
+\begin{figure}
+  \centering
+  \newcommand{\imagewidth}{\columnwidth}
+  \input{Source/scenelayoutoverlayCity0961}
+  \caption{A sample road scene with the unknowns of each car modeled as random variables. 
+  The relating energies are shown in Figure~\ref{fig:graphmodel}}
+\end{figure}
+\begin{figure}
+    \input{Source/graphical_model_multiple}
+    \caption{Graphical model for a single frame with state of car represented
+    as single node.  The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables. }
+  \label{fig:graphmodel}
+\end{figure}
+
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{results/0009_contPtTracks_size_bboxOcc_yawTstepWiseInference_0000000061.png}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\columnwidth]{results/0009_lane_size_bboxOcc_yawTstepWiseInference_0000000061.png}
+\end{figure}
+
+
+\begin{table}
+  \centering
+  \begin{tabular}{lrrr}
+    \toprule
+    Energy & t & yaw & dim \\
+    \midrule
+    initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
+    $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
+    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
+    %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
+    % \EnergyBBox+\EnergyDyn+\EnergyCol $
+    $\EnergyTrackNoOcc+\EnergyCol + \EnergyLane + \dots$  & 3.80 & 0.91 & 1.58 \\
+    $\EnergyTrack+\EnergyCol + \EnergyLane + \dots$ & \textbf{3.78} & 0.91 & 1.58 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
+\end{table}
