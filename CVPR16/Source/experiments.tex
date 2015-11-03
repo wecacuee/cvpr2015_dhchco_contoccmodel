@@ -92,12 +92,12 @@ intermediate probabilities, while the baseline methods have only 0-1 error.}
 
 
 \subsection{Localization Experiment}
-To prove the effectiveness of our method we apply it to the localization
+To show the effectiveness of our method we apply it to the localization
 problem. We estimate the position, orientation and dimensions of the car with
 our framework and compute the error in birds eye view domain along the ground
 plane. We report error in three metrics translation error (t) in meters per
 car, yaw error (yaw) in radians per car and dimension error is again meters per
-car.
+car. The results are shown in Table~\ref{tab:localizationExperiment}.
 
 We build the graphical model as shown in Fig~\ref{fig:graphmodel} that 
 allows us to factorize the intractable probability distribution into following form
@@ -125,7 +125,7 @@ allows us to factorize the intractable probability distribution into following f
 %
 We use the following energies in our graphical model.
 
-\subsubsection{Point tracks energy with occlusion}
+\subsubsection{Continuous point tracks energy with occlusion}
 \label{sec:totalContPtTracksEnergy}
 We model continuous point tracks energy with explicit occlusion reasoning as
 the expected re-projection error over the association probability,
@@ -153,86 +153,80 @@ inverse projection functions that project 3D point to camera image and vice
 versa. Note that inverse projection $\invProjectionOf{.}$ depend on both the
 point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on TP pose at time $t-1$ while the projection depends on pose at time $t$ which can be different.
 
-\subsubsection{Object detection energy}
+\subsubsection{Continuous bounding box energy with occlusion}
 
-We model object detection energy as the norm of difference in the coordinates
-of the projected bounding box and detected bounding box. The detected bounding
-box is represented by the extrema along X and Y dimensions $\bb{i} = [\xmin,
-\ymin, \xmax, \ymax]^\top$. If $\dimsn{i} = [l, w, h]^\top$ represent the 3D
-then we can compute the eight corners of the cuboid model in the tracklet
-coordinate transform as
+Object detection is usually followed by non-maximal suppression that results in
+discarding similar bounding boxes. When we are jointly optimizing detections
+with other cues, it is not usually desirable to go with a single bounding box.
+Hence, we keep all the bounding box detections by approximating them with
+multi-modal sum of Gaussian like logistic functions. We fit the parametric function of the form 
+%
+\begin{multline}
+  S(\bb{i}) = \\
+  \sum_k A_k \exp(-(\bb{i}-\mu^{(d)}_k)^\top \Sigma^{(d)-1}_k
+  (\bb{i}-\mu^{(d)}_k))
+\end{multline}
+%
+to detection scores, by non-linear error minimization with initialization from
+non-maximal suppressed outputs. Here $\mu^{(d)}_j$ is one of the $k$ modes as a
+4D vector representing a single bounding box as $[\minx, \miny, \maxx,
+\maxy]^\top$. The optimization is constrained with symmetry and positive
+definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
 
-With slight abuse of notation for projection operator we write this energy as
+\paragraph{Detection scores with occlusion reasoning} 
+\def\u{\mathbf{u}}
+With our model of $\Ptrans$ described in Section \ref{sec:ptransmission}, we can
+compute the probability of a point $\u$ on image be occluded assuming
+the point is on traffic participant (TP) $i$ with mean depth $\mu^{(i)}_d$ as
 \begin{align}
-  \EnergyBBox &= \left\| \projectionOf{\dimsn{i}} - \bb{i}\right\|^2_2 \enspace.
+  O_{i}(\u, \mu^{(i)}_d) = 1 - \Ptransmission(\mu^{(i)}_d\u) \enspace .
+\end{align}
+
+If we know a portion of our proposed detection bounding box is known to be
+occluded, then we would like to decrease the confidence in the detection score
+about the localization of that end of the object. Assuming that the occlusion
+is often on the boundary of detection bounding boxes, we want to decrease our
+confidence on the mean detection boundaries around the occluded boundaries.
+To re-model our detection scores scaled by continuous occlusion we sample
+$O_{i}(\mathbf{u}, \mu^{(i)}_d)$ at the hypothesized detection boundaries from
+GMM $S(.)$ and we augment the detection boundary covariance matrix by
+$\mathcal{P}_{j} = \rho_{j}\rho_{j}^\top$ where $\rho_{j} = O_{j}(\mathbf{u},
+\mu^{(i)}_d)$. The new covariance matrix in detection score is given by 
+  $\Sigma'^{(d)}_j = \mathcal{P}_{j} + \Sigma^{(d)}_j$.
+The detection scores GMM with occlusion is given by replacing the covariance
+matrix
+%
+\begin{multline}
+  S'(\bb{i}) =
+  \\
+  \sum_j A_j \exp(-(\bb{i}-\mu^{(d)}_j)^\top \Sigma'^{(d)-1}_j
+  (\bb{i}-\mu^{(d)}_j))
+\end{multline}
+
+The energy of detection scores is simply take to be the inverse of the detection score.
+\begin{align}
+  \Energy{detect}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
 \end{align}
 
 For object detections we use object detector by \cite{Felzenszwalb_etal_2010}
 which is detector by parts model and we use eight parts to train the car model 
 on half of the KITTI dataset \cite{geiger2013vision}. The trained modeled is 
-used to get detections for the other half of the dataset and vice versa.
+used to get detections for the other half of the dataset and vice versa. 
 
-\subsubsection{Lane energy}
-\label{sec:laneEnergy}
- The lanes are modeled as splines. Here we assume that the confidence in lane
- detection is decreases as the distance from the lane center increases.  The
- energy is given by the dot product between car orientation and tangent to the
- lane at that point.
+\subsubsection{Other energies}
+Other energies we use are described in detail in the supplementary material. We briefly describe them here:
+\begin{description}
+  \item[Lane energy ($\Energy{lane}$)] This energy term constrains the
+    orientation of traffic participants to be parallel to the nearest detected
+    lane. The lanes are either detected visually or obtained from GPS and Map 
+    information.
+  \item[Transition probability ($\Energy{dyn}$)] We use these energies to
+    constrain the motion of cars to be smooth in linear motion and rotation
+    motion. We also constrain cars to move in the direction of heading.
+  \item[Size prior ($\EnergySize$)] We use size prior of cars by using the mean
+    of cars over the KITTI dataset.
+\end{description}
 
-\begin{align}
-  \label{eq:laneOrientationEnergy}
-  \Energy{lane} = 
-  \sum_{m \in M_{\text{close}}}
-  (1 - \ori{i}{t} \cdot \text{TAN}(L_{m}(k), \pos{i}{t}) )
-\LaneUncertainty{\pos{i}{t}}
-\end{align}
-where $M_{\text{close}} = \{m : \text{DIST}(L_{m}(k), \pos{i}{t}) < d_{\text{thresh}}\} $ is
-the set of nearby lanes close to the object by a certain distance threshold $d_{\text{thresh}}$ and 
-\begin{align}
-\LaneUncertainty{\pos{i}{t}} = 
-  \frac{1}{1 + \exp(-q(w_{\text{road}} - \text{DIST}(L_{m}(k), \pos{i}{t})))}
-\end{align}
-for some constant $w_{\text{road}}$ that represents the width of the road.
-
-\subsubsection{Transition probability}
-Dynamics constraints should not only enforce smooth trajectories, but also the
-holonomic constraints.  The following energy adds a penalty if the change in
-position is not in direction of previous orientation.
-
-\begin{align}
-  \label{eq:totalPosTransitionEnergy}
-  \Energy{dyn-hol} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1})
-\end{align}
-
-The following energy adds a penalty for change in position and orientation
-but a penalty for change in velocity is much better approximation. However, in
-a Markovian setting that would mean extending the state space of the car to
-include velocity.
-
-\begin{align}
-  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2\\
-  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2
-\end{align}
-
-As a result the dynamics are modeled by weighted combination of holonomic
-constraint and smoothness constraints.
-
-\begin{align}
-  \WEnergy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel}
-\end{align}
-
-\subsubsection{Size Prior}
-
-Prior can include among many other things the size prior on the car.
-
-\begin{align}
-  \label{eq:totalSizeEnergy}
-  \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
-  \expDimsn)
-\end{align}
-
-where $\expDimsn$ is the mean TP dimensions and
-$\Sigma_{\expDimsn}$ is the correspondence covariance matrix.
 
 
 \begin{figure}
@@ -248,15 +242,6 @@ $\Sigma_{\expDimsn}$ is the correspondence covariance matrix.
     as single node.  The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables. }
   \label{fig:graphmodel}
 \end{figure}
-
-
-\begin{figure}
-  \includegraphics[width=\columnwidth]{results/0009_contPtTracks_size_bboxOcc_yawTstepWiseInference_0000000061.png}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\columnwidth]{results/0009_lane_size_bboxOcc_yawTstepWiseInference_0000000061.png}
-\end{figure}
-
 
 \begin{table}
   \centering
@@ -275,4 +260,5 @@ $\Sigma_{\expDimsn}$ is the correspondence covariance matrix.
     \bottomrule
   \end{tabular}
   \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
+  \label{tab:localizationExperiment}
 \end{table}

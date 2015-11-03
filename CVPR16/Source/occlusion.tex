@@ -11,8 +11,6 @@ In this section, we introduce our representation of 3D traffic participants and 
   \label{fig:reflectiontransimission}
 \end{figure}
 
-
-
 \paragraph{Occupancy model for traffic participants}
 Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whos opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at location $\bx$ corresponding to a traffic participant $i$ centered at $\pos{i}{t}$ as:
 \begin{align}
@@ -43,6 +41,7 @@ The $\max \{ \}$ ensures that the negative probability due to gradient in the di
 
 
 \paragraph{Transmission probability}
+\label{sec:ptransmission}
 Since we are modeling occupancy as transparency, we look towards optics for modeling of translucent objects. A model for transmission of light through a material of thickness $\alpha$, density $\rho$ and opacity $\beta$ is given by the Beer-Lambert Law:
 \begin{align}
 I(x) = I_0 e^{-\beta\rho\alpha}.
