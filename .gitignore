@@ -12,7 +12,6 @@
 *.toc
 CVPR/cvpr2015AuthorKit/
 CVPR16/cvpr2016AuthorKit/
-CVPR/graphics
 CVPR/out/
 Paper/out/
 poster/out/
