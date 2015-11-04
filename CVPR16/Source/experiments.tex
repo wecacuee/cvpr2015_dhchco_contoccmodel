@@ -1,9 +1,7 @@
-\section{Experiments}
+\section{Experimental results}
 \label{sec:experiments}
 
-In this section, we first compare our continuous occlusion model for point-to-object association against the baseline method using detection bounding boxes and state-of-the-art methods for motion segmentation. We then show how the proposed model benefits the task of 3D localization in autonomous driving.
-
-For our experiments, we use the KITTI dataset~\cite{geiger2013vision}, which consists of video sequences of road scenes under a variety of driving conditions including highways and residential areas. It also provides ground truth data for different tasks such as segmentation, detection, tracking and 3D localization.
+In this section, we first benchmark our continuous occlusion model for point-to-object association against the baseline method using detection bounding boxes and state-of-the-art methods for motion segmentation. We then show how the proposed model benefits the task of 3D localization in autonomous driving. For our experiments, we use the KITTI dataset~\cite{geiger2013vision}, which consists of video sequences of road scenes under a variety of driving conditions including highways and residential areas. It also provides ground truth data for different tasks such as segmentation, detection, tracking and 3D localization.
 
 %\paragraph{Dataset} We use KITTI dataset for our experiments.  \cite{geiger2013vision}. KITTI dataset is a labeled video sequence of road scenes under variety of driving conditions including highways and residential areas in Karlsruhe, Germany. It provides manually labelled ground truth data for localization of cars and also uses velodyne data provide metrically accurate estimates of cars location.
 
@@ -11,19 +9,19 @@ For our experiments, we use the KITTI dataset~\cite{geiger2013vision}, which con
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Association experiment}
 
-We first perform the association experiment that compares the accuracy of point-to-object association using the proposed model against those of detection bounding box baseline method (BBox) and state-of-the-art motion segmentation methods, namely robust algebraic segmentation with hybrid perspective constraints (RAS)~\cite{Rao_etal_2010} and spectral clustering with point track spatial affinity (BM)~\cite{Brox_Malik_2010}.
+We first perform the association experiment that compares the accuracy of point-to-object association using the proposed model against those of the detection bounding box baseline method (BBox) and state-of-the-art motion segmentation methods, namely robust algebraic segmentation with hybrid perspective constraints (RAS)~\cite{Rao_etal_2010} and spectral clustering with point track spatial affinity (BM)~\cite{Brox_Malik_2010}.
 
 %To verify the correctness of our association probability $\assocP$ we perform association error experiment that compare the accuracy of point track association with TPs with that of bounding box baseline method.
 
 \subsubsection{Association probability}
 
-Using our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ of $j$\textsuperscript{th} point track with $i$\textsuperscript{th} object at depth $\lambda$ can be defined as
+Based on our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ of $j$\textsuperscript{th} point track with $i$\textsuperscript{th} object at depth $\lambda$ can be defined as
 \begin{align}
   \assocP = \Prefl\Ptrans,
 \end{align}
-where $\Prefl$ and $\Ptrans$ are from \ref{eq:evalPrefl} and \ref{eq:evalCumulativePtrans} respectively. Note that the fraction $\assocP$ although called association probability does not capture the entire information that we have available for computing association of point tracks to objects. This above fraction is the association probability given the hypothesized parameters of TPs. 
+where $\Prefl$ and $\Ptrans$ are from \eqref{eq:evalPrefl} and \eqref{eq:evalCumulativePtrans} respectively. Note that the fraction $\assocP$ although called association probability does not capture the entire information that we have available for computing association of point tracks to objects. This above fraction is the association probability given the hypothesized parameters of TPs in the scene. 
 
-To compute the association probability $\assocP$ between point track $j$ and TP $i$ we must use re-projection error as well. When the association of $i$ and $j$ is correct and the point of reflection is at depth $\lambda$, the re-projection error must be zero \eqref{eq:reprojerror}, otherwise the error becomes a measure of distance from the true solution. The error terms can be converted to probability domain by considering the error term as negative log of probability
+To compute the association probability $\assocP$ between point track $j$ and TP $i$ we must use the reprojection error as well. When the association of $i$ and $j$ is correct and the point of reflection is at depth $\lambda$, the reprojection error must be zero \eqref{eq:reprojerror}, otherwise the error becomes a measure of distance from the true solution. The error term can be converted to probability domain by considering the error term as negative log of probability
 \begin{align}
   P^{(ij)}_{\text{assoc by reproj}}(\lambda) = \frac{1}{Z}\exp(-\Ereproj(\lambda))
 \end{align}
@@ -39,21 +37,19 @@ Once we have the probability of association $P^{(ij)}_{\text{assoc}}$ we can com
   i^*_{j} = \argmin_{i} \int_0^\infty \assocP \Ereproj(\lambda) d\lambda
 \end{align}
 
-We use detection bounding box based assignment of point tracks to TPs as the baseline. For the regions where the bounding boxes overlap, we assign the point tracks to the TP that has smaller mean depth than the competing bounding box.
+For the baseline method, the associations between point tracks and TPs are achieved by using detection bounding boxes, where point tracks within each bounding box are simply assigned to it. For the regions where the bounding boxes overlap, we assign the point tracks to the TP that has smaller mean depth than the competing bounding boxes.
 
 \subsubsection{Association results}
 
-For each sequence of the KITTI dataset, the methods of \cite{} and \cite{} are used respectively for computing detection bounding boxes and object tracklets. We then apply \cite{} on object tracklets to extract point tracks. From these point tracks, we create four different sets of input point tracks, namely all point tracks, occluded point tracks, dynamic point tracks and dynamic and occluded point tracks, to examine various aspects of the methods (our method focuses on occlusion scenes while RAS and BM favour dynamic scenes). In addition to point tracks, the parameters of all TPs estimated by the method~\cite{Song_Chandraker_2014} are provided to our method (for computing association probability) and the baseline method (for depth ordering).
+For each sequence of the KITTI dataset, the methods of \cite{Felzenszwalb_etal_2010} and \cite{Choi_Savarese_2010} are used respectively for computing detection bounding boxes and object tracklets. We then apply \cite{Zach2007} on object tracklets to extract point tracks. From these point tracks, we create four different sets of input point tracks, namely all point tracks, occluded point tracks, dynamic point tracks and dynamic and occluded point tracks, to examine various aspects of the methods (our method focuses on occlusion scenes while RAS and BM favour dynamic scenes). In addition to point tracks, the parameters of all TPs estimated by the method~\cite{Song_Chandraker_2014} are provided to our method (for computing association probability) and the baseline method (for depth ordering).
 
-Table~\ref{tab:meanAssoc} and Figure~\ref{fig:assoc-occ-results} present the association errors --- the percentages of point tracks incorrectly assigned to objects --- of all methods on four sets of input point tracks for each sequence as well as the mean results over all sequences of the KITTI dataset. From the results, our method is usually the most accurate among all methods, leading to the best mean errors on all sets of input point tracks, which is followed by the bounding box baseline method. This clearly shows the advantage of our continuous occlusion model over the simple baseline method for resolving occlusions. Both RAS and BM often have the highest errors and hence the highest mean errors on all sets of input point tracks.
+Figure~\ref{fig:assoc-occ-results} shows the association errors --- the percentages of point tracks incorrectly assigned to objects --- of all methods on four sets of input point tracks for each sequence of the KITTI dataset, while the mean results over all sequences are presented in Table~\ref{tab:meanAssoc}. From Figure~\ref{fig:assoc-occ-results}, our method is usually the most accurate among all methods, leading to the best mean errors on all sets of input point tracks in Table~\ref{tab:meanAssoc}, which is followed by the bounding box baseline method. This clearly shows the advantage of our continuous occlusion model over the simple baseline method for resolving occlusions. RAS and BM often have the highest errors in Figure~\ref{fig:assoc-occ-results}, and hence the highest mean errors on all sets of input point tracks in Table~\ref{tab:meanAssoc}. 
+
+More importantly, both RAS and BM rely on motions of objects for clustering point tracks, therefore they cannot work well with static point tracks (e.g., point tracks belong to parked cars). This fact can be observed in Table~\ref{tab:meanAssoc}, where there are large differences in the mean errors of both methods on data containing static point tracks (i.e., rows 2 and 4) and data consisting of dynamic point tracks only (i.e., rows 1 and 3). In contrast, our method and the baseline method are relatively independent of object motions, resulting in smaller performance gaps.
 
 \begin{figure*}
 \includegraphics[trim=1.0in 0.4in 1.0in 0.2in, clip, width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
-  \caption{Association errors on different sets of point tracks. The
-    numbers on y-axis represent the data sequence number in KITTI dataset. The
-    first set of bars in each plot correspond to the mean across all sequences.
-    The error is in terms of average fraction of foreground points incorrectly
-    associated to objects per sequence.}
+  \caption{Association errors on different sets of input point tracks. Numbers on y-axis represent data sequence numbers in KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
 \label{fig:assoc-occ-results}
 \end{figure*}
 \begin{table}
@@ -67,7 +63,7 @@ Table~\ref{tab:meanAssoc} and Figure~\ref{fig:assoc-occ-results} present the ass
   All tracks                  & \textbf{08.6} & 12.6 & 21.9 & 21.5 \\
   \bottomrule
 \end{tabular}
-\caption{Mean association experiment results in error percentage calculated as percentage of points wrongly associated.}
+\caption{Mean association errors on different sets of input point tracks over all sequences of KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
 \label{tab:meanAssoc}
 \end{table}
 
@@ -95,15 +91,15 @@ Table~\ref{tab:meanAssoc} and Figure~\ref{fig:assoc-occ-results} present the ass
     \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks-small.png} &%
     \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}
   \end{tabular}
-  \caption{Qualitative results for association experiment. The left column
-  shows the point tracks assignment to appropriate object. Each color represents
-a different track to which the point is associated to. Right column shows the
-probablistic error in association: red is low error while blue is high error.
-Note that our method changes smoothly at the boundary of the objects with
-intermediate probabilities, while the baseline methods have only 0-1 error.} 
+  \caption{Qualitative results of the association experiment. The left column
+  shows the point track assignments to appropriate objects. Each color represents
+a different object to which point tracks can be associated to. Right column shows the
+probabilistic error in association: low errors are in red while high errors are in blue.
+Note that our method changes smoothly at the object boundaries with
+intermediate probabilities, while the baseline method has merely 0-1 error.} 
 \end{table*}
 
-\subsection{Localization Experiment}
+\subsection{Localization experiment}
 To show the effectiveness of our method we apply it to the localization
 problem. We estimate the position, orientation and dimensions of the car with
 our framework and compute the error in birds eye view domain along the ground
@@ -140,7 +136,7 @@ We use the following energies in our graphical model.
 \subsubsection{Continuous point tracks energy with occlusion}
 \label{sec:totalContPtTracksEnergy}
 We model continuous point tracks energy with explicit occlusion reasoning as
-the expected re-projection error over the association probability,
+the expected reprojection error over the association probability,
 
 \begin{multline}
   \Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = 
@@ -152,7 +148,7 @@ the expected re-projection error over the association probability,
 \end{multline}
 where $\assocP$ is the association probability of
 $j$\textsuperscript{th} point with $i$\textsuperscript{th} TP at depth $\lambda$, $\{ \relp{i}{t} \}_i$ are the poses of all occluding objects at time $t$, $ \{ \dimsn{i} \}_i$ are the dimensions of all objects that occlude $i$
-and $\Ereproj(\lambda)$ is the re-projection error given by
+and $\Ereproj(\lambda)$ is the reprojection error given by
 %
 \begin{align}
   \assocP &= \Prefl\Ptrans\\
