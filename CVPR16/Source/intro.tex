@@ -3,26 +3,22 @@ The problem of segmenting points to objects often comes up in different
 computer vision problems especially in multi-body 
 reconstruction and localization. Given correspondence points on
 consecutive frames, the problem becomes one of finding out which points belong
-to which object following which one can use the consensus of segmented points
+to which object, following which one can use the consensus of segmented points
 to reconstruct or localize the object more accurately. Without additional 
-information this is very difficult problem as attempted by semantic segmentation 
+information, this is a very difficult problem as attempted by semantic segmentation 
 and motion segmentation methods. However, in the problems like reconstruction and
-localization on can use the hypothesis of the algorithm as the feedback.
+localization one can use the hypothesis of the algorithm as the feedback.
 % What is the problem we are trying to solve, and why is it even important?
 
 % What did we do
-We propose a model for representation of objects in the scene so that points
-can be probabilistically  associated to the tracklets while accounting for occlusion.
+We propose a novel model for representation of objects in the scene so that point tracks
+can be probabilistically associated with objects while accounting for object occlusions.
 % Why is it novel
-Although our proposed modeling is inspired by Milan et
+Although our proposed model is inspired by Milan et
 al.\cite{Milan_etal_2014}, it is more detailed and more principled than their
 work. Milan et al. used soft ellipses and sigmoids to model pedestrians and
-their occlusion. We instead reason in 3D and use ellipsoids to model objects
-and reason about occupancy of the space to model occlusion.
+their occlusions. Our reasoning is instead in 3D. We use ellipsoids to model objects
+and reason about their occupancies of the space to model their occlusions.
 % Ok you proposed a model is it of any use
 % How does it compare to state of art
-We employ our model in the context of autonomous for problem of localization of
-cars in the road scene. We show that associate points to objects more
-accurately than other methods like bounding box based association, Brox and
-Malik's\cite{Brox_Malik_2010} segmentation method and Robust Algebraic
-Segmentation (RAS)\cite{Rao_etal_2010}.
+We show that our continuous occlusion model achieves significantly lower point-to-object association errors compared to the baseline method using detection bounding boxes and other state-of-the-art methods for motion segmentation~\cite{Brox_Malik_2010, Rao_etal_2010}. As a consequence, our model benefits the task of 3D localization of traffic participants in autonomous driving.
