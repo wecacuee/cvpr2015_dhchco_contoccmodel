@@ -1,5 +1,3 @@
 \begin{abstract}
-We propose a novel model for representing objects so that point tracks can be
-probabilistically  associated with objects while accounting for object occlusions.
-We compare our approach against state-of-the-art motion segmentation methods.
+This paper studies the problem of segmenting tracked feature points of multiple objects in a video sequence. We consider scenes that contain both dynamic and static objects which usually appear in the context of autonomous driving (e.g., moving and parked cars) and occlusions among objects. We propose a novel continuous model for representing objects so that point tracks can be probabilistically and accurately assigned to the corresponding object while accounting for object occlusions. Detailed experiments on the KITTI dataset show the superiority of the propose method over the baseline method which simply uses detection bounding boxes for resolving occlusions and other state-of-the-art motion segmentation methods which cannot cope well with static objects. As a notable application, we show how our continuous occlusion model benefits the task of 3D localization of traffic participants in autonomous driving.  
 \end{abstract}
