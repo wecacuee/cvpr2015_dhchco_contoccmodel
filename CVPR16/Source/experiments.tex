@@ -45,7 +45,7 @@ We use detection bounding box based assignment of point tracks to TPs as the bas
 
 For each sequence of the KITTI dataset, the methods of \cite{} and \cite{} are used respectively for computing detection bounding boxes and object tracklets. We then apply \cite{} on object tracklets to extract point tracks. From these point tracks, we create four different sets of input point tracks, namely all point tracks, occluded point tracks, dynamic point tracks and dynamic and occluded point tracks, to examine various aspects of the methods (our method focuses on occlusion scenes while RAS and BM favour dynamic scenes). In addition to point tracks, the parameters of all TPs estimated by the method~\cite{Song_Chandraker_2014} are provided to our method (for computing association probability) and the baseline method (for depth ordering).
 
-Figure~\ref{fig:assoc-occ-results} presents the association errors --- the percentages of point tracks incorrectly assigned to objects --- of all methods on four sets of input point tracks for each sequence as well as the mean results over all sequences of the KITTI dataset. From the results, our method is usually the most accurate among all methods, leading to the best mean errors on all sets of input point tracks, which is followed by the bounding box baseline method. This clearly shows the advantage of our continuous occlusion model over the simple baseline method for resolving occlusions. Both RAS and BM often have the highest errors and hence the highest mean errors on all sets of input point tracks.
+Table~\ref{tab:meanAssoc} and Figure~\ref{fig:assoc-occ-results} present the association errors --- the percentages of point tracks incorrectly assigned to objects --- of all methods on four sets of input point tracks for each sequence as well as the mean results over all sequences of the KITTI dataset. From the results, our method is usually the most accurate among all methods, leading to the best mean errors on all sets of input point tracks, which is followed by the bounding box baseline method. This clearly shows the advantage of our continuous occlusion model over the simple baseline method for resolving occlusions. Both RAS and BM often have the highest errors and hence the highest mean errors on all sets of input point tracks.
 
 \begin{figure*}
 \includegraphics[trim=1.0in 0.4in 1.0in 0.2in, clip, width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
@@ -56,6 +56,20 @@ Figure~\ref{fig:assoc-occ-results} presents the association errors --- the perce
     associated to objects per sequence.}
 \label{fig:assoc-occ-results}
 \end{figure*}
+\begin{table}
+\begin{tabular}{lrrrr}
+  \toprule
+  & Ours & BBox & BM & RAS\\
+  \midrule
+  Dyn. and occ. tracks        & \textbf{13.2} & 21.3 & 30.9 & 37.8 \\
+  Occluded tracks             & \textbf{15.7} & 19.8 & 39.5 & 29.3 \\
+  Dynamic tracks              & \textbf{06.6} & 11.4 & 15.3 & 21.5 \\
+  All tracks                  & \textbf{08.6} & 12.6 & 21.9 & 16.4 \\
+  \bottomrule
+\end{tabular}
+\caption{Mean association experiment results in error percentage calculated as percentage of points wrongly associated.}
+\label{tab:meanAssoc}
+\end{table}
 
 
 \newlength{\tblimgwidth}
