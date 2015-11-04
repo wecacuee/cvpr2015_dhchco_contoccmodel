@@ -74,7 +74,7 @@ More importantly, both RAS and BM rely on motions of objects for clustering poin
   \centering
   \begin{tabular}{ccc}
     & Associations & Error in association\\
-    \rotatebox{90}{\hspace{2em} Baseline} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png} &%
+    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png} &%
     \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
     \rotatebox{90}{\hspace{2em} BM} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010-small.png} &%
     \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
@@ -82,7 +82,7 @@ More importantly, both RAS and BM rely on motions of objects for clustering poin
     \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_RAS_correct_incorrect-small.png}\\
     \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks-small.png} &%
     \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} Baseline} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model-small.png} &%
+    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model-small.png} &%
     \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
     \rotatebox{90}{\hspace{2em} BM} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010-small.png} &%
     \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
@@ -94,7 +94,7 @@ More importantly, both RAS and BM rely on motions of objects for clustering poin
   \caption{Qualitative results of the association experiment. The left column
   shows the point track assignments to appropriate objects. Each color represents
 a different object to which point tracks can be associated to. Right column shows the
-probabilistic error in association: low errors are in red while high errors are in blue.
+probabilistic error in association: low error points are in blue while high error points are in red.
 Note that our method changes smoothly at the object boundaries with
 intermediate probabilities, while the baseline method has merely 0-1 error.} 
 \end{table*}
@@ -131,7 +131,7 @@ allows us to factorize the intractable probability distribution into following f
   \enspace.
 \end{multline}
 %
-We use the following energies in our graphical model.
+Next, we explain the important energies used in our graphical model.
 
 \subsubsection{Continuous point tracks energy with occlusion}
 \label{sec:totalContPtTracksEnergy}
@@ -235,7 +235,10 @@ Other energies we use are described in detail in the supplementary material. We 
     of cars over the KITTI dataset.
 \end{description}
 
-
+\subsection{Metropolis Hastings Inference}
+We use Metropolis Hastings' methods for graphical model inference. Since we are
+optimizing over continuous random variables, we use Gaussian distribution as
+the proposal distribution.
 
 \begin{figure}
   \centering
@@ -258,7 +261,7 @@ Other energies we use are described in detail in the supplementary material. We 
     Energy & t & yaw & dim \\
     \midrule
     initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
-    $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
+    %$\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
     %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
     %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
     %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
