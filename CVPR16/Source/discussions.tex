@@ -1,0 +1,13 @@
+\section{Discussion and Future Work}
+\label{sec:conclusions}
+
+Our experiments shows that our association probability produces more accurate
+point to object associations when compared to bounding box based
+association and state of art motion segmentation.
+Also the localization experiment results show improvement by modeling occlusions, however, the average translation error of 5 meters is very high. Since the results are averaged over the entire KITTI dataset, there are various possible sources of error, including outliers in point tracks, outliers in detections results. 
+One of the reasons of poor performance is that we set the parameters $\lambda_{\text{bbox,track,lane,dyn,size}}$ empirically which may be suboptimal. However, because of slow inference algorithms, which take about a day to run on 300 cores for the entire KITTI dataset, learning become infeasible.
+
+We have several ideas for speeding up inference and thereby allowing learning
+of weights to become feasible. One of them is to approximate the graph into a
+tree using Chow-Liu's \cite{chow1968approximating} algorithm and then using
+Belief Propagation which is linear in the number of edges of the tree.
