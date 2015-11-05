@@ -1,9 +1,12 @@
 \section{Unified Occlusion Models}
 %\section{Occlusion-Aware Association and Localization}
+\label{sec:unified}
 
 In this section, we highlight the versatility of our occlusion modeling by demonstrating its unified application to two different problems: associating point tracks with objects and 3D object localization using object and point tracks.
 
 \subsection{Object-Point Association}
+\label{sec:association}
+
 Based on our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ of the $j$\textsuperscript{th} point track with $i$\textsuperscript{th} object at depth $\lambda$ can be defined as
 \begin{align}
 \assocP = \Prefl\Ptrans,
@@ -34,6 +37,8 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 
 
 \subsection{3D Object Localization}
+\label{sec:localization}
+
 To show the effectiveness of our method we apply it to the localization
 problem. We estimate the position, orientation and dimensions of the car with
 our framework and compute the error in birds eye view domain along the ground
