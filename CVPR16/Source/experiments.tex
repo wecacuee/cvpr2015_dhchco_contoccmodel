@@ -107,6 +107,7 @@ plane. We report error in three metrics translation error (t) in meters per
 car, yaw error (yaw) in radians per car and dimension error is again meters per
 car. The results are shown in Table~\ref{tab:localizationExperiment}.
 
+To estimate the localization of traffic participants (TPs) in a road scene we follow the graphical model approach.
 We build the graphical model as shown in Fig~\ref{fig:graphmodel} that 
 allows us to factorize the intractable probability distribution into following form
 %
@@ -131,7 +132,8 @@ allows us to factorize the intractable probability distribution into following f
   \enspace.
 \end{multline}
 %
-Next, we explain the important energies used in our graphical model.
+Next, we explain the formulation of important energies used in our graphical
+model.
 
 \subsubsection{Continuous point tracks energy with occlusion}
 \label{sec:totalContPtTracksEnergy}
@@ -192,7 +194,7 @@ the point is on traffic participant (TP) $i$ with mean depth $\mu^{(i)}_d$ as
 
 If we know a portion of our proposed detection bounding box is known to be
 occluded, then we would like to decrease the confidence in the detection score
-about the localization of that end of the object. Assuming that the occlusion
+about the localization of that end of the object. Assuming that the occlusion of interest
 is often on the boundary of detection bounding boxes, we want to decrease our
 confidence on the mean detection boundaries around the occluded boundaries.
 To re-model our detection scores scaled by continuous occlusion we sample
@@ -238,7 +240,19 @@ Other energies we use are described in detail in the supplementary material. We 
 \subsection{Metropolis Hastings Inference}
 We use Metropolis Hastings' methods for graphical model inference. Since we are
 optimizing over continuous random variables, we use Gaussian distribution as
-the proposal distribution.
+the proposal distribution. We choose Metropolis Hastings inference over
+block-coordinate descent which turns out to be slower than Metropolis Hastings
+in our experiments. Please refer to our supplementary material for the comparison
+of inference methods.
+
+\subsection{Observations}
+The results from our localization experiments are shown in Table~\ref{tab:localizationExperiment}. We compare four combinations of energies as shown in the table.
+The energy $\EnergyTrackNoOcc$ represents the point tracks energy modeled with 
+accounting for occlusion, i.e., we remove the term $\Ptransmission$ and model
+$\EnergyTrack$ in the absence of $\Ptransmission$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the modification of $\bSigma$ that accounts for occlusion.
+The results show that use of continuous occlusion model 
+improves the localization accuracy in terms of all three metrics: translation,
+yaw and dimension error.
 
 \begin{figure}
   \centering

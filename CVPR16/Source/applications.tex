@@ -37,10 +37,8 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 To show the effectiveness of our method we apply it to the localization
 problem. We estimate the position, orientation and dimensions of the car with
 our framework and compute the error in birds eye view domain along the ground
-plane. We report error in three metrics translation error (t) in meters per
-car, yaw error (yaw) in radians per car and dimension error is again meters per
-car. The results are shown in Table~\ref{tab:localizationExperiment}.
-
+plane. 
+To estimate the localization of traffic participants (TPs) in a road scene we follow the graphical model approach.
 We build the graphical model as shown in Fig~\ref{fig:graphmodel} that 
 allows us to factorize the intractable probability distribution into following form
 %
@@ -173,7 +171,10 @@ Other energies we use are described in detail in the supplementary material. We 
 \subsection{Metropolis Hastings Inference}
 We use Metropolis Hastings' methods for graphical model inference. Since we are
 optimizing over continuous random variables, we use Gaussian distribution as
-the proposal distribution.
+the proposal distribution. We choose Metropolis Hastings inference over
+block-coordinate descent which turns out to be slower than Metropolis Hastings
+in our experiments. Please refer to our supplementary material for the comparison
+of inference methods.
 
 \begin{figure}
   \centering

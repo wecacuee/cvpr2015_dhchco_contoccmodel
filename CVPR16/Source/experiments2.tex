@@ -94,3 +94,17 @@ intermediate probabilities, while the baseline method has merely 0-1 error.}
   \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
   \label{tab:localizationExperiment}
 \end{table}
+
+
+\subsection{Localization Experiment and Results}
+We report error in three metrics translation error (t) in meters per car, yaw
+error (yaw) in radians per car and dimension error is again meters per car. The
+results are shown in Table~\ref{tab:localizationExperiment}.  We compare four
+combinations of energies as shown in the table.  The energy $\EnergyTrackNoOcc$
+represents the point tracks energy modeled with accounting for occlusion, i.e.,
+we remove the term $\Ptransmission$ and model $\EnergyTrack$ in the absence of
+$\Ptransmission$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the
+modification of $\bSigma$ that accounts for occlusion.  The results show that
+use of continuous occlusion model improves the localization accuracy in terms
+of all three metrics: translation, yaw and dimension error.
+
