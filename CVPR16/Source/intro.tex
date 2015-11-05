@@ -1,31 +1,20 @@
 \section{Introduction}
-Motion segmentation is a fundamental problem in computer vision, which aims to separate the motions of multiple objects appearing in a video sequence. The input data is usually a set of points extracted on the surfaces of the objects, which are then tracked through the video sequence. Motion segmentation serves as an important preprocessing step for different applications such as 3D localization and reconstruction, where the point tracks associated with each individual object can be used to localize or reconstruct the object in the 3D space accurately.
 
-Previous work 
-Input assumption
-Contributions
+A fundamental problem in computer vision is to separate feature points of multiple objects which are tracked through a video sequence. The assignments of point tracks to objects can serve as an important preprocessing step for different applications such as 3D localization and reconstruction, where the point tracks associated with an individual object can be used to localize or reconstruct the object in 3D space accurately. In this paper, we focus on road scenes in autonomous driving applications which often include dynamic and static objects simultaneously. For example, some cars are parked near the curb while other cars are moving on the street. 
+
+Motion segmentation approaches usually rely on object motions for clustering point tracks. Since point tracks of the same object possess similar motion patterns, these methods generally produce accurate point-to-object associations for dynamic objects. However, when there are static objects in the scene, their corresponding point tracks are often clustered together, which decreases the performances significantly and makes motion segmentation approaches unsuitable for road scenes with combinations of dynamic and static objects. Moreover, object occlusions are frequently involved in road scenes, where cars are relatively close to each other and move in the same directions, which makes the problem of point-to-object association for road scene understanding become more challenging.
+
+In this work, we first propose to represent objects as 3D ellipsoids. Motivated by image formulation theory in computer graphics, we then develop novel \emph{transmission} and \emph{reflection} models, which can explicitly reason about object occlusions. Leveraging on the success of object detection and tracking algorithms, we assume that detection bounding boxes and object tracklets are provided, thus we concentrate on segmenting point tracks that are only computed within object tracklets, which often contain both dynamic and static point tracks. As we will show later, the proposed method outperforms the baseline method which merely uses detection bounding boxes for resolving occlusions. Furthermore, our method is not based on object motions and hence does not suffer from static objects as other state-of-the-art methods for motion segmentation.
 
 
-The problem of segmenting points to objects often comes up in different
-computer vision problems especially in multi-body 
-reconstruction and localization. Given correspondence points on
-consecutive frames, the problem becomes one of finding out which points belong
-to which object, following which one can use the consensus of segmented points
-to reconstruct or localize the object more accurately. Without additional 
-information, this is a very difficult problem as attempted by semantic segmentation 
-and motion segmentation methods. However, in the problems like reconstruction and
-localization one can use the hypothesis of the algorithm as the feedback.
+
+%The problem of segmenting points to objects often comes up in different computer vision problems especially in multi-body reconstruction and localization. Given correspondence points on consecutive frames, the problem becomes one of finding out which points belong to which object, following which one can use the consensus of segmented points to reconstruct or localize the object more accurately. Without additional information, this is a very difficult problem as attempted by semantic segmentation and motion segmentation methods. However, in the problems like reconstruction and localization one can use the hypothesis of the algorithm as the feedback.
 % What is the problem we are trying to solve, and why is it even important?
 
-% What did we do
-We propose a novel model for representation of objects in the scene so that point tracks
-can be probabilistically associated with objects while accounting for object occlusions.
+% What did we do We propose a novel model for representation of objects in the scene so that point tracks can be probabilistically associated with objects while accounting for object occlusions.
 % Why is it novel
-Although our proposed model is inspired by Milan et
-al.\cite{Milan_etal_2014}, it is more detailed and more principled than their
-work. Milan et al. used soft ellipses and sigmoids to model pedestrians and
-their occlusions. Our reasoning is instead in 3D. We use ellipsoids to model objects
-and reason about their occupancies of the space to model their occlusions.
+
+%Although our proposed model is inspired by Milan et al.\cite{Milan_etal_2014}, it is more detailed and more principled than their work. Milan et al. used soft ellipses and sigmoids to model pedestrians and their occlusions. Our reasoning is instead in 3D. We use ellipsoids to model objects and reason about their occupancies of the space to model their occlusions.
 % Ok you proposed a model is it of any use
 % How does it compare to state of art
-We show that our continuous occlusion model achieves significantly lower point-to-object association errors compared to the baseline method using detection bounding boxes and other state-of-the-art methods for motion segmentation~\cite{Brox_Malik_2010, Rao_etal_2010}. As a consequence, our model benefits the task of 3D localization of traffic participants in autonomous driving.
+% We show that our continuous occlusion model achieves significantly lower point-to-object association errors compared to the baseline method using detection bounding boxes and other state-of-the-art methods for motion segmentation~\cite{Brox_Malik_2010, Rao_etal_2010}. As a consequence, our model benefits the task of 3D localization of traffic participants in autonomous driving.
