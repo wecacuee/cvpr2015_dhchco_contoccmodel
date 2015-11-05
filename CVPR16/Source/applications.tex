@@ -70,18 +70,20 @@ Next, we explain the important energies used in our graphical model.
 \subsubsection{Continuous point tracks energy with occlusion}
 \label{sec:totalContPtTracksEnergy}
 
-Let the pose of object $i$ at time $t$ be $\relp{i}{t}$. We denote $\projectionOf{.}$ and $\invProjectionOftm{.}$ for the projection and inverse projection functions that project a 3D point to the camera image and vice versa. Then, the reprojection error for the $j$\textsuperscript{th} 2D point, with hypothesized depth $\lambda$, is given by
+Let the pose of object $i$ at time $t$ be $\relp{i}{t}$. We denote $\projectionOf{.}$ and $\invProjectionOftm{.}$ for the forward and inverse projection functions that project a 3D point to the camera image and vice versa. Then, the reprojection error for the $j$\textsuperscript{th} 2D point, $\trackp{t}$, with hypothesized depth $\lambda$, is given by
 \begin{equation}
 \Ereproj(\lambda) = \left\|\trackpj{t} - \projectionOf{\invProjectionOftm{\trackpj{t-1}, \lambda}}\right\|^2.
 \label{eq:reprojerror}
 \end{equation}
-Note that inverse projection $\invProjectionOf{.}$ depends on both the 2D point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on object pose at time $t-1$ while the forward projection depends on pose at time $t$ which can be different.
+Note that inverse projection $\invProjectionOf{.}$ depends on both the 2D point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on object pose at time $t-1$ while the forward projection depends on pose at time $t$, which can be different.
 
-For an object $i$, let $\{ \relp{i}{t} \}_i$ be the poses of all occluding objects at time $t$ and $ \{ \dimsn{i} \}_i$ be their dimensions. Then, we model the continuous point tracks energy with explicit occlusion reasoning as the expected reprojection error over the association probability:
+For an object $i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding objects at time $t$ (inclusive of object $i$) and $ \{ \bB \}_i$ be their dimensions. Then, we model the continuous point tracks energy with explicit occlusion reasoning as the expected reprojection error over the association probability:
 \begin{multline}
-  \Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = 
+  %\!\!\!\! \Energy{track}(\relp{i}{t}, \relp{i}{t-1}, \dimsn{i}, \{ \Omega (t) \}_i, \{ \Omega (t-1) \}_i, \{ \bB \}_i ) 
+  %\Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = 
+  \Energy{track}(\{ \Omega (t) \}_i, \{ \Omega (t-1) \}_i, \{ \bB \}_i )
   \\
-    \sum_{i=1}^{N} 
+    = \sum_{i=1}^{N} 
     %\sum_{t = s_i}^{e_i}
     \sum_{j = 1}^{M}
     \int_1^\infty \assocP\Ereproj(\lambda) d\lambda
@@ -98,34 +100,32 @@ where $\assocP$ is the association probability of the $j$\textsuperscript{th} po
 
 \subsubsection{Continuous bounding box energy with occlusion}
 
-Object detection is usually followed by non-maximal suppression that results in
-discarding similar bounding boxes. When we are jointly optimizing detections
-with other cues, it is not usually desirable to go with a single bounding box.
-Hence, we keep all the bounding box detections by approximating them with
-multi-modal sum of Gaussian like logistic functions. We fit the parametric function of the form 
-%
-\begin{multline}
-  S(\bb{i}) = \\
-  \sum_k A_k \exp(-(\bb{i}-\mu^{(d)}_k)^\top \Sigma^{(d)-1}_k
-  (\bb{i}-\mu^{(d)}_k))
-\end{multline}
-%
-to detection scores, by non-linear error minimization with initialization from
-non-maximal suppressed outputs. Here $\mu^{(d)}_j$ is one of the $k$ modes as a
-4D vector representing a single bounding box as $[\minx, \miny, \maxx,
-\maxy]^\top$. The optimization is constrained with symmetry and positive
-definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
+Object detection is usually followed by non-maximal suppression that results in discarding similar bounding boxes. When we are jointly optimizing detections with other cues, it is not usually desirable to go with a single bounding box. To retain the entire detection output while maintaining the continuous form of our energies, we approximate the distribution of detection scores with a multi-modal sum of Gaussians-like logistic functions. In particular, let $\bb{i}$ be a detection bounding box for object $i$, parameterized as a 4D vector $[\minx, \miny, \maxx, \maxy]^\top$. We fit a parametric function to the detection scores, of the form
+\begin{equation}
+S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{(i)}(t)^\top \Lambda_k^{-1} \bepsilon_k^{(i)}(t) \right)
+\end{equation}
+where $A_k$ is an amplitude and $\bepsilon_k^{(i)}(t) = \bb{i}-\mu^{(k)}_d$, with $\mu^{(k)}_d$ the mean and $\Lambda_k$ the covariance.
+%% %
+%% \begin{multline}
+%%   S(\bb{i}) = \\
+%%   \sum_k A_k \exp(-(\bb{i}-\mu^{(d)}_k)^\top \Sigma^{(d)-1}_k
+%%   (\bb{i}-\mu^{(d)}_k))
+%% \end{multline}
+%% %
+%% to detection scores, by 
+We use a non-linear solver to minimize the above, with initialization from non-maximal suppressed outputs. The optimization is constrained by the symmetry and positive definiteness of $\Lambda_k^{-1}$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
+%Here $\mu^{(d)}_j$ is one of the $k$ modes as a 4D vector representing a single bounding box as $[\minx, \miny, \maxx, \maxy]^\top$. The optimization is constrained with symmetry and positive definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
 
 \paragraph{Detection scores with occlusion reasoning} 
 \def\u{\mathbf{u}}
 With our model of $\Ptrans$ described in Section \ref{sec:ptransmission}, we can
-compute the probability of a point $\u$ on image be occluded assuming
-the point is on traffic participant (TP) $i$ with mean depth $\mu^{(i)}_d$ as
+compute the probability of a point $\u$ in the image to be occluded assuming
+the point is on object $i$ with mean depth $\mu^{(i)}_d$ as
 \begin{align}
   O_{i}(\u, \mu^{(i)}_d) = 1 - \Ptransmission(\mu^{(i)}_d\u) \enspace .
 \end{align}
 
-If we know a portion of our proposed detection bounding box is known to be
+If a portion of our proposed detection bounding box is known to be
 occluded, then we would like to decrease the confidence in the detection score
 about the localization of that end of the object. Assuming that the occlusion
 is often on the boundary of detection bounding boxes, we want to decrease our
