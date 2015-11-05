@@ -100,7 +100,7 @@ where $\assocP$ is the association probability of the $j$\textsuperscript{th} po
 
 Object detection is usually followed by non-maximal suppression that results in discarding similar bounding boxes. When we are jointly optimizing detections with other cues, it is not usually desirable to go with a single bounding box. To retain the entire detection output while maintaining the continuous form of our energies, we approximate the distribution of detection scores with a multi-modal sum of Gaussians-like logistic functions. In particular, let $\bb{i}$ be a detection bounding box for object $i$, parameterized as a 4D vector $[\minx, \miny, \maxx, \maxy]^\top$. We fit a parametric function to the detection scores, of the form
 \begin{equation}
-S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{(i)}(t)^\top \Lambda_k^{-1} \bepsilon_k^{(i)}(t) \right)
+S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{(i)}(t)^\top \Lambda_k^{'-1} \bepsilon_k^{(i)}(t) \right)
 \end{equation}
 where $A_k$ is an amplitude and $\bepsilon_k^{(i)}(t) = \bb{i}-\mu^{(k)}_d$, with $\mu^{(k)}_d$ the mean and $\Lambda_k$ the covariance.
 %% %
@@ -118,9 +118,9 @@ We use a non-linear solver to minimize the above, with initialization from non-m
 \def\u{\mathbf{u}}
 With our model of $\Ptrans$ described in Section \ref{sec:ptransmission}, we can
 compute the probability of a point $\u$ in the image to be occluded assuming
-the point is on object $i$ with mean depth $\mu^{(i)}_d$ as
+the point is on object $i$ with mean depth $\meandepth{i}$ as
 \begin{align}
-  O_{i}(\u, \mu^{(i)}_d) = 1 - \Ptransmission(\mu^{(i)}_d\u) \enspace .
+  O_{i}(\u, \meandepth{i}) = 1 - \Ptransmission(\meandepth{i}, \u) \enspace .
 \end{align}
 
 If a portion of our proposed detection bounding box is known to be
@@ -129,19 +129,16 @@ about the localization of that end of the object. Assuming that the occlusion
 is often on the boundary of detection bounding boxes, we want to decrease our
 confidence on the mean detection boundaries around the occluded boundaries.
 To re-model our detection scores scaled by continuous occlusion we sample
-$O_{i}(\mathbf{u}, \mu^{(i)}_d)$ at the hypothesized detection boundaries from
+$O_{i}(\mathbf{u}, \meandepth{i})$ at the hypothesized detection boundaries from
 GMM $S(.)$ and we augment the detection boundary covariance matrix by
-$\mathcal{P}_{j} = \rho_{j}\rho_{j}^\top$ where $\rho_{j} = O_{j}(\mathbf{u},
-\mu^{(i)}_d)$. The new covariance matrix in detection score is given by 
-  $\Sigma'^{(d)}_j = \mathcal{P}_{j} + \Sigma^{(d)}_j$.
+$\mathcal{P}_{i} = \rho_{i}\rho_{i}^\top$ where $\rho_{i} = O_{i}(\mathbf{u},
+\meandepth{i})$. The new covariance matrix in detection score is given by 
+  $\Lambda'_k = \mathcal{P}_{i} + \Lambda_k$ for all $k$.
 The detection scores GMM with occlusion is given by replacing the covariance
 matrix
 %
 \begin{multline}
-  S'(\bb{i}) =
-  \\
-  \sum_j A_j \exp(-(\bb{i}-\mu^{(d)}_j)^\top \Sigma'^{(d)-1}_j
-  (\bb{i}-\mu^{(d)}_j))
+S'(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{(i)}(t)^\top \Lambda_k^{'-1} \bepsilon_k^{(i)}(t) \right)
 \end{multline}
 
 The energy of detection scores is simply take to be the inverse of the detection score.

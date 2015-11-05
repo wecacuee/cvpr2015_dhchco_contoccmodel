@@ -70,15 +70,15 @@ In practice, the integral for transmission probability \eqref{eq:ptrans-integral
 %
 \newcommand{\Ptransmission}{P_{\textit{transmission}}}%
 \begin{align}
-  \Ptransmission^j(\lambda) = \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \nu_i)),
+  \Ptransmission^j(\lambda) = \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \meandepth{i})),
 \label{eq:evalCumulativePtrans}
 \end{align}
 %
-where $\cL_u(.)$ is sigmoid in image domain, with $\bmu^i_u$ and $\bGamma_i$ representing the elliptical projection of object $O_i$ in the image and $\cL_{\lambda}(.)$ is sigmoid in the depth domain with $\nu_i$ the mean depth of object $O_i$. That is,
+where $\cL_u(.)$ is sigmoid in image domain, with $\bmu^i_u$ and $\bGamma_i$ representing the elliptical projection of object $O_i$ in the image and $\cL_{\lambda}(.)$ is sigmoid in the depth domain with $\meandepth{i}$ the mean depth of object $O_i$. That is,
 %
 \begin{align}
 \cL_u(\bu; \bmu_i, \bGamma_i^{-1}) &= \frac{1}{1 + e^{-k_u(1 - (\bu - \bmu_i)^\top \bGamma_i^{-1} (\bu - \bmu_i))}} \\
-\cL_{\lambda}(\lambda; \nu_i) &= \frac{1}{1 + e^{-k_d(\lambda - \nu_i)}}
+  \cL_{\lambda}(\lambda; \meandepth{i}) &= \frac{1}{1 + e^{-k_d(\lambda - \meandepth{i})}}
 \end{align}
 %
 We compare the exact and relative formulation of transmission probability in
