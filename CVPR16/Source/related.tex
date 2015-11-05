@@ -1,4 +1,5 @@
 \section{Related Work}
+\label{sec:related}
 \paragraph{Occlusion handling in tracking}
 Occlusions have also been handled in tracking-by-detection frameworks by considering occluder patterns in the image \cite{Kwak_etal_2012,Wu_Nevatia_2007}. A notable exception is the work of Milan et al.~\cite{Milan_etal_2014} that explicits models occlusion in the continuous domain to determine a visibility for each object in multi-target tracking. However, the occlusion model in \cite{Milan_etal_2014} is essentially the overlap of image projections of a Gaussian representation of the object. Our occlusion modeling is much more general in determining the probability of a point in space as belonging to an object. While it can also be used to determine a visibility ratio similar to \cite{Milan_etal_2014}, it can have far more general applications and can be quantitatively evaluated, as shown by our experiments on point track associations.
 
