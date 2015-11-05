@@ -13,6 +13,8 @@ LATEXMK = latexmk -recorder -use-make -deps
 PDFLATEX=pdflatex# -interaction=nonstopmode
 
 all : $(TARGETS)
+	
+supplementarymaterial: out/supplementarymaterial.pdf
 
 # Include the dependency makefile produced by latexmk
 # latexmk -deps-out= is used to record the dependencies
