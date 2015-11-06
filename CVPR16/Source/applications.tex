@@ -45,7 +45,7 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 
 %To show the effectiveness of our method we also apply it to the localization problem, where we must jointly solve for association and object poses, while considering occlusions. In road scenes, we estimate the position, orientation and dimensions traffic participants (cars) with our framework and compute the error in birds eye view along the ground plane. We propose a graphical model as shown in Figure \ref{fig:graphmodel} that allows a factorization of the intractable probability distribution into following form
 
-We exploit in this section the application of our continuous occlusion model to 3D localization in road scenes, which further demonstrates its versatility. Given a set of tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants (TPs), in particular, for each TP, estimating its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. We build a graphical model for representing object relationships and decompose the negative log likelihood as follows
+We exploit in this section the application of our continuous occlusion model to 3D localization in road scenes, which further demonstrates the versatility of the proposed model. Given a set of tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants (TPs), in particular, for each TP, estimating its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. We build a graphical model for representing object relationships and decompose the negative log likelihood as follows
 %
 \begin{multline}
   -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i(t) \} | \{\bu_j(t)\} , \{\bb{i}\} )} = \\
@@ -63,7 +63,7 @@ We exploit in this section the application of our continuous occlusion model to 
   \enspace,
 \end{multline}
 %
-where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations such as point tracks and bounding boxes while $\Energy{dyn}$  and $\Energy{size}$ impose smoothness constraints and size priors respectively. Here, $\lambda_{track}$, $\lambda_{detect}$, $\lambda_{dyn}$, $\lambda_{size}$ are energy weights and $Z$ is the normalization coefficient. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. Next, we present our unified continuous occlusion modelling for point track and bounding box energies; please refer to our supplementary material for the formulations of other energies.
+where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations such as point tracks and bounding boxes while $\Energy{dyn}$  and $\Energy{size}$ impose smoothness constraints and size priors respectively. Here, $\lambda_{track}$, $\lambda_{detect}$, $\lambda_{dyn}$, $\lambda_{size}$ are energy weights, $N$ is the number of objects in the sequence, $s_i$ and $t_i$ are respectively the starting and ending frames of object $O_i$, and $Z$ is the normalization coefficient. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. Next, we present our unified continuous occlusion modelling for both point track and bounding box energies. Due to space constraints, we present the details of other energies in the supplementary.
 
 \begin{figure}
   \centering
@@ -90,7 +90,7 @@ Let $\relp{i}{t}$ be the pose of object $O_i$ with respect to the camera at time
 \end{equation}
 Note that inverse projection $\invProjectionOf{.}$ depends on both the 2D point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on object pose at time $t-1$ while the forward projection depends on pose at time $t$, which can be different.
 
-For an object $i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding objects at time $t$ (inclusive of object $i$) and $ \{ \bB \}_i$ be their dimensions. Then, we model the continuous point tracks energy with explicit occlusion reasoning as the expected reprojection error over the association probability:
+For an object $O_i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding objects at time $t$ (inclusive of object $i$) and $ \{ \bB \}_i$ be their corresponding 3D dimensions. Then, we model the continuous point tracks energy with explicit occlusion reasoning as the expected reprojection error over the association probability:
 \begin{multline}
   %\!\!\!\! \Energy{track}(\relp{i}{t}, \relp{i}{t-1}, \dimsn{i}, \{ \Omega (t) \}_i, \{ \Omega (t-1) \}_i, \{ \bB \}_i ) 
   %\Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = 
@@ -101,7 +101,7 @@ For an object $i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding object
     \sum_{j = 1}^{M}
     \int_1^\infty \assocP\Ereproj(\lambda) d\lambda
 \end{multline}
-where $\assocP$ is the association probability of point $\trackp{t}$ with the object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
+where $N$ and $M$ are respectively the number of objects and points and $\assocP$ is the association probability of point $\trackp{t}$ with the object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
 
 %\begin{align}
 %  \assocP &= \Prefl\Ptrans\\
@@ -123,13 +123,12 @@ where $\assocP$ is the association probability of point $\trackp{t}$ with the ob
   % \item[Size prior ($\EnergySize$)] We use size prior of cars by using the mean of cars over the KITTI dataset.
 %\end{description}
 
-\subsection{Metropolis Hastings Inference}
-We use Metropolis Hastings' methods \cite{mackay1998introduction} for graphical model inference. Since we are
-optimizing over continuous random variables, we use Gaussian distribution as
-the proposal distribution. We choose Metropolis Hastings inference over
-block-coordinate descent which turns out to be slower than Metropolis Hastings
-in our experiments. Please refer to the supplementary material for the
-comparison of inference methods.
+\subsubsection{Inference on graphical model}
+We apply Metropolis Hastings' method~\cite{mackay1998introduction} for performing inference on graphical model. Since we are
+optimizing over continuous variables, we use Gaussian distribution as
+the proposal function. We choose Metropolis Hastings over
+Blocked Coordinate Descent which turns out to be slower than Metropolis Hastings
+in our experiments. Please refer to the supplementary material for our comparisons of inference methods.
 
 %% \begin{figure}
 %%   \centering
