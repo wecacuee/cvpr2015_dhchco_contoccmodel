@@ -47,21 +47,19 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 
 We exploit in this section the application of our continuous occlusion model to 3D localization in road scenes, which further demonstrates the versatility of the proposed model. Given a set of tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants (TPs), in particular, for each TP, estimating its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. We build a graphical model for representing object relationships and decompose the negative log likelihood as follows
 %
-\begin{multline}
+\begin{multline*}
   -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i(t) \} | \{\bu_j(t)\} , \{\bb{i}\} )} = \\
   -Z 
-   + \sum_{t=s_i}^{e_i} \WpEnergy{track}
-  \\
+   + \sum_{t=s_i}^{e_i} \lambda_t\EnergyTrack
   + 
   \sum_{t=s_i}^{e_i}
   \sum_{i=1}^N  
-  \left( 
-  \WEnergy{detect}
-  + \WEnergy{dyn}
-  + \WEnergy{size}
-\right)
+  %\sum_{\substack{i \in [1, \dots, N] \\t \in [s_i, \dots e_i]}}
+  \lambda_d\EnergyBBox
+  + \lambda_{\text{dyn}}\EnergyDyn
+  + \lambda_{\text{size}}\EnergySize
   \enspace,
-\end{multline}
+\end{multline*}
 %
 where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations such as point tracks and bounding boxes while $\Energy{dyn}$  and $\Energy{size}$ impose smoothness constraints and size priors respectively. Here, $\lambda_{track}$, $\lambda_{detect}$, $\lambda_{dyn}$, $\lambda_{size}$ are energy weights, $N$ is the number of objects in the sequence, $s_i$ and $t_i$ are respectively the starting and ending frames of object $O_i$, and $Z$ is the normalization coefficient. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. Next, we present our unified continuous occlusion modelling for both point track and bounding box energies. Due to space constraints, we present the details of other energies in the supplementary.
 
