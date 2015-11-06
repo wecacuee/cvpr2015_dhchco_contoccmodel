@@ -92,23 +92,41 @@ intermediate probabilities, while the baseline method has merely 0-1 error.}
 % OccCity      1       contPtTracksNoOcc_contBBoxOcc_size_posTmcmc_inference      8/18  4.815849 0.463034        2.159956        
 % OccCity      1       contPtTracks_ctBBoxNoOcc_size_posTmcmc_inference           8/18  4.058560 0.995495        1.593641        
 % OccCity      1       contPtTracks_contBBoxOcc_size_posTmcmc_inference           8/18  3.241853 0.631901        2.167446        
+% \begin{table}
+%   \centering
+%   \begin{tabular}{lrrr}
+%     \toprule
+%     Energy & t & yaw & dim \\
+%     \midrule
+%     $\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$
+%     5.81 & 0.69 & 1.96 \\
+%     $\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$
+%     4.50 & 0.78 & 2.37 \\
+%     $\EnergyTrack + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$
+%     3.93 & 0.76 & 2.22 \\
+%     $\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$
+%     4.92 & 0.80 & 2.28 \\
+%     \bottomrule
+%   \end{tabular}
+%   \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
+%   \label{tab:localizationExperimentNoOcc}
+% \end{table}
 \begin{table}
-  \centering
   \begin{tabular}{lrrr}
     \toprule
     Energy & t & yaw & dim \\
     \midrule
-    initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
-    %$\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
-    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
-    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
-    %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
-    % \EnergyBBox+\EnergyDyn+\EnergyCol $
-    $\EnergyTrackNoOcc+\EnergyCol + \EnergyLane + \dots$  & 3.80 & 0.91 & 1.58 \\
-    $\EnergyTrack+\EnergyCol + \EnergyLane + \dots$ & \textbf{3.78} & 0.91 & 1.58 \\
+    $\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$ 
+    & 3.95 & 0.44  & 1.72\\        
+    $\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$        
+    & 4.81 & 0.46  & 2.16\\        
+    $\EnergyTrack + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$      
+    & 4.05 & 0.99  & 1.59\\        
+    $\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$             
+    & 3.24 & 0.63  & 2.16\\
     \bottomrule
   \end{tabular}
-  \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
+  \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car. The result provided here are only on occluded tracks}
   \label{tab:localizationExperiment}
 \end{table}
 
