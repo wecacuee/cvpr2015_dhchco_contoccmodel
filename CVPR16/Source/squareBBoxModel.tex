@@ -1,0 +1,61 @@
+\section{Object detection energy}
+
+We model object detection energy as the norm of difference in the coordinates
+of the projected bounding box and detected bounding box. The detected bounding
+box is represented by the extrema along X and Y dimensions $\bb{i} = [\xmin,
+\ymin, \xmax, \ymax]^\top$. If $\dimsn{i} = [l, w, h]^\top$ represent the 3D
+dimensions of the traffic participant along the X, Y and Z dimensions then we 
+can compute the projection of the bounding box in terms the dimensions $\dimsn{i}$
+and object pose $\Omega_i(t)$. We model occlusion such that the confidence in
+accuracy of the particular bounding box edge is reduced proportional to its
+occlusion. We measure the extent of occlusion by the fraction of the area of 
+the triangle corresponding to the occluded side and call it visibility fraction.
+The visibility fraction stacked as a diagonal matrix gives us visibility matrix
+$\mathcal{V}$ which can be used to scale the difference between projected bounding box
+$\projectionOf{\dimsn{i}}$ and the detected bounding box $\bbt{i}{t}$. More precisely, for
+the situation described in Fig~\ref{fig:bboxoccfigure}.
+%
+\begin{align}
+  \mathcal{V} &= \text{diag}([v_{AB}, v_{BC}, v_{CD}, v_{DA}])\\
+  \EnergyBBox &= \left\| \mathcal{V} \left(\projectionOf{\dimsn{i}}-\bbt{i}{t}\right) \right\|^2 
+\end{align}
+%
+%
+\begin{figure}
+  \centering
+  \input{bboxoccfigure}
+  \caption{We model the occlusion of bounding by taking the corresponding
+  triangle as a proxy for edge. The visibility fraction for the AD, $v_{AD}$ is given
+by the fraction of the area of triangle $\bigtriangleup AED$ 
+that is occluded.}
+  \label{fig:bboxoccfigure}
+\end{figure}
+
+% \begin{align}
+%   X^{(i)}_{\text{cuboid}} &= \dimsn{i}{}^\top C_u \\
+%   \text{where} &\\
+%   C_u &= 
+%   \begin{bmatrix}
+%   0.5 & 0.5 & -0.5 & -0.5 & 0.5 & 0.5 & -0.5 & -0.5 \\
+%     0.5 & -0.5 & -0.5 & 0.5 & 0.5 & -0.5 & -0.5 & 0.5 \\
+%     0 & 0 & 0 & 0 & 1  & 1 & 1 & 1
+%   \end{bmatrix} \enspace .
+% \end{align}
+% These cuboid points can be projected to the camera image plane to get the projected bounding box,
+% \newcommand{\ucub}{U^{(i)}(t)}
+% \newcommand{\ucubx}{U_{(1,:)}^{(i)}(t)}
+% \newcommand{\ucuby}{U_{(2,:)}^{(i)}(t)}
+% \newcommand{\estbb}{\hat{\mathbf{d}}^{(i)}(t)}
+% \begin{align}
+%   \ucub &= \projectionOf{\dimsn{i}{}^\top C_u}\\
+%   \estbb &= [\min \ucubx, \min \ucuby, \max \ucubx, \max \ucuby]^\top \enspace .
+% \end{align}
+% We take $\estbb$ as the projected bounding box. The object detection energy is
+% taken to be the euclidean distance between projected and detected bounding box.
+% \begin{align}
+%   \EnergyBBox &= \| \estbb - \bb{i}\|^2_2
+% \end{align}
+% With slight abuse of notation for projection operator we write this energy as
+% \begin{align}
+%   \EnergyBBox &= \left\| \projectionOf{\dimsn{i}} - \bb{i}\right\|^2_2 \enspace.
+% \end{align}

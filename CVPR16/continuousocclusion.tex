@@ -7,7 +7,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{tikz}
-\usetikzlibrary{shadows,trees}
+\usepackage{tikz3d}
+\usetikzlibrary{shadows,trees,calc}
 
 \usepackage{verbatim}
 \usepackage{bm}
@@ -46,6 +47,7 @@
 \newcommand{\xmax}{x_\text{max}}
 \newcommand{\ymax}{y_\text{max}}
 \DeclareMathOperator*{\argmin}{\arg\min}
+\input{Source/drawingslib}
 
 % Some diagrams have "visble" macro from beamer. Everything should be visible in paper mode.
 \makeatletter

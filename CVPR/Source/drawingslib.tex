@@ -40,22 +40,22 @@
 }
 
 \newcommand{\acuboid}{
-  \providecommand{\xmin}{-2}
-  \providecommand{\xlen}{1}
-  \providecommand{\ymin}{-2}
-  \providecommand{\ylen}{1}
-  \providecommand{\zmin}{-2}
-  \providecommand{\zlen}{1}
-  \pgfmathsetmacro{\ymax}{\ymin+\ylen}
-  \pgfmathsetmacro{\xmax}{\xmin+\xlen}
-  \pgfmathsetmacro{\zmax}{\zmin+\zlen}
-  \coordinate (a) at (3d cs:\xmax,\ymax,\zmin);
-  \coordinate (b) at (3d cs:\xmax,\ymax,\zmax);
-  \coordinate (c) at (3d cs:\xmax,\ymin,\zmax);
-  \coordinate (d) at (3d cs:\xmax,\ymin,\zmin);
-  \coordinate (h) at (3d cs:\xmin,\ymin,\zmin);
-  \coordinate (e) at (3d cs:\xmin,\ymax,\zmin);
-  \coordinate (f) at (3d cs:\xmin,\ymax,\zmax);
+  \providecommand{\acxmin}{-2}
+  \providecommand{\acxlen}{1}
+  \providecommand{\acymin}{-2}
+  \providecommand{\acylen}{1}
+  \providecommand{\aczmin}{-2}
+  \providecommand{\aczlen}{1}
+  \pgfmathsetmacro{\acymax}{\acymin+\acylen}
+  \pgfmathsetmacro{\acxmax}{\acxmin+\acxlen}
+  \pgfmathsetmacro{\aczmax}{\aczmin+\aczlen}
+  \coordinate (a) at (3d cs:\acxmax,\acymax,\aczmin);
+  \coordinate (b) at (3d cs:\acxmax,\acymax,\aczmax);
+  \coordinate (c) at (3d cs:\acxmax,\acymin,\aczmax);
+  \coordinate (d) at (3d cs:\acxmax,\acymin,\aczmin);
+  \coordinate (h) at (3d cs:\acxmin,\acymin,\aczmin);
+  \coordinate (e) at (3d cs:\acxmin,\acymax,\aczmin);
+  \coordinate (f) at (3d cs:\acxmin,\acymax,\aczmax);
 
   \draw [facestyle] (a) -- (b) -- (c) -- (d) -- cycle;
   \draw [facestyle] (a) -- (b) -- (f) -- (e) -- cycle;
