@@ -7,6 +7,8 @@ In this section, we highlight the versatility of our occlusion modeling by demon
 \subsection{Object-Point Association}
 \label{sec:association}
 
+Consider the problem of assigning 2D point tracks among several objects (including background), so that the consensus of points can be used draw inferences about the object. In particular given a set of corresponding 2D points $\trackpj{t-1}$ and $\trackpj{t}$ in consecutive frames, object poses $\relp{i}{t}$ and object dimensions $\dimsn{i}$, we wish to associate points with various objects. We call this the association problem. Even if the pose of the object is not immediately available, we propose the use of hypothesized pose of the object as we show in the localization estimation experiments. 
+
 Based on our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ of the $j$\textsuperscript{th} point track with $i$\textsuperscript{th} object at depth $\lambda$ can be defined as
 \begin{align}
 \assocP = \Prefl\Ptrans,
