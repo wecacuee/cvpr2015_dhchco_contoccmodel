@@ -9,28 +9,24 @@ In this section, we highlight the versatility of our occlusion modeling by demon
 
 Consider the problem of assigning 2D point tracks among several objects (including background), so that the consensus of points can be used draw inferences about the object. In particular given a set of corresponding 2D points $\trackpj{t-1}$ and $\trackpj{t}$ in consecutive frames, object poses $\relp{i}{t}$ and object dimensions $\dimsn{i}$, we wish to associate points with various objects. We call this the association problem. Even if the pose of the object is not immediately available, we propose the use of hypothesized pose of the object as we show in the localization estimation experiments. 
 
-Based on our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ of the $j$\textsuperscript{th} point track with $i$\textsuperscript{th} object at depth $\lambda$ can be defined as
+Based on our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ between point track $j$ and object $i$ at depth $\lambda$ can be defined as
 \begin{align}
 \assocP = \Prefl\Ptrans,
 \label{eq:defineassocP}
 \end{align}
 where $\Prefl$ and $\Ptrans$ are from \eqref{eq:evalPrefl} and \eqref{eq:evalCumulativePtrans} respectively. Note that the fraction $\assocP$ although called association probability does not capture the entire information that we have available for computing association of point tracks to objects. This above fraction is the association probability given the hypothesized parameters of objects in the scene. 
 
-To compute the association probability $\assocP$ between point track $j$ and object $i$, we must use the reprojection error as well. When the association of $i$ and $j$ is correct and the point of reflection is at depth $\lambda$, the reprojection error must be zero \eqref{eq:reprojerror}, otherwise the error becomes a measure of distance from the true solution. The error term can be converted to probability domain by considering the error term as negative log of probability
+To compute the association probability $\assocP$ between point track $j$ and object $i$, we must use the reprojection error as well. When the association of point track $j$ and object $i$ is correct and the point of reflection is at depth $\lambda$, the reprojection error must be zero \eqref{eq:reprojerror}, otherwise the error becomes a measure of distance from the true solution. The error term can be converted to probability domain by considering the error term as negative log of probability
 \begin{align}
-  P^{(ij)}_{\text{assoc by reproj}}(\lambda) = \frac{1}{Z}\exp(-\Ereproj(\lambda))
+  P^{ij}_{\text{assoc by reproj}}(\lambda) = \frac{1}{Z}\exp(-\Ereproj(\lambda))
 \end{align}
 
-Using both of the above evidence terms we can write the probability of association $P^{(ij)}_{\text{assoc}}$ as follows
+Using both of the above evidence terms we can define the new association probability $P^{ij}_{\text{assoc}}$ as follows
 \begin{align}
-  P^{(ij)}_{\text{assoc}} = \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda
+  P^{ij}_{\text{assoc}} = \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda
   \label{eq:prob-assoc}
 \end{align}
-Once we have the probability of association $P^{(ij)}_{\text{assoc}}$ we can compute the best possible assignment of object for each point track. The points having very small association probability are assigned to the background,
-\begin{align}
-  i^*_{j} = \arg \min_{i} \int_0^\infty \assocP \Ereproj(\lambda) d\lambda
-\end{align}
-
+Once we have the association probability $P^{ij}_{\text{assoc}}$ we can compute the best possible assignment of object for each point track. The points having very small association probabilities are assigned to the background.
 
 In contrast to the principled approach above, a heuristic baseline may simply assign a point to the detection bounding box enclosing it (and background if outside all bounding boxes). For regions where bounding boxes overlap, it may assign point tracks to the object that has smaller mean depth among the competing bounding boxes. As we will demonstrate in experiments, such heuristics are sub-optimal compared to using \eqref{eq:prob-assoc} inspired by our occlusion model.
 
