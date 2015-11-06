@@ -62,15 +62,15 @@
     % \draw (x4) edge node [bboxfactor] {\tiny{1}} (d4);
 
     % colfactor
-    \draw (x6) edge node [collfactor] {\tiny{1}} (x2);
-    \draw (x2) edge [] node [collfactor] {\tiny{1}} (x5);
-    \draw (x5) edge [] node [collfactor] {\tiny{1}} (x1);
+    %% \draw (x6) edge node [collfactor] {\tiny{1}} (x2);
+    %% \draw (x2) edge [] node [collfactor] {\tiny{1}} (x5);
+    %% \draw (x5) edge [] node [collfactor] {\tiny{1}} (x1);
 
     % Legend
-    \path (-1.75,-4.0) node (l1s) {} (-0, -4.0) node [anchor=west] (l1e) {$\EnergyBBox$};
+    \path (-1.75,-4.5) node (l1s) {} (-0, -4.5) node [anchor=west] (l1e) {$\EnergyBBox$};
     \draw (l1s) edge node [bboxfactor] {\tiny{1}} (l1e);
-    \path (-1.75,-4.5) node (l2s) {} (0, -4.5) node [anchor=west] (l2e) {$\EnergyCol$};
-    \draw (l2s) edge node [collfactor] {\tiny{1}} (l2e);
+    % \path (-1.75,-4.5) node (l2s) {} (0, -4.5) node [anchor=west] (l2e) {$\EnergyCol$};
+    %% \draw (l2s) edge node [collfactor] {\tiny{1}} (l2e);
     \path (-1.75,-5.0) node (l3s) {} (0, -5.0) node [anchor=west] (l3e) {$\EnergyTrack$};
     \draw (l3s) edge node [trackfactor] {\tiny{1}} (l3e);
 
