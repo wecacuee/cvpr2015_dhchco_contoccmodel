@@ -1,8 +1,8 @@
 \subsubsection{Continuous bounding box energy with occlusion}
 
-Object detection is usually followed by non-maximal suppression that results in discarding similar bounding boxes. When we are jointly optimizing detections with other cues, it is not usually desirable to go with a single bounding box. To retain the entire detection output while maintaining the continuous form of our energies, we approximate the distribution of detection scores with a multi-modal sum of Gaussians-like logistic functions. In particular, let $\bb{i}$ be parameterized as a 4D vector $[\minx, \miny, \maxx, \maxy]^\top$. We fit a parametric function to the detection scores, of the form
+Object detection is usually followed by non-maximal suppression that results in discarding similar bounding boxes. When we are jointly optimizing detections with other cues, it is not usually desirable to go with a single bounding box. To retain the entire detection output while maintaining the continuous form of our energies, we approximate the distribution of detection scores with a multi-modal sum of Gaussians-like logistic functions. In particular, let the 2D bounding box $\bb{i}$ be parameterized as a 4D vector $[\minx, \miny, \maxx, \maxy]^\top$. We fit a parametric function to the detection scores, of the form
 \begin{equation}
-S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \Lambda_k^{'-1} \bepsilon_k^{i}(t) \right)
+S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \Lambda_k^{-1} \bepsilon_k^{i}(t) \right)
 \end{equation}
 where $A_k$ is an amplitude and $\bepsilon_k^{i}(t) = \bb{i}-\mu^{k}_d$, with $\mu^{k}_d$ the mean and $\Lambda_k$ the covariance.
 %% %
@@ -20,7 +20,7 @@ We use a non-linear solver to minimize the above, with initialization from non-m
 \def\u{\mathbf{u}}
 With our model of $\Ptrans$ described in Section \ref{sec:ptransmission}, we can
 compute the probability of a point $\u$ in the image to be occluded assuming
-the point is on object $i$ with mean depth $\meandepth{i}$ as
+the point is on object $O_i$ with mean depth $\meandepth{i}$ as
 \begin{align}
   O_{i}(\u, \meandepth{i}) = 1 - \Ptransmission(\meandepth{i}, \u) \enspace .
 \end{align}
