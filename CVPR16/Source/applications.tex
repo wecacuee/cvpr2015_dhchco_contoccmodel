@@ -121,12 +121,11 @@ where $N$ and $M$ are respectively the number of objects and points and $\assocP
   % \item[Size prior ($\EnergySize$)] We use size prior of cars by using the mean of cars over the KITTI dataset.
 %\end{description}
 
-\subsubsection{Inference on graphical model}
-We apply Metropolis Hastings' method~\cite{mackay1998introduction} for performing inference on graphical model. Since we are
-optimizing over continuous variables, we use Gaussian distribution as
-the proposal function. We choose Metropolis Hastings over
-Blocked Coordinate Descent which turns out to be slower than Metropolis Hastings
-in our experiments. Please refer to the supplementary material for our comparisons of inference methods.
+\vspace{-0.3cm}
+\paragraph{Inference on graphical model}
+We apply Metropolis Hastings method~\cite{mackay1998introduction} for performing inference on the graphical model. Since we are optimizing over continuous variables, we use Gaussian distribution as the proposal function. We choose this over alternatives such as blocked coordinate descent since they are slower in our experiments.
+
+%in our experiments. Please refer to the supplementary material for our comparisons of inference methods.
 
 %% \begin{figure}
 %%   \centering
