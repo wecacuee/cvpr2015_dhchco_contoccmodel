@@ -41,13 +41,9 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 \subsection{3D Object Localization}
 \label{sec:localization}
 
-To show the effectiveness of our method we apply it to the localization
-problem. We estimate the position, orientation and dimensions of the car with
-our framework and compute the error in birds eye view domain along the ground
-plane. 
-To estimate the localization of traffic participants (TPs) in a road scene we use the graphical model approach.
-We build the graphical model as shown in Fig~\ref{fig:graphmodel} that 
-allows us to factorize the intractable probability distribution into following form
+%To show the effectiveness of our method we apply it to the localization problem. We estimate the position, orientation and dimensions of the car with our framework and compute the error in birds eye view domain along the ground plane. To estimate the localization of traffic participants (TPs) in a road scene we use the graphical model approach. We build the graphical model as shown in Fig~\ref{fig:graphmodel} that allows us to factorize the intractable probability distribution into following form
+
+To show the effectiveness of our method we also apply it to the localization problem, where we must jointly solve for association and object poses, while considering occlusions. In road scenes, we estimate the position, orientation and dimensions traffic participants (cars) with our framework and compute the error in birds eye view along the ground plane. We propose a graphical model as shown in Figure \ref{fig:graphmodel} that allows a factorization of the intractable probability distribution into following form
 %
 \begin{multline}
   -\log{P(\{\state{i}{t}\} | \mathbb{E})} = 
@@ -71,6 +67,20 @@ allows us to factorize the intractable probability distribution into following f
 \end{multline}
 %
 Next, we explain the important energies used in our graphical model.
+
+
+\begin{figure}
+  \centering
+  \begin{tabular}{c}
+    \newcommand{\imagewidth}{7cm}
+    \input{Source/scenelayoutoverlayCity0961} \\
+    \input{Source/graphical_model_multiple}
+  \end{tabular}
+  \caption{\small (Top) A sample road scene with occlusions, where the unknowns of each car are modeled as random variables. (Bottom) Graphical model for a single frame. The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables (detection bounding boxes and point tracks), while the colored squares represent various energies that capture object-object interactions.}
+  \label{fig:graphmodel}
+\end{figure}
+
+
 
 \subsubsection{Continuous point tracks energy with occlusion}
 \label{sec:totalContPtTracksEnergy}
@@ -180,16 +190,16 @@ block-coordinate descent which turns out to be slower than Metropolis Hastings
 in our experiments. Please refer to the supplementary material for the
 comparison of inference methods.
 
-\begin{figure}
-  \centering
-  \newcommand{\imagewidth}{\columnwidth}
-  \input{Source/scenelayoutoverlayCity0961}
-  \caption{A sample road scene with the unknowns of each car modeled as random variables. 
-  The relating energies are shown in Figure~\ref{fig:graphmodel}}
-\end{figure}
-\begin{figure}
-    \input{Source/graphical_model_multiple}
-    \caption{Graphical model for a single frame with state of car represented
-    as single node.  The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables. }
-  \label{fig:graphmodel}
-\end{figure}
+%% \begin{figure}
+%%   \centering
+%%   \newcommand{\imagewidth}{\columnwidth}
+%%   \input{Source/scenelayoutoverlayCity0961}
+%%   \caption{A sample road scene with the unknowns of each car modeled as random variables. 
+%%   The relating energies are shown in Figure~\ref{fig:graphmodel}}
+%% \end{figure}
+%% \begin{figure}
+%%     \input{Source/graphical_model_multiple}
+%%     \caption{Graphical model for a single frame with state of car represented
+%%     as single node.  The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables. }
+%%   \label{fig:graphmodel}
+%% \end{figure}
