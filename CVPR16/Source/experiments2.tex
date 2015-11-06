@@ -34,6 +34,7 @@ Qualitative comparisons of point track associations from various methods are sho
   \caption{Association errors on different sets of input point tracks. Numbers on y-axis represent data sequence numbers in KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
 \label{fig:assoc-occ-results}
 \end{figure*}
+
 \begin{table}
 \begin{tabular}{lrrrr}
   \toprule
@@ -45,7 +46,7 @@ Qualitative comparisons of point track associations from various methods are sho
   All tracks                  & \textbf{08.6} & 12.6 & 21.9 & 21.5 \\
   \bottomrule
 \end{tabular}
-\caption{Mean association errors on different sets of input point tracks over all sequences of KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
+\caption{\small Mean association errors on different sets of input point tracks over all sequences of KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
 \label{tab:meanAssoc}
 \end{table}
 
@@ -111,35 +112,53 @@ intermediate probabilities, while the baseline method has merely 0-1 error.}
 %   \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car.}
 %   \label{tab:localizationExperimentNoOcc}
 % \end{table}
+
+%% \begin{table}
+%% \small
+%%   \begin{tabular}{lrrr}
+%%     \toprule
+%%     Energy & t & yaw & dim \\
+%%     \midrule
+%%     $\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$ 
+%%     & 3.95 & 0.44  & 1.72\\        
+%%     $\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$        
+%%     & 4.81 & 0.46  & 2.16\\        
+%%     $\EnergyTrack + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$      
+%%     & 4.05 & 0.99  & 1.59\\        
+%%     $\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$             
+%%     & 3.24 & 0.63  & 2.16\\
+%%     \bottomrule
+%%   \end{tabular}
+%%   \caption{\small Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car. The results provided here are only on occluded tracks.}
+%%   \label{tab:localizationExperiment}
+%% \end{table}
+
+
 \begin{table}
-  \begin{tabular}{lrrr}
+  \begin{tabular}{lrr}
     \toprule
-    Energy & t & yaw & dim \\
+    Energy & t & dim \\
     \midrule
     $\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$ 
-    & 3.95 & 0.44  & 1.72\\        
+    & 3.95  & 1.72\\        
     $\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$        
-    & 4.81 & 0.46  & 2.16\\        
+    & 4.81  & 2.16\\        
     $\EnergyTrack + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$      
-    & 4.05 & 0.99  & 1.59\\        
+    & 4.05  & {\bf 1.59}\\        
     $\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$             
-    & 3.24 & 0.63  & 2.16\\
+    & {\bf 3.24}  & 2.16\\
     \bottomrule
   \end{tabular}
-  \caption{Localization experiment results with different combination of energies. We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car. The result provided here are only on occluded tracks}
+  \caption{\small Localization experiment results with different combinations of energies. We report translation error (t) and dimension error (dim) in meters per car. Yaw angles for static objects are not optimized by our model. These experiments use the set of occluded tracks to demonstrate the effect of our modeling.}
   \label{tab:localizationExperiment}
 \end{table}
 
 
 \subsection{Localization Experiments}
-We report error in three metrics translation error (t) in meters per car, yaw
-error (yaw) in radians per car and dimension error is again meters per car. The
-results are shown in Table~\ref{tab:localizationExperiment}.  We compare four
-combinations of energies as shown in the table.  The energy $\EnergyTrackNoOcc$
-represents the point tracks energy modeled with accounting for occlusion, i.e.,
-we remove the term $\Ptransmission$ and model $\EnergyTrack$ in the absence of
-$\Ptransmission$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the
-modification of $\Sigma^{(d)}_j$ that accounts for occlusion.  The results show that
-use of continuous occlusion model improves the localization accuracy in terms
-of all three metrics: translation, yaw and dimension error.
+We report errors in translation error and dimension estimates, measured in meters per car, in Table~\ref{tab:localizationExperiment}. We compare four combinations of energies.  The energy $\EnergyTrackNoOcc$ represents the point tracks energy without accounting for occlusion, that is, we model $\EnergyTrack$ in the absence of $\Ptransmission$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the modification of $\Lambda_k$ that accounts for occlusion. The results show that the use of continuous occlusion model improves the localization accuracy in terms of the translation error, which is he most significant metric affected by all cues. Occlusion modeling for detection improves localization, but penalizes dimension since we explicitly allow greater uncertainty in occluded edges of the bounding box.
+
+%of all three metrics: translation, yaw and dimension error.
+
+
+%We report error in three metrics translation error (t) in meters per car, yaw error (yaw) in radians per car and dimension error is again meters per car. The results are shown in Table~\ref{tab:localizationExperiment}.  We compare four combinations of energies as shown in the table.  The energy $\EnergyTrackNoOcc$ represents the point tracks energy modeled with accounting for occlusion, i.e., we remove the term $\Ptransmission$ and model $\EnergyTrack$ in the absence of $\Ptransmission$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the modification of $\Sigma^{(d)}_j$ that accounts for occlusion.  The results show that use of continuous occlusion model improves the localization accuracy in terms of all three metrics: translation, yaw and dimension error.
 
