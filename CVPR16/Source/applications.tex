@@ -101,7 +101,7 @@ For an object $O_i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding obje
     \sum_{j = 1}^{M}
     \int_1^\infty \assocP\Ereproj(\lambda) d\lambda
 \end{multline}
-where $\assocP$ is the association probability of point $\trackp{t}$ with the object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
+where $N$ and $M$ are respectively the number of objects and points and $\assocP$ is the association probability of point $\trackp{t}$ with the object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
 
 %\begin{align}
 %  \assocP &= \Prefl\Ptrans\\
@@ -123,13 +123,12 @@ where $\assocP$ is the association probability of point $\trackp{t}$ with the ob
   % \item[Size prior ($\EnergySize$)] We use size prior of cars by using the mean of cars over the KITTI dataset.
 %\end{description}
 
-\subsubsection{Metropolis Hastings Inference}
-We use Metropolis Hastings' methods \cite{mackay1998introduction} for graphical model inference. Since we are
-optimizing over continuous random variables, we use Gaussian distribution as
-the proposal distribution. We choose Metropolis Hastings inference over
-block-coordinate descent which turns out to be slower than Metropolis Hastings
-in our experiments. Please refer to the supplementary material for the
-comparison of inference methods.
+\subsubsection{Inference on graphical model}
+We apply Metropolis Hastings' method~\cite{mackay1998introduction} for performing inference on graphical model. Since we are
+optimizing over continuous variables, we use Gaussian distribution as
+the proposal function. We choose Metropolis Hastings over
+Blocked Coordinate Descent which turns out to be slower than Metropolis Hastings
+in our experiments. Please refer to the supplementary material for our comparisons of inference methods.
 
 %% \begin{figure}
 %%   \centering
