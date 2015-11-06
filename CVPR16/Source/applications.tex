@@ -111,57 +111,9 @@ where $\assocP$ is the association probability of point $\trackp{t}$ with the ob
 
 %The $\projectionOf{.}$ and $\invProjectionOftm{.}$ denote the projection and inverse projection functions that project 3D point to camera image and vice versa. Note that inverse projection $\invProjectionOf{.}$ depend on both the point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on TP pose at time $t-1$ while the projection depends on pose at time $t$ which can be different.
 
-\subsubsection{Continuous bounding box energy with occlusion}
+\input{contBBoxModel.tex}
+%\input{Source/squareBBoxModel.tex}
 
-Object detection is usually followed by non-maximal suppression that results in discarding similar bounding boxes. When we are jointly optimizing detections with other cues, it is not usually desirable to go with a single bounding box. To retain the entire detection output while maintaining the continuous form of our energies, we approximate the distribution of detection scores with a multi-modal sum of Gaussians-like logistic functions. In particular, let $\bb{i}$ be parameterized as a 4D vector $[\minx, \miny, \maxx, \maxy]^\top$. We fit a parametric function to the detection scores, of the form
-\begin{equation}
-S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \Lambda_k^{'-1} \bepsilon_k^{i}(t) \right)
-\end{equation}
-where $A_k$ is an amplitude and $\bepsilon_k^{i}(t) = \bb{i}-\mu^{k}_d$, with $\mu^{k}_d$ the mean and $\Lambda_k$ the covariance.
-%% %
-%% \begin{multline}
-%%   S(\bb{i}) = \\
-%%   \sum_k A_k \exp(-(\bb{i}-\mu^{(d)}_k)^\top \Sigma^{(d)-1}_k
-%%   (\bb{i}-\mu^{(d)}_k))
-%% \end{multline}
-%% %
-%% to detection scores, by 
-We use a non-linear solver to minimize the above, with initialization from non-maximal suppressed outputs. The optimization is constrained by the symmetry and positive definiteness of $\Lambda_k^{-1}$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
-%Here $\mu^{(d)}_j$ is one of the $k$ modes as a 4D vector representing a single bounding box as $[\minx, \miny, \maxx, \maxy]^\top$. The optimization is constrained with symmetry and positive definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
-
-\paragraph{Detection scores with occlusion reasoning} 
-\def\u{\mathbf{u}}
-With our model of $\Ptrans$ described in Section \ref{sec:ptransmission}, we can
-compute the probability of a point $\u$ in the image to be occluded assuming
-the point is on object $i$ with mean depth $\meandepth{i}$ as
-\begin{align}
-  O_{i}(\u, \meandepth{i}) = 1 - \Ptransmission(\meandepth{i}, \u) \enspace .
-\end{align}
-
-If a portion of our proposed detection bounding box is known to be
-occluded, then we would like to decrease the confidence in the detection score
-about the localization of that end of the object. Assuming that the occlusion
-is often on the boundary of detection bounding boxes, we want to decrease our
-confidence on the mean detection boundaries around the occluded boundaries.
-To re-model our detection scores scaled by continuous occlusion we sample
-$O_{i}(\mathbf{u}, \meandepth{i})$ at the hypothesized detection boundaries from
-GMM $S(.)$ and we augment the detection boundary covariance matrix by
-$\mathcal{P}_{i} = \rho_{i}\rho_{i}^\top$ where $\rho_{i} = O_{i}(\mathbf{u},
-\meandepth{i})$. The new covariance matrix in detection score is given by 
-  $\Lambda'_k = \mathcal{P}_{i} + \Lambda_k$ for all $k$.
-The detection scores GMM with occlusion is given by replacing the covariance
-matrix
-%
-\begin{multline}
-S'(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \Lambda_k^{'-1} \bepsilon_k^{i}(t) \right)
-\end{multline}
-
-The energy of detection scores is simply take to be the inverse of the detection score.
-\begin{align}
-  \Energy{detect}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
-\end{align}
-
-%For object detections we use object detector by \cite{Felzenszwalb_etal_2010} which is detector by parts model and we use eight parts to train the car model on half of the KITTI dataset \cite{geiger2013vision}. The trained modeled is used to get detections for the other half of the dataset and vice versa. 
 
 %\subsubsection{Other energies}
 %Other energies we use are described in detail in the supplementary material. We briefly describe them here:
