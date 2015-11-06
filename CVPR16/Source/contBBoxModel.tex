@@ -1,5 +1,5 @@
-\subsubsection{Continuous bounding box energy with occlusion}
-
+\vspace{-0.3cm}
+\paragraph{Continuous bounding box energy with occlusion}
 Object detection is usually followed by non-maximal suppression that results in discarding similar bounding boxes. When we are jointly optimizing detections with other cues, it is not usually desirable to go with a single bounding box. To retain the entire detection output while maintaining the continuous form of our energies, we approximate the distribution of detection scores with a multi-modal sum of Gaussians-like logistic functions. In particular, let 2D bounding box $\bb{i}$ be parameterized as a 4D vector $[\minx, \miny, \maxx, \maxy]^\top$. We fit a parametric function to the detection scores, of the form
 \begin{equation}
 S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \Lambda_k^{-1} \bepsilon_k^{i}(t) \right)

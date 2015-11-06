@@ -15,10 +15,13 @@ A common parametric modeling for objects, especially traffic participants (TP) i
   \begin{tikzpicture}
     \input{Source/reflectiontransmissiongraph.tex}
   \end{tikzpicture}
-  \caption{We represent traffic participants as soft ellipsoids which lead to formulation of transmision and reflection probability. This figure shows the reflection probability for the first car which is highest around the camera facing face of the car. Also note that transmission probability is inversly proportional to occupancy.}
+  \vspace{-0.3cm}
+  \caption{\small We represent traffic participants as soft ellipsoids which lead to formulation of transmision and reflection probability. This figure shows the reflection probability for the first car which is highest around the camera facing face of the car. Also note that transmission probability is inversly proportional to occupancy.}
   \label{fig:reflectiontransimission}
+  \vspace{-0.3cm}
 \end{figure}
 
+\vspace{-0.3cm}
 \paragraph{Occupancy model for traffic participants}
 Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whose opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at 3D location $\bx$ corresponding to an object $O_i$ centered at $\bp_i$ as:
 \begin{align}
@@ -31,6 +34,7 @@ where $\cL(\cdot)$ is the logistic function given by
 with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends of the dimensions of the object. Please refer to the supplementary material for the computation of $\bSigma_i$ from object dimensions.
 
 
+\vspace{-0.3cm}
 \paragraph{Image formation}
 Given the above occupancy representation of the scene, a point on an object is observed in the camera when precisely two conditions are satisfied. First, the backprojected ray from the observed image pixel is transmitted through free space until it reaches the object. Second, the ray encounters an opaque enough object surface and is reflected. More formally, the probability of observation of a point $\bx_j$ on object $O_i$ is given by
 \begin{align}
@@ -40,6 +44,7 @@ P^{ij}_{\textit{observation}} = P^{ij}_{\textit{reflection}}P^{j}_{\textit{trans
 The reflection probability ensures the presence of an object to constitute the observation, while the transmission probability allows us to model occlusions. The forms of these two functions are described next.
 
 
+\vspace{-0.3cm}
 \paragraph{Reflection probability}
 Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\bK$ be the intrinsic calibration matrix for the camera and $\ray = \displaystyle\frac{\bK^{-1}\bu_j}{\lVert \bK^{-1}\bu_j \rVert}$ be the unit vector along the backprojected ray from the camera center passing through $\bu_j$. Then, the probability of reflection at depth $\lambda$ along the ray $\ray$, by an object $O_i$, is determined by the gradient of the object's occupancy function $f_{occ}^i$:
 \begin{align}
@@ -49,6 +54,7 @@ Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\bK$ be
 The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to the ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object being Lambertian, the above reverts to a (squared) Lambertian reflection.
 
 
+\vspace{-0.3cm}
 \paragraph{Transmission probability}
 \label{sec:ptransmission}
 Since we are modeling occupancy as transparency, we derive inspiration from optics for the modeling of translucent objects. A model for transmission of light across a distance $\alpha$, through a medium of density $\rho$ and opacity $\beta$ is given by the Beer-Lambert Law:
@@ -94,10 +100,13 @@ In Figure \ref{fig:compare:exact:approx:ptrans}, we compare the exact and relati
 %the computation of ray intersection with ellipsoid is expensive to compute for every ray and the shift of transmission probability anywhere through the object is a reasonable approximation as the occluded points can only lie outside the object.
 
 \begin{figure}
-  \includegraphics[width=\columnwidth]{results/plotPtransmission_exact_vs_approx_pt_vis-small.png}\\
-  \includegraphics[trim=0.0 0 0.3in 0, clip, width=\columnwidth]{results/plotPtransmission_exact_vs_approx.pdf}
-  \caption{Comparing the approximate $\Ptrans$ with exact version. The drop in approximate version of $\Ptrans$ is delayed because we assume drop at the center of the car rather than camera facing face of the car.}
+\centering
+  \includegraphics[width=0.9\columnwidth]{results/plotPtransmission_exact_vs_approx_pt_vis-small.png}\\
+  \includegraphics[trim=0.0 0 0.3in 0, clip, width=0.9\columnwidth]{results/plotPtransmission_exact_vs_approx.pdf}
+  \vspace{-0.3cm}
+  \caption{\small Comparing the approximate $\Ptrans$ with exact version. The drop in approximate version of $\Ptrans$ is delayed because we assume drop at the center of the car rather than camera facing face of the car.}
   \label{fig:compare:exact:approx:ptrans}
+  \vspace{-0.3cm}
 \end{figure}
 
 Thus, we have modeled the transmission probability to effectively capture the effect of occlusion due to all traffic participants in a scene that lie along a particular ray. We reiterate that our reflection and transmission probabilities are continuous functions, which allows us to keep the problem formulation in the continuous domain.
