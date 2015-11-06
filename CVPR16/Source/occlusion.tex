@@ -20,13 +20,13 @@ A common parametric modeling for objects, especially traffic participants (TP) i
 \end{figure}
 
 \paragraph{Occupancy model for traffic participants}
-Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whose opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at 3D location $\bx$ corresponding to an object $i$ centered at $\pos{i}{t}$ as:
+Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whose opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at 3D location $\bx$ corresponding to an object $O_i$ centered at $\bp_i$ as:
 \begin{align}
-  f_{\text{occ}}(\bx) = \cL(\bx; \pos{i}{t}, \bSigma_i)
+  f^i_{\text{occ}}(\bx) = \cL(\bx; \bp_i, \bSigma_i)
 \end{align}
 where $\cL(\cdot)$ is the logistic function given by
 \begin{align}
-  L(\bx; \bp, \bSigma) = \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp))}},
+  \cL(\bx; \bp, \bSigma) = \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp))}},
 \end{align}
 with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends of the dimensions of the object. Please refer to the supplementary material for the computation of $\bSigma_i$ from object dimensions.
 
@@ -59,7 +59,7 @@ I(\alpha) = I_0 e^{-\beta\rho\alpha}.
 In our formulation of scene occupancy, both opacity and density at a scene point $\bx_j$ are encapsulated within the total occupancy function summer over all objects, $\occftot = \sum_i \occf$. Further, the domain of our ocupancy function $\occftot$ is $[0, 1]$ instead of $[0, \infty)$ for opacity $\beta$. Thus, we replace $e^{-\beta\rho}$ by the transparency function $1 - \occftot$ and consequently, the transmission probability over a small distance $d\lambda$ is given by
 %
 \begin{align}
-  \!\!\!\! P_{\textit{transmission}}(\lambda + d\lambda) = P_{\textit{transmission}}(\lambda) (1-\occftot)^{d\lambda}.
+  \!\!\!\! P^j_{\textit{transmission}}(\lambda + d\lambda) = P^j_{\textit{transmission}}(\lambda) (1-\occftot)^{d\lambda}.
 \end{align}
 %
 Thus, for an image point $\bu_j$ to correspond to a 3D point $\bx_j$ at depth $\lambda$ along the backprojected ray $\ray$, the ray must be transmitted through space with the probability
@@ -78,14 +78,14 @@ In practice, the integral for transmission probability \eqref{eq:ptrans-integral
 %
 \newcommand{\Ptransmission}{P_{\textit{transmission}}}%
 \begin{align}
-  \Ptransmission^j(\lambda) = \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i^{-1}) \cL_{\lambda}(\lambda; \meandepth{i})),
+  \Ptransmission^j(\lambda) = \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i) \cL_{\lambda}(\lambda; \meandepth{i})),
 \label{eq:evalCumulativePtrans}
 \end{align}
 %
 where $\cL_u(.)$ is sigmoid in image domain, with $\bmu_i$ and $\bGamma_i$ representing the elliptical projection of object $O_i$ in the image and $\cL_{\lambda}(.)$ is sigmoid in the depth domain with $\meandepth{i}$ the mean depth of object $O_i$. That is,
 %
 \begin{align}
-\cL_u(\bu; \bmu_i, \bGamma_i^{-1}) &= \frac{1}{1 + e^{-k_u(1 - (\bu - \bmu_i)^\top \bGamma_i^{-1} (\bu - \bmu_i))}} \\
+\cL_u(\bu; \bmu_i, \bGamma_i) &= \frac{1}{1 + e^{-k_u(1 - (\bu - \bmu_i)^\top \bGamma_i (\bu - \bmu_i))}} \\
   \cL_{\lambda}(\lambda; \meandepth{i}) &= \frac{1}{1 + e^{-k_d(\lambda - \meandepth{i})}}
 \end{align}
 %
