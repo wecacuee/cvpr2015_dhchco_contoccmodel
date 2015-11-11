@@ -15,6 +15,7 @@
 \usepackage{microtype}
 \usepackage{url}
 \usepackage{multirow}
+\usepackage{caption}
 \usepackage{subcaption}
 \usepackage{booktabs} % for better tables
 
@@ -67,7 +68,7 @@
 
 
 \begin{document}
-\section{Computation of ellipsoid parameters}
+\section{Computation of Ellipsoids}
 How to compute the parameters of ellipsoid in the camera coordinate frame when center and dimensions of the ellipsoid are given in tracklet coordinate frame.
 \label{sec:sigmacomputation}
 
@@ -123,13 +124,13 @@ Hence, we have following expression for mean and sigma of ellipsoid:
 {1 - \tcmut^\top \Sigmait \tcmut + \muic^\top\Sigmaic\muic}
 \end{align}
 
-\section{Projection of ellipsoid to image}
+\section{Projection of Ellipsoids to Image}
 \newcommand{\mubar}{\bar{\mu}_i}
 The perspective projection of an ellipsoid in general is not an ellipsoid in
 general. We approximate the projection of ellipsoid by projecting a slice
 through the ellipsoid.
 
-\subsection{Tangent planes method}
+\subsection{Tangent plane method}
 \newcommand{\nx}{\hat{n}_x}
 We chose the slice as the plane passing through the four points that touch 
 the tangent planes through the origin.
@@ -194,7 +195,6 @@ $\np = \mubar = \frac{\muic}{\|\muic\|^2}$ for notational simplicity. Hence, we 
 to project the points that satisfy both the equation of chosen plane and the 
 ellipsoid i.e.
 
-\subsection{Projection of the ellipsoid slice}
 \begin{align}
   \np^\top x = x^\top\np &= 1\\ 
   (x-\muic)^\top\Sigmaicf(x-\muic) &= 1 \enspace.
@@ -244,8 +244,9 @@ The mean and sigma of the projected ellipse can be computed by
 %
 
 
-\section{Localization}
-\subsection{Other Energies}
+\section{Other Energies for 3D Object Localization}
+
+\begin{comment}
 \subsubsection{Lane energy}
 \label{sec:laneEnergy}
  The lanes are modeled as splines. Here we assume that the confidence in lane
@@ -267,8 +268,9 @@ the set of nearby lanes close to the object by a certain distance threshold $d_{
   \frac{1}{1 + \exp(-q(w_{\text{road}} - \text{DIST}(L_{m}(k), \pos{i}{t})))}
 \end{align}
 for some constant $w_{\text{road}}$ that represents the width of the road.
+\end{comment}
 
-\subsubsection{Transition probability}
+\subsection{Dynamic energy}
 Dynamics constraints should not only enforce smooth trajectories, but also the
 holonomic constraints.  The following energy adds a penalty if the change in
 position is not in direction of previous orientation.
@@ -295,7 +297,7 @@ constraint and smoothness constraints.
   \WEnergy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel}
 \end{align}
 
-\subsubsection{Size Prior}
+\subsection{Size energy}
 
 Prior can include among many other things the size prior on the car.
 
@@ -308,7 +310,7 @@ Prior can include among many other things the size prior on the car.
 where $\expDimsn$ is the mean TP dimensions and
 $\Sigma_{\expDimsn}$ is the correspondence covariance matrix.
 
-
+\begin{comment}
 \section{Inference method Comparison}
 
 We use two methods for inference, Metropolic Hastings and block coordinate descent. We briefly describe the inference algorithms for completeness.
@@ -371,6 +373,7 @@ variable types like dimension, yaw and position. Hence we iteratively minimize t
   \caption{Qualitative localization results}
   \label{fig:qualLocalizationResults}
 \end{figure}
+\end{comment}
 
 
 \end{document}
