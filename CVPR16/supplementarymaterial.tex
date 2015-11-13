@@ -47,8 +47,7 @@
 \newcommand{\xmax}{x_\text{max}}
 \newcommand{\ymax}{y_\text{max}}
 \DeclareMathOperator*{\argmin}{\arg\min}
-
-
+\input{Source/drawingslib}
 
 % Some diagrams have "visble" macro from beamer. Everything should be visible in paper mode.
 \makeatletter
@@ -58,7 +57,7 @@
 
 %\cvprfinalcopy % *** Uncomment this line for the final submission
 
-\def\cvprPaperID{XXX} % *** Enter the CVPR Paper ID here
+\def\cvprPaperID{2072} % *** Enter the CVPR Paper ID here
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
 
 
@@ -68,67 +67,98 @@
 
 
 \begin{document}
-\section{Computation of Ellipsoids}
-How to compute the parameters of ellipsoid in the camera coordinate frame when center and dimensions of the ellipsoid are given in tracklet coordinate frame.
-\label{sec:sigmacomputation}
+\title{A Continuous Occlusion Model for Road Scene Understanding}
 
+\author{Vikas Dhiman\\
+  University of Michigan\\
+  Ann Arbor, MI, USA\\
+{\tt\small dhiman@umich.edu}
+Quoc-Huy Tran\\
+NEC Laboratories America, Inc.\\
+Cupertino, CA, USA\\
+{\tt\small qhtran@nec-labs.com}
+\and
+Manmohan Chandraker\\
+NEC Laboratories America, Inc.\\
+Cupertino, CA, USA\\
+{\tt\small manu@nec-labs.com}
+\and
+Jason J Corso\\
+  University of Michigan\\
+  Ann Arbor, MI, USA\\
+{\tt\small jjcorso@eecs.umich.edu}
+}
+
+\maketitle
+
+\appendix 
+
+\section{Computation of Ellipsoids}
+\label{sec:sigmacomputation}
+Here we present how to compute the parameters of ellipsoids representing the occupancy of traffic participants. For an object $O_i$, let $\bB^i = [l~w~h]$ be its 3D dimensions, where $l$, $w$ and $h$ are respectively its length, width, and height on the ground plane, we are interested in calculating the center $\muic$ and spread $\Sigmaicf$ of the ellipsoid representing the occupancy of $O_i$ with respect to the camera coordinate system $\cC$ of the current frame. 
+
+Consider an object coordinate system $\cO$, which has the same orthonormal axes as the camera coordinate system and the origin at the projected point of the object center to the ground plane. For an object $O_i$, the center $\muit$ and spread $\Sigmait$ of the ellipsoid representing the occupancy of $O_i$ in the object coordinate system are expressed as
 \begin{align}
   \muit &= \begin{bmatrix}
   0& 0& \frac{h}{2}
-  \end{bmatrix}^\top\\
+  \end{bmatrix}^\top,\\
   \Sigmait &= \begin{bmatrix}
     \frac{4}{l^2} & 0 & 0 \\
     0 & \frac{4}{w^2} & 0 \\
     0 & 0 & \frac{4}{h^2}
-  \end{bmatrix}
+  \end{bmatrix}.
 \end{align}
 
-In tracklet coordinates the equation of ellipsoid is 
+In object coordinates, the ellipsoid equation is written as
 \begin{align}
-  (\xt - \muit)^\top \Sigmait (\xt - \muit) = 1
+  (\xt - \muit)^\top \Sigmait (\xt - \muit) = 1,
+\label{equ:ellipsoidobj}
 \end{align}
-
-
-Moving to camera coordinates
+where $\xt$ is a point in object coordinates. Given $\Omega^i$ as the pose of $O_i$ in camera coordinates, we can extract the rotation $\Rctot$ and translation $\tctot$ for converting points in camera coordinates to object coordinates and rewrite \eqref{equ:ellipsoidobj} as
 \begin{align}
-  (\Rctot \xc + \tctot - \muit)^\top \Sigmait (\Rctot \xc + \tctot - \muit) = 1
+  (\Rctot \xc + \tctot - \muit)^\top \Sigmait (\Rctot \xc + \tctot - \muit) = 1,
+\label{equ:ellipsoidobj1}
 \end{align}
+where $\xc$ is a point in camera coordinates.
 
-Let $\tcmut = \tctot - \muit$
-\begin{align}
-  (\Rctot \xc + \tcmut)^\top \Sigmait (\Rctot \xc + \tcmut) = 1
-\end{align}
+Let $\tcmut = \tctot - \muit$, \eqref{equ:ellipsoidobj1} becomes
+%\begin{align}
+%  (\Rctot \xc + \tcmut)^\top \Sigmait (\Rctot \xc + \tcmut) = 1
+%\end{align}
 \begin{multline}
   \xc^\top \Rctot^\top \Sigmait \Rctot \xc + 2 (\Rctot^\top \tcmut)^\top  \Rctot^\top\Sigmait \Rctot \xc
   \\
-  + \tcmut^\top \Sigmait \tcmut = 1
+  + \tcmut^\top \Sigmait \tcmut = 1.
+\
+\label{equ:ellipsoidobj2}
 \end{multline}
-Let $\Sigmaic = \Rctot^\top \Sigmait \Rctot$ and $\muic = - \Rctot^\top
-\tcmut$
+Next, denote $\Sigmaic = \Rctot^\top \Sigmait \Rctot$ and $\muic = - \Rctot^\top
+\tcmut$, \eqref{equ:ellipsoidobj2} becomes
 \begin{multline}
   (\xc - \muic)^\top\Sigmaic(\xc - \muic) - \muic^\top\Sigmaic\muic 
   \\
-  + \tcmut^\top \Sigmait \tcmut = 1
+  + \tcmut^\top \Sigmait \tcmut = 1.
 \end{multline}
-Let $\Sigmaicf = \frac{\Sigmaic}{1 - \tcmut^\top \Sigmait \tcmut +
-\muic^\top\Sigmaic\muic}$
+Finally, denote $\Sigmaicf = \frac{\Sigmaic}{1 - \tcmut^\top \Sigmait \tcmut +
+\muic^\top\Sigmaic\muic}$, we have the ellipsoid equation in camera coordinates
 \begin{align}
-(\xc - \muic)^\top\Sigmaicf(\xc - \muic) = 1
+(\xc - \muic)^\top\Sigmaicf(\xc - \muic) = 1.
+\label{equ:ellipsoidcam}
 \end{align}
 
-Hence, we have following expression for mean and sigma of ellipsoid:
+Therefore, the center $\muic$ and spread $\Sigmaicf$ of the ellipsoid representing the occupancy of $O_i$ in camera coordinates are expressed as
 \begin{align}
   \label{eq:ellipsoidMeanSigma}
-  \muic &= - \Rctot^\top \tcmut \\
+  \muic &= - \Rctot^\top \tcmut, \\
   \Sigmaicf &= \frac{\Sigmaic}
-{1 - \tcmut^\top \Sigmait \tcmut + \muic^\top\Sigmaic\muic}
+{1 - \tcmut^\top \Sigmait \tcmut + \muic^\top\Sigmaic\muic},
 \end{align}
+where $\Rctot$, $\tcmut$, $\Sigmaic$, $\Sigmait$ are derived as above.
 
+\begin{comment}
 \section{Projection of Ellipsoids to Image}
 \newcommand{\mubar}{\bar{\mu}_i}
-The perspective projection of an ellipsoid in general is not an ellipsoid in
-general. We approximate the projection of ellipsoid by projecting a slice
-through the ellipsoid.
+In general, the perspective projection of an ellipsoid to the image plane is not an ellipse. We describe below two reasonable approximate methods which project a slice of the ellipsoid to the image such that the projection is always an ellipse.
 
 \subsection{Tangent plane method}
 \newcommand{\nx}{\hat{n}_x}
@@ -242,9 +272,10 @@ The mean and sigma of the projected ellipse can be computed by
   \Sigma^{-1}_{\text{2D}} &= \frac{1}{b^\top A^{-\top} b - d} A
 \end{align}%
 %
-
+\end{comment}
 
 \section{Other Energies for 3D Object Localization}
+We present in this section the details of other energies, namely dynamic and size energies (in addition to point track and detection bounding box energies), that are used in our localization experiment.
 
 \begin{comment}
 \subsubsection{Lane energy}
@@ -271,44 +302,30 @@ for some constant $w_{\text{road}}$ that represents the width of the road.
 \end{comment}
 
 \subsection{Dynamic energy}
-Dynamics constraints should not only enforce smooth trajectories, but also the
-holonomic constraints.  The following energy adds a penalty if the change in
-position is not in direction of previous orientation.
-
+Dynamic energy imposes both temporal smoothness and holonomic constraints. In particular, holonomic constraints penalize changes in object position that are not in the direction of object orientation at the previous time step as
 \begin{align}
   \label{eq:totalPosTransitionEnergy}
-  \Energy{dyn-hol} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1})
+  \Energy{dyn-hol} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1}),
 \end{align}
-
-The following energy adds a penalty for change in position and orientation
-but a penalty for change in velocity is much better approximation. However, in
-a Markovian setting that would mean extending the state space of the car to
-include velocity.
-
+while temporal smoothness constraints add a penalty for unsmooth changes in object orientation and velocity over consecutive time steps as
 \begin{align}
-  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2\\
-  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2
+  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2,\\
+  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2.
 \end{align}
-
-As a result the dynamics are modeled by weighted combination of holonomic
-constraint and smoothness constraints.
-
+As a consequence, dynamic energy is expressed as a weighted combination of holonomic and smoothness constraints
 \begin{align}
-  \WEnergy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel}
+  \Energy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel},
 \end{align}
+where $\lambda_{\text{dyn-hol}}$, $\lambda_{\text{dyn-ori}}$ and $\lambda_{\text{dyn-vel}}$ are the weights of component energies.
 
 \subsection{Size energy}
-
-Prior can include among many other things the size prior on the car.
-
+Size energy imposes prior knowledge on object dimensions as
 \begin{align}
   \label{eq:totalSizeEnergy}
   \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
-  \expDimsn)
+  \expDimsn),
 \end{align}
-
-where $\expDimsn$ is the mean TP dimensions and
-$\Sigma_{\expDimsn}$ is the correspondence covariance matrix.
+where $\expDimsn$ and $\Sigma_{\expDimsn}$ are respectively the mean and covariance of object dimensions obtained from the KITTI dataset.
 
 \begin{comment}
 \section{Inference method Comparison}
