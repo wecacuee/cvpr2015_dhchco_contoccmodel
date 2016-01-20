@@ -15,6 +15,7 @@ PDFLATEX=pdflatex# -interaction=nonstopmode
 all : $(TARGETS)
 	
 supplementarymaterial: out/supplementarymaterial.pdf
+rebuttal: out/rebuttal.pdf
 
 # Include the dependency makefile produced by latexmk
 # latexmk -deps-out= is used to record the dependencies
@@ -55,8 +56,22 @@ $(cvprlatexdir)/cvpr.sty $(cvprlatexdir)/eso-pic.sty.bak ieee.bst:
 	mv $(cvprlatexdir)/eso-pic.sty $(cvprlatexdir)/eso-pic.sty.bak
 	ln -sf $(cvprlatexdir)/ieee.bst
 
-out/%.pdf : %.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(cvprlatexdir)/cvpr.sty $(wildcard Source/*.tex)
-	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -output-directory=out -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+rebuttallatexdir:= cvpr2016RebuttalKit/latex
+$(rebuttallatexdir)/cvpr.sty $(rebuttallatexdir)/eso-pic.sty.bak ieee.bst:
+	wget http://www.pamitc.org/cvpr16/files/cvpr2016RebuttalKit.zip
+	unzip cvpr2016RebuttalKit.zip
+	rm cvpr2016RebuttalKit.zip
+	mv $(rebuttallatexdir)/eso-pic.sty $(rebuttallatexdir)/eso-pic.sty.bak
+	ln -sf $(rebuttallatexdir)/ieee.bst
+
+out/continuousocclusion.pdf: continuousocclusion.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(cvprlatexdir)/cvpr.sty $(wildcard Source/*.tex)
+	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+
+out/supplementarymaterial.pdf: supplementarymaterial.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(cvprlatexdir)/cvpr.sty $(wildcard Source/*.tex)
+	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+
+out/rebuttal.pdf: rebuttal.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(rebuttallatexdir)/cvpr.sty $(wildcard Source/*.tex)
+	TEXINPUTS=$(rebuttallatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
 
 clean:
 	latexmk -C -output-directory=out
