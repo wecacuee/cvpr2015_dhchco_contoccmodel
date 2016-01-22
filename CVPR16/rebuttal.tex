@@ -7,12 +7,32 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
+\usepackage{verbatim}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs} % for better tables
+
+\usepackage{color}
+\newcommand{\hili}[1]{\colorbox{yellow}{#1}}
+
 % Include other packages here, before hyperref.
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
 % run, let it finish, and you should be clear).
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\input{preamble}
+\newcommand{\xmin}{x_\text{min}}
+\newcommand{\ymin}{y_\text{min}}
+\newcommand{\xmax}{x_\text{max}}
+\newcommand{\ymax}{y_\text{max}}
+\DeclareMathOperator*{\argmin}{\arg\min}
+\input{Source/drawingslib}
 
 %%%%%%%%% PAPER ID  - PLEASE UPDATE
 \def\cvprPaperID{2072} % *** Enter the CVPR Paper ID here
@@ -28,79 +48,102 @@
 
 
 %%%%%%%%% BODY TEXT - ENTER YOUR RESPONSE BELOW
-\section{Introduction}
 
-After receiving paper reviews, authors may optionally submit a rebuttal to address the reviewers' comments, which will be limited to a {\bf one page} PDF file.  Please follow the steps and style guidelines outlined below for submitting your author response.
+As suggested by Reviewers 1 and 2, we have added Table~\ref{tab:notations} for improving the exposition of our methods. In addition to feature tracks and detection bounding boxes, we use camera poses and 3D object bounding boxes (estimated respectively using SFM and assuming detection bounding boxes lie on the ground with priors on object dimensions) for computing object-point association probabilities and initializing 3D object localization methods. 
 
-Note that, following similar guidelines to previous CVPR conferences, the rebuttal is meant to address only the reviewers' comments and questions. It is not intended to add new material (theorems, algorithms, experiments) which was not included in the original submission. You may optionally add a figure, graph or proof to your rebuttal, but only to better illustrate your answer to the reviewers' comments. These additions must be minimal (as they are meant to address only the reviewers' comments). You must not use the rebuttal to add any new results or contributions.
+\begin{table}\centering\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+& Symbol & Description \\
+\hline
+\hline
+\multirow{2}{*}{\rotatebox{90}{Input}} & $\bu_j(t)$ & 2D feature track $j$ at time $t$ \\
+					   	& $\bb{i}$ & 2D detection bounding box of object $O_i$ at time $t$ \\
+\hline
+\hline
+\multirow{5}{*}{\rotatebox{90}{Estimated}} & $\bp^c(t)$ & Position of camera at time $t$ \\
+						& $\bomega^c(t)$ & Orientation of camera at time $t$ \\
+						& $\bp_0^i(t)$ & Initial position of object $O_i$ at time $t$ \\
+					    & $\bomega_0^i(t)$ & Initial orientation of object $O_i$ at time $t$ \\
+						& $\bB_0^i$ & Initial 3D dimensions of object $O_i$ (independent of time $t$) \\
 
-The rebuttal must adhere to the same blind-submission as the original submission and must comply with this rebuttal-formatted template.
+\hline
+\hline
+\multirow{4}{*}{\rotatebox{90}{Output}} & $P^{ij}_{\text{assoc}}$ & Probability of associating feature track $j$ with object $O_i$ \\	
+						& $\bp^i(t)$ & Position of object $O_i$ at time $t$ \\
+					    & $\bomega^i(t)$ & Orientation of object $O_i$ at time $t$ \\
+						& $\bB^i$ & 3D dimensions of object $O_i$ (independent of time $t$) \\
+\hline
+\end{tabular}
+\caption{Notation of input and output.}
+\label{tab:notations}
+\end{table}
 
-%-------------------------------------------------------------------------
+Reviewers 1 and 2 mentioned the coarse representation of objects (3D ellipsoids), our aim is to balance between the ease of analytical formulations and the practical requirements of object-point association. Reviewer 2 further said that we demonstrated only for a single but important object category (car), which is because it is the only one that we have ground truth data for (KITTI dataset), and there are very few obstacles to apply our methods to other categories as long as we have feature tracks and detection bounding boxes.
 
-\subsection{Response length}
-Author responses must be no longer than 1 page in length including any references and figures.  Overlength responses will simply not be reviewed.  This includes responses where the margins and formatting are deemed to have been significantly altered from those laid down by this style guide.  Note that this \LaTeX\ guide already sets figure captions and references in a smaller font.
+Regarding the complicated graphical model and computational aspect, our current work focuses on the flexibility of our occlusion model, and there are many potential applications while object localization is one of them. Future work will invest in speeding up the inference. In the following, we will respond to each reviewer's comments:
 
-%------------------------------------------------------------------------
-\section{Formatting your Response}
+\section{Reviewer 1}
 
-{\bf Make sure to update the paper title and paper ID in the appropriate place in the tex file.}
+We thank Reviewer 1 for the suggestion of including the errors corresponding to the initial estimates in Table~\ref{tab:localization}, which clearly shows the benefits of energy minimization.   
 
-All text must be in a two-column format. The total allowable width of the text
-area is $6\frac78$ inches (17.5 cm) wide by $8\frac78$ inches (22.54 cm) high.
-Columns are to be $3\frac14$ inches (8.25 cm) wide, with a $\frac{5}{16}$ inch
-(0.8 cm) space between them. The top margin should begin
-1.0 inch (2.54 cm) from the top edge of the page.  The bottom margin should be
-1-1/8 inches (2.86 cm) from the bottom edge of the page for $8.5 \times
-11$-inch paper; for A4 paper, approximately 1-5/8 inches (4.13 cm) from the
-bottom edge of the page.
+\begin{table}\centering\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+Energy & t & dim \\
+\hline
+\hline
+Baseline & \hili{XXX} & \hili{XXX} \\
+Initialization & \hili{XXX} & \hili{XXX} \\
+$\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$ 
+& 3.95  & 1.72\\        
+$\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$        
+& 4.81  & 2.16\\        
+$\EnergyTrack + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$      
+& 4.05  & {\bf 1.59}\\        
+$\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$             
+& {\bf 3.24}  & 2.16\\
+\hline
+\end{tabular}
+\caption{Localization experiment results.}
+\label{tab:localization}
+\end{table}
 
-Please number all of your sections and any displayed equations.  It is important
-for readers to be able to refer to any particular equation.
+Equation 4: we use gradient occupancy vector $\nabla {f^i_{occ}}(\bx_j)$ since we want reflection probability to be high near object borders, $\max$ ensures that negative probability due to gradient in the direction opposite to the ray is clipped off, and squaring allows the function to be smooth near zero. We normalize $P^{ij}_{\textit{reflection}}(\lambda)$  with respect to different $\lambda$. Please refer to Figure 2 for an illustration of reflection probability.
 
-Wherever Times is specified, Times Roman may also be used.  Main text should be
-in 10-point Times, single-spaced. Section headings should be in 10 or 12 point
-Times.  All paragraphs should be indented 1 pica (approx. 1/6 inch or 0.422
-cm).  Figure and table captions should be 9-point Roman type as in
-Figure~\ref{fig:onecol}.
+We compute the normalization factor $Z'$ in Equation 13 numerically using importance sampling.
 
-%-------------------------------------------------------------------------
-\subsection{References}
+\section{Reviewer 2}
 
-List and number all bibliographical references in 9-point Times, single-spaced,
-at the end of your response. When referenced in the text, enclose the citation
-number in square brackets, for example~\cite{Authors14}.  Where appropriate,
-include the name(s) of editors of referenced books.
+Instead of using binary functions, we model objects by translucent functions, which not only accounts for object shape uncertainty but also allows a continuous occlusion model that remains amenable to continuous optimization tools. 
 
-\begin{figure}[t]
-\begin{center}
-\fbox{\rule{0pt}{1.8in} \rule{0.9\linewidth}{0pt}}
-   %\includegraphics[width=0.8\linewidth]{egfigure.eps}
-\end{center}
-   \caption{Example of caption.  It is set in Roman so that mathematics
-   (always set in Roman: $B \sin A = A \sin B$) may be included without an
-   ugly clash.}
-\label{fig:long}
-\label{fig:onecol}
-\end{figure}
+Section 4.2: our apologies, we have included all objects in the first equation as follows:
+\begin{multline*}
+  -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i \} | \{\bu_j(t)\} , \{\bb{i}\} )} = -Z + \\ 
+  \lambda_t \sum_{t=s_i}^{e_i} \EnergyTrack
+  + 
+  \lambda_d \sum_{t=s_i}^{e_i} \sum_{i=1}^N \EnergyBBox
+  + 
+  \lambda_{\text{dyn}} \sum_{i=1}^N \EnergyDyn
+  + 
+  \lambda_{\text{size}} \sum_{i=1}^N \EnergySize
+  \enspace,
+\end{multline*}
+and have excluded object poses from the previous time step in Equation 19 as below:
+\begin{align*}
+\Energy{detect}(\{ \relp{i}{t} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}.
+\end{align*}
 
-%-------------------------------------------------------------------------
-\subsection{Illustrations, graphs, and photographs}
+The number of objects is known a priori in our occlusion model (given by object tracking [2]) and is also provided to other methods such as BBox and RAS. Outlier feature tracks usually have high reprojection errors and hence low object-point association probabilities while outlier detection bounding boxes are likely to be removed by object tracking [2]. We use \hili{XXX} sequences from KITTI dataset, which have total \hili{XXX} frames. After running object tracking [2], there are total \hili{XXX} objects survived.
 
-All graphics should be centered.  Please ensure that any point you wish to make is resolvable in a printed copy of the response.  Resize fonts in figures to match the font in the body text, and choose line widths which render effectively in print.  Many readers (and reviewers), even of an electronic copy, will choose to print your response in order to read it.  You cannot insist that they do otherwise, and therefore must not assume that they can zoom in to see tiny details on a graphic.
+In object-point association experiments, the baseline method (BBox) uses 3D bounding boxes (though they are only for depth ordering). The crucial question now is how to probabilistically weigh points closer to the boundary of the 3D bounding box less than points inside the box and our occlusion model is in fact a principle way to do that same thing.
 
-When placing figures in \LaTeX, it's almost always best to use \verb+\includegraphics+, and to specify the  figure width as a multiple of the line width as in the example below
-{\small\begin{verbatim}
-   \usepackage[dvips]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]
-                   {myfile.eps}
-\end{verbatim}
-}
+In localization experiments, we have tried [33] on a few images and it has higher localization accuracy than our method, which is mostly due to its detailed shape model. However, it needs a database of CAD models, takes about 30 mins for inference on a single image, and is a discrete model which is not suitable for continuous optimization tools. Alternatively, we have added the suggested baseline which robustly fits a 3D bounding box on the reconstructed point cloud (by SFM within detection bounding boxes) and relies on priors on object dimensions for unobservable dimensions. We have included the results of this baseline in Table~\ref{tab:localization}.
 
+\section{Reviewer 3}
 
-{\small
-\bibliographystyle{ieee}
-\bibliography{rebuttal}
-}
+Transmission probability only indicates whether a ray is transmissible to a particular depth but does not provide information on which object obstructs the ray at that depth. Alternatively, this information is given by the reflection probability. Therefore, a combination of transmission and reflection probabilities is more suitable for explaining the image observations.
+
+Regarding the concern about the superiority of our method in Figure 5, we focus on a probabilistic method to incorporate all available information for occlusion reasoning and it is not provided by previous works (in a sense this was also the goal of [32][33] which use CAD models).
 
 \end{document}
