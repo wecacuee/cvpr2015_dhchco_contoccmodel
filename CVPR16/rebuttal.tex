@@ -109,7 +109,7 @@ $\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$
 \label{tab:localization}
 \end{table}
 
-In Equation 4, we use gradient vector $\nabla {f^i_{occ}}(\bx_j)$ since we want reflection probability to be high near object borders, $\max$ ensures that negative probability due to gradient in the direction opposite to the ray is clipped off, and squaring allows the function to be smooth near zero. We normalize $P^{ij}_{\textit{reflection}}(\lambda)$  with respect to different $\lambda$ (our apologies, we will fix this). Please refer to Figure 2 for an illustration of reflection probability.
+In Equation 4, we use gradient vector $\nabla {f^i_{occ}}(\bx_j)$ since we want reflection probability to be high near object borders, $\max$ ensures that negative probability due to gradient in the direction opposite to the ray is clipped off, and squaring allows the function to be smooth near zero. We normalize $P^{ij}_{\textit{reflection}}(\lambda)$  with respect to different $\lambda$ (our apologies, we will add a normalization factor). Please refer to Figure 2 for an illustration of reflection probability.
 
 We compute the normalization factor $Z'$ in Equation 13 numerically using importance sampling.
 
