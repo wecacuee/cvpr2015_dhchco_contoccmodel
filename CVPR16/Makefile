@@ -15,7 +15,7 @@ PDFLATEX=pdflatex# -interaction=nonstopmode
 all : $(TARGETS)
 	
 supplementarymaterial: out/supplementarymaterial.pdf
-rebuttal: out/rebuttal.pdf
+rebuttal: out/rebuttal2.pdf
 
 # Include the dependency makefile produced by latexmk
 # latexmk -deps-out= is used to record the dependencies
@@ -70,7 +70,7 @@ out/continuousocclusion.pdf: continuousocclusion.tex $(DEPS_DIR)/.touch $(OUT_DI
 out/supplementarymaterial.pdf: supplementarymaterial.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(cvprlatexdir)/cvpr.sty $(wildcard Source/*.tex)
 	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
 
-out/rebuttal.pdf: rebuttal.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(rebuttallatexdir)/cvpr.sty $(wildcard Source/*.tex)
+out/rebuttal2.pdf: rebuttal2.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(rebuttallatexdir)/cvpr.sty $(wildcard Source/*.tex)
 	TEXINPUTS=$(rebuttallatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
 
 clean:
