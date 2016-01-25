@@ -89,17 +89,17 @@ Thanks, $\cE_{\textrm{dyn}}$ and $\cE_{\textrm{size}}$ terms must be summed over
 \paragraph{R24: Number of objects} 
 This is known a priori in our occlusion model (from object tracking [2]) and is also provided to other methods such as BBox and RAS.
 
-\vspace{-0.4cm}
-\paragraph{R24: Handling outliers} 
-As noted by R24, outliers are inherently handled in our model. Outlier tracks usually have high reprojection errors and thus, low association probabilities. Additionally, outlier detection bounding boxes are likely to be filtered out by object tracking. 
+%\vspace{-0.4cm}
+%\paragraph{R24: Handling outliers} 
+%As noted by R24, outliers are inherently handled in our model. Outlier tracks usually have high reprojection errors and thus, low association probabilities. Additionally, outlier detection bounding boxes are likely to be filtered out by object tracking. 
 
-\vspace{-0.4cm}
-\paragraph{R24: Sequences for experiments} 
-We use all the sequences in the KITTI raw dataset (\hili{XXX} sequences, \hili{XXX} frames, \hili{XXX} object tracks).
+%\vspace{-0.4cm}
+%\paragraph{R24: Sequences for experiments} 
+%We use all the sequences in the KITTI raw dataset (\hili{XXX} sequences, \hili{XXX} frames, \hili{XXX} object tracks).
 
 \vspace{-0.4cm}
 \paragraph{R24: Related works}
-Thanks, final version will cite these.
+Thank you, we will cite them.
 
 
 \begin{table}[!!t]
@@ -136,7 +136,7 @@ Thanks, final version will cite these.
 
 \vspace{-0.4cm}
 \paragraph{R26: Superiority over baselines}
-Figure 5 is a reasonable comparison along with Table 1 which provides separate results for static and dynamic objects. Methods like BM and RAS fundamentally cannot handle point tracks on static objects. BBox does start with both depth and motion information, but makes a hard assignment. In contrast, our formulation can incorporate point tracks, bounding boxes and detection scores in a unified probabilistic framework.
+Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects. BBox does start with both depth and motion information, but makes a hard assignment. In contrast, our formulation can incorporate point tracks, bounding boxes and detection scores in a unified probabilistic framework.
 
 
 \vspace{-0.4cm}
@@ -150,7 +150,7 @@ We empirically choose parameters to minimize energy with both bounding box and p
 
 \vspace{-0.4cm}
 \paragraph{R26: Parameters}
-The final version will include a detailed list of parameters.
+We use \hili{XXX}. The final version will include a detailed list of parameters.
 
 
 

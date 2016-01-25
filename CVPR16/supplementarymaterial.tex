@@ -18,6 +18,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{booktabs} % for better tables
+\usepackage{microtype}
 
 \newlength{\eqs}
 \setlength{\eqs}{-0.04in}
@@ -67,7 +68,7 @@
 
 
 \begin{document}
-\title{A Continuous Occlusion Model for Road Scene Understanding}
+\title{Supplement: A Continuous Occlusion Model for Road Scene Understanding}
 
 \author{Vikas Dhiman\\
   University of Michigan\\
@@ -95,9 +96,9 @@ Jason J Corso\\
 
 \section{Computation of Ellipsoids}
 \label{sec:sigmacomputation}
-Here we present how to compute the parameters of ellipsoids representing the occupancy of traffic participants. For an object $O_i$, let $\bB^i = [l~w~h]$ be its 3D dimensions, where $l$, $w$ and $h$ are respectively its length, width, and height on the ground plane, we are interested in calculating the center $\muic$ and spread $\Sigmaicf$ of the ellipsoid representing the occupancy of $O_i$ with respect to the camera coordinate system $\cC$ of the current frame. 
+In this section, we present computation of the parameters of ellipsoids representing occupancy of traffic participants. For an object $O_i$, let $\bB^i = [l~w~h]$ be its 3D dimensions, where $l$, $w$ and $h$ are its length, width and height on the ground plane, respectively. We wish to calculate the center $\muic$ and spread $\Sigmaicf$ of the ellipsoid representing the occupancy of $O_i$ with respect to the camera coordinate system $\cC$ of the current frame. 
 
-Consider an object coordinate system $\cO$, which has the same orthonormal axes as the camera coordinate system and the origin at the projected point of the object center to the ground plane. For an object $O_i$, the center $\muit$ and spread $\Sigmait$ of the ellipsoid representing the occupancy of $O_i$ in the object coordinate system are expressed as
+Consider an object coordinate system $\cO$, which has the same orthonormal axes as the camera coordinate system and the origin at the projected point of the object center on the ground plane. For an object $O_i$, the center $\muit$ and spread $\Sigmait$ of the ellipsoid representing the occupancy of $O_i$ in the object coordinate system are expressed as
 \begin{align}
   \muit &= \begin{bmatrix}
   0& 0& \frac{h}{2}
@@ -108,7 +109,6 @@ Consider an object coordinate system $\cO$, which has the same orthonormal axes 
     0 & 0 & \frac{4}{h^2}
   \end{bmatrix}.
 \end{align}
-
 In object coordinates, the ellipsoid equation is written as
 \begin{align}
   (\xt - \muit)^\top \Sigmait (\xt - \muit) = 1,
@@ -121,7 +121,7 @@ where $\xt$ is a point in object coordinates. Given $\Omega^i$ as the pose of $O
 \end{align}
 where $\xc$ is a point in camera coordinates.
 
-Let $\tcmut = \tctot - \muit$, \eqref{equ:ellipsoidobj1} becomes
+Let $\tcmut = \tctot - \muit$, then \eqref{equ:ellipsoidobj1} becomes
 %\begin{align}
 %  (\Rctot \xc + \tcmut)^\top \Sigmait (\Rctot \xc + \tcmut) = 1
 %\end{align}
@@ -133,13 +133,13 @@ Let $\tcmut = \tctot - \muit$, \eqref{equ:ellipsoidobj1} becomes
 \label{equ:ellipsoidobj2}
 \end{multline}
 Next, denote $\Sigmaic = \Rctot^\top \Sigmait \Rctot$ and $\muic = - \Rctot^\top
-\tcmut$, \eqref{equ:ellipsoidobj2} becomes
+\tcmut$, then \eqref{equ:ellipsoidobj2} becomes
 \begin{multline}
   (\xc - \muic)^\top\Sigmaic(\xc - \muic) - \muic^\top\Sigmaic\muic 
   \\
   + \tcmut^\top \Sigmait \tcmut = 1.
 \end{multline}
-Finally, denote $\Sigmaicf = \frac{\Sigmaic}{1 - \tcmut^\top \Sigmait \tcmut +
+Finally, denoting $\Sigmaicf = \displaystyle\frac{\Sigmaic}{1 - \tcmut^\top \Sigmait \tcmut +
 \muic^\top\Sigmaic\muic}$, we have the ellipsoid equation in camera coordinates
 \begin{align}
 (\xc - \muic)^\top\Sigmaicf(\xc - \muic) = 1.
@@ -275,7 +275,7 @@ The mean and sigma of the projected ellipse can be computed by
 \end{comment}
 
 \section{Other Energies for 3D Object Localization}
-We present in this section the details of other energies, namely dynamic and size energies (in addition to point track and detection bounding box energies), that are used in our localization experiment.
+This section provides the details of other energies, namely dynamic and size energies (in addition to point track and detection bounding box energies already presented in the main paper), that are used in our localization experiment.
 
 \begin{comment}
 \subsubsection{Lane energy}
@@ -302,21 +302,21 @@ for some constant $w_{\text{road}}$ that represents the width of the road.
 \end{comment}
 
 \subsection{Dynamic energy}
-Dynamic energy imposes both temporal smoothness and holonomic constraints. In particular, holonomic constraints penalize changes in object position that are not in the direction of object orientation at the previous time step as
+Dynamic energy imposes both temporal smoothness and holonomic constraints. In particular, holonomic constraints penalize changes in object position that are not in the direction of object orientation at the previous time step, as
 \begin{align}
   \label{eq:totalPosTransitionEnergy}
-  \Energy{dyn-hol} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1}),
+  \Energy{dyn-hol} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1}).
 \end{align}
-while temporal smoothness constraints add a penalty for unsmooth changes in object orientation and velocity over consecutive time steps as
+Temporal smoothness constraints add a penalty for unsmooth changes in object orientation and velocity over consecutive time steps, as
 \begin{align}
   \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2,\\
   \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2.
 \end{align}
-As a consequence, dynamic energy is expressed as a weighted combination of holonomic and smoothness constraints
+The total dynamic energy is expressed as a weighted combination of holonomic and smoothness constraints
 \begin{align}
   \Energy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel},
 \end{align}
-where $\lambda_{\text{dyn-hol}}$, $\lambda_{\text{dyn-ori}}$ and $\lambda_{\text{dyn-vel}}$ are the weights of component energies.
+where $\lambda_{\text{dyn-hol}}$, $\lambda_{\text{dyn-ori}}$ and $\lambda_{\text{dyn-vel}}$ are the weights of the component energies.
 
 \subsection{Size energy}
 Size energy imposes prior knowledge on object dimensions as
@@ -325,7 +325,7 @@ Size energy imposes prior knowledge on object dimensions as
   \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
   \expDimsn),
 \end{align}
-where $\expDimsn$ and $\Sigma_{\expDimsn}$ are respectively the mean and covariance of object dimensions obtained from the KITTI dataset.
+where $\expDimsn$ and $\Sigma_{\expDimsn}$ are the mean and covariance, respectively, of object dimensions obtained from the KITTI dataset.
 
 \begin{comment}
 \section{Inference method Comparison}
