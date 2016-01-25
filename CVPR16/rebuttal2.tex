@@ -46,10 +46,10 @@
 \maketitle
 \thispagestyle{empty}
 
-We thank all the reviewers for their feedback, noting our work as interesting and novel.
+We thank all the reviewers for their feedback and for noting our work as novel, interesting and well-written.
 
 \vspace{-0.4cm}
-\paragraph{R18, R24: Define inputs and outputs} As suggested, we will add Table~\ref{tab:notations} in final version to improve exposition.
+\paragraph{R18, R24: Define inputs and outputs} As suggested, we will add Table~\ref{tab:notations} in the final version to improve exposition.
 
 \vspace{-0.4cm}
 \paragraph{R18, R24: Ellipsoid representation of objects} Our goal is to balance an analytical formulation for a tractable, continuous probabilistic model, with a shape representation that still yields good results for objects such as cars.
@@ -67,21 +67,23 @@ We initialize by fitting a 3D bounding box to detected bounding boxes and estima
 
 
 \vspace{-0.4cm}
-\paragraph{R24: Complex graphical model for localization} Our intent is to showcase the flexibility of our occlusion model, which can be used for multiple applications such as point track association or 3D localization. Simplified graphical models and faster inference in a particular application are important subjects of our future work.
+\paragraph{R24: Complex graphical model for localization} 
+Our intent is to show that our occlusion model can be used for multiple applications such as association or localization. Simplified graphical models and faster inference in a particular application are important subjects of our future work.
+%Our intent is to showcase the flexibility of our occlusion model, which can be used for multiple applications such as point track association or 3D localization. Simplified graphical models and faster inference in a particular application are important subjects of our future work.
 
 \vspace{-0.4cm}
 \paragraph{R24: Real-valued occupancy functions}
-We model objects as translucent, which not only accounts for shape uncertainty but also allows a probabilistic occlusion model amenable to continuous optimization tools. 
+We model objects as translucent, which not only accounts for shape uncertainty but also allows a probabilistic occlusion model amenable to continuous optimization.
 
 \vspace{-0.4cm}
 \paragraph{R24: Baselines}
-For object-point association, the BBox baseline uses 3D bounding boxes with simple depth ordering. For suggested baseline with less weight closer to the boundary -- in a sense, our association probability is a principled way to compute such a weight. For localization, we note that [33] does not account for point tracks and as R24 notes, uses a database of highly detailed CAD models and discrete modeling, so is not directly comparable. We thank R24 for the suggested baseline that fits a 3D bounding box on the reconstructed point cloud (using SFM within detection bounding boxes), yielding \hili{XXX}\% error in t and \hili{XXX}\% in dim. We will add these in Table 2.
+For object-point association, BBox baseline uses mean depth of 3D bounding boxes for simple depth ordering. For suggested baseline with less weight closer to the boundary -- our association probability is a principled way to compute such a weight. For localization, we note that [33] does not account for point tracks and as R24 notes, uses a database of highly detailed CAD models and discrete modeling, so might not be directly comparable. We thank R24 for the suggested baseline that fits a 3D bounding box on the reconstructed point cloud (using SFM within detection bounding boxes), yielding \hili{XXX}\% error in t and \hili{XXX}\% in dim. We will add these in Table 2.
 %the results are shown in Table \ref{tab:localization}. 
 Here, we rely on size priors for unobservable dimensions in traffic scenes (say, when 3D points on only back of car are visible).
 
 
 \vspace{-0.4cm}
-\paragraph{R24: Typos in equations}
+\paragraph{R24: Typos in Eqn 15, 19}
 Thanks, $\cE_{\textrm{dyn}}$ and $\cE_{\textrm{size}}$ terms must be summed over all objects ($\cE_{\textrm{track}}$ in Eqn 15 already is), dependence on $\{ \Omega^i (t-1) \}_i$ in Eqn 19 must be dropped.
 
 
@@ -93,13 +95,13 @@ This is known a priori in our occlusion model (from object tracking [2]) and is 
 %\paragraph{R24: Handling outliers} 
 %As noted by R24, outliers are inherently handled in our model. Outlier tracks usually have high reprojection errors and thus, low association probabilities. Additionally, outlier detection bounding boxes are likely to be filtered out by object tracking. 
 
-%\vspace{-0.4cm}
-%\paragraph{R24: Sequences for experiments} 
-%We use all the sequences in the KITTI raw dataset (\hili{XXX} sequences, \hili{XXX} frames, \hili{XXX} object tracks).
+\vspace{-0.4cm}
+\paragraph{R24: Sequences for experiments} 
+We use 35 sequences of the KITTI raw dataset (10k frames, 634 object tracks).
 
 \vspace{-0.4cm}
-\paragraph{R24: Related works}
-Thank you, we will cite them.
+\paragraph{R24: Other comments}
+Thank you, we will fix typos, include requested details and cite the listed related works.
 
 
 \begin{table}[!!t]
@@ -136,7 +138,8 @@ Thank you, we will cite them.
 
 \vspace{-0.4cm}
 \paragraph{R26: Superiority over baselines}
-Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects. BBox does start with both depth and motion information, but makes a hard assignment. In contrast, our formulation can incorporate point tracks, bounding boxes and detection scores in a unified probabilistic framework.
+Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects, while BBox uses depth but makes a heuristic hard assignment. In contrast, our formulation can incorporate point tracks, bounding boxes and detection scores in a unified probabilistic framework.
+%Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects. BBox does start with both depth and motion information, but makes a hard assignment. In contrast, our formulation can incorporate point tracks, bounding boxes and detection scores in a unified probabilistic framework.
 
 
 \vspace{-0.4cm}
@@ -145,7 +148,7 @@ Transmission probability only indicates whether a ray is transmissible to a part
 
 
 \vspace{-0.4cm}
-\paragraph{R26: Increase in error with occlusion modeling}
+\paragraph{R26: Error trends with occlusion modeling}
 We empirically choose parameters to minimize energy with both bounding box and point track occlusions. The same parameters are used for all experiments. Thus, error might be higher when modeling tracks or bounding boxes individually, but low when considered jointly. These parameters can be learned for a particular localization application, but our focus is more general -- to show that a continuous probabilistic occlusion model can be designed which is flexible enough to simultaneously handle point tracks and bounding boxes.
 
 \vspace{-0.4cm}
