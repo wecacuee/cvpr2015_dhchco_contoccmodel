@@ -1,0 +1,18 @@
+\section{Continuous Occlusion Model}
+\label{sec:setup}
+We want to solve the problem of segmenting point tracks into object so that the
+consensus of points can be used draw inferences about the object. In particular
+given a set of correspondence points on consecutive frames $(\trackpj{t},
+\trackpj{t-1})$, object localizations $\relp{i}{t}$ and object dimensions
+$\dimsn{i}$ we want to figure out which points belong to which object. We call
+this the association problem. Even if the pose of the object is not immediately
+available we propose the use of hypothesized pose of the object as we show in
+the localization estimation experiments. 
+
+\def\TP{TP}
+A common way of modeling objects, especially traffic participants (TP), in road
+scene understanding context is to model the TP as cuboids. However modelingTPs
+as cuboids fails to model the uncertainty in the pose and dimensions of TP. Moreover, the cuboid model introduces discontinuity in the problem formulation making
+optimization difficulty. With this motivation we propose the use of soft
+ellipsoids for modeling TPs that leads to continuous occlusion model that 
+accounts for uncertainty in TP position and dimensions.
