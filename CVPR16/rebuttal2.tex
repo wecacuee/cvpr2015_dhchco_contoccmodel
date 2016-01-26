@@ -61,7 +61,7 @@ In Eqn 4, the gradient $\nabla {f^i_{occ}}(\bx_j)$ encourages reflection probabi
 
 \vspace{-0.4cm}
 \paragraph{R18, R24: Initialization}
-We initialize by fitting a 3D bounding box to detected bounding boxes and estimated ground plane, with 3D size priors. Initialization errors are \textbf{5.61} for t and \textbf{3.23} for dim. They show advantage of our energy minimization and we will add them to Table 2.
+To initialize, we fit a 3D bounding box to detection boxes and estimated ground plane, with 3D size priors, yielding errors of \textbf{5.61} for t and \textbf{3.23} for dim (meters per object). They show the advantage of our energy minimization and we will add them to Table 2 of the paper.
 
 \vspace{-0.4cm}
 \paragraph{R24: Single but important category of cars} For evaluation, the KITTI dataset has ground truth 3D boxes only for cars. Our model is applicable for any rigid object type for which bounding boxes and point tracks may be obtained.
@@ -82,9 +82,9 @@ We model objects as translucent, which not only accounts for shape uncertainty b
 
 \vspace{-0.4cm}
 \paragraph{R24: Baselines}
-For object-point association, BBox baseline uses mean depth of 3D bounding boxes for simple depth ordering. For suggested baseline with less weight closer to the boundary -- our association probability is a principled way to compute such a weight. For localization, we note that [33] does not account for point tracks and as R24 notes, uses a database of highly detailed CAD models and discrete modeling, so might not be directly comparable. We thank R24 for the suggested baseline that fits a 3D bounding box on the reconstructed point cloud (using SFM within detection bounding boxes), yielding errors \textbf{6.87} in t and \textbf{4.02} in dim. We will add these in Table 2.
+For object-point association, BBox baseline uses mean depth of 3D bounding boxes for simple depth ordering. For suggested baseline with less weight closer to the boundary -- our association probability is a principled way to compute such a weight. For localization, we note that [33] does not account for point tracks and as R24 notes, uses a database of detailed CAD models and a discrete formulation, so might not be directly comparable. We thank R24 for the suggested baseline that fits a 3D bounding box on the reconstructed point cloud (using SFM within detection bounding boxes), yielding errors of \textbf{6.87} in t and \textbf{4.02} in dim (meters per object). We will add these to Table 2 of the paper.
 %the results are shown in Table \ref{tab:localization}. 
-Here, we rely on 3D size priors for unobservable dimensions in traffic scenes (say, when 3D points on only back of car are visible).
+Here, we rely on 3D size priors for unobservable dimensions, say, when only 3D points on the back of a car are visible.
 
 
 \vspace{-0.4cm}
