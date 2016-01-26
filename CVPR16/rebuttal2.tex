@@ -61,7 +61,7 @@ In Eqn 4, the gradient $\nabla {f^i_{occ}}(\bx_j)$ encourages reflection probabi
 
 \vspace{-0.4cm}
 \paragraph{R18, R24: Initialization}
-We initialize by fitting a 3D bounding box to detected bounding boxes and estimated ground plane, with 3D size priors. Initialization errors are \hili{XXX}\% for t and \hili{XXX}\% for dim. They show advantage of our energy minimization and we will add them to Table 2.
+We initialize by fitting a 3D bounding box to detected bounding boxes and estimated ground plane, with 3D size priors. Initialization errors are \textbf{5.61} for t and \textbf{3.23} for dim. They show advantage of our energy minimization and we will add them to Table 2.
 
 \vspace{-0.4cm}
 \paragraph{R24: Single but important category of cars} For evaluation, the KITTI dataset has ground truth 3D boxes only for cars. Our model is applicable for any rigid object type for which bounding boxes and point tracks may be obtained.
@@ -82,7 +82,7 @@ We model objects as translucent, which not only accounts for shape uncertainty b
 
 \vspace{-0.4cm}
 \paragraph{R24: Baselines}
-For object-point association, BBox baseline uses mean depth of 3D bounding boxes for simple depth ordering. For suggested baseline with less weight closer to the boundary -- our association probability is a principled way to compute such a weight. For localization, we note that [33] does not account for point tracks and as R24 notes, uses a database of highly detailed CAD models and discrete modeling, so might not be directly comparable. We thank R24 for the suggested baseline that fits a 3D bounding box on the reconstructed point cloud (using SFM within detection bounding boxes), yielding \hili{XXX}\% error in t and \hili{XXX}\% in dim. We will add these in Table 2.
+For object-point association, BBox baseline uses mean depth of 3D bounding boxes for simple depth ordering. For suggested baseline with less weight closer to the boundary -- our association probability is a principled way to compute such a weight. For localization, we note that [33] does not account for point tracks and as R24 notes, uses a database of highly detailed CAD models and discrete modeling, so might not be directly comparable. We thank R24 for the suggested baseline that fits a 3D bounding box on the reconstructed point cloud (using SFM within detection bounding boxes), yielding errors \textbf{6.87} in t and \textbf{4.02} in dim. We will add these in Table 2.
 %the results are shown in Table \ref{tab:localization}. 
 Here, we rely on 3D size priors for unobservable dimensions in traffic scenes (say, when 3D points on only back of car are visible).
 
@@ -139,7 +139,7 @@ Thank you, we will fix typos, include requested details and cite the listed rela
 
 \vspace{-0.4cm}
 \paragraph{R26: Superiority over baselines}
-Figure 5 may be considered with Table 1, which provides results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects, while BBox uses depth but makes a heuristic hard assignment. In contrast, our formulation can handle point tracks on static objects and makes accurate probabilistic soft assignment.
+Figure 5 may be considered with Table 1, which provides results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects, while BBox uses depth but makes a heuristic hard assignment. In contrast, our formulation can handle point tracks on static objects and makes accurate probabilistic soft assignments.
 %Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects. BBox does start with both depth and motion information, but makes a hard assignment. In contrast, our formulation can incorporate point tracks, bounding boxes and detection scores in a unified probabilistic framework.
 
 
