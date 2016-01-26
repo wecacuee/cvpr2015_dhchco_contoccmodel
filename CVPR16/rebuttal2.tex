@@ -98,7 +98,7 @@ This is known a priori in our occlusion model (from object tracking [2]) and is 
 
 \vspace{-0.4cm}
 \paragraph{R24: Sequences for experiments} 
-We use 35 sequences of the KITTI raw dataset (10k frames, 634 object tracks).
+We use 35 sequences of the KITTI raw dataset (10088 frames, 634 object tracks).
 
 \vspace{-0.4cm}
 \paragraph{R24: Other comments}
@@ -123,14 +123,14 @@ Thank you, we will fix typos, include requested details and cite the listed rela
  & $\bB_0^i$ & Initial 3D dimensions of object $O_i$ (independent of $t$) \\
 \hline
 \hline
-\multirow{4}{*}{\rotatebox{90}{Output}} & $P^{ij}_{\text{assoc}}$ & Probability of associating point track $j$ with object $O_i$ \\	
+\multirow{4}{*}{\rotatebox{90}{Output}} & $P^{ij}_{\text{assoc}}$ & Probability of assigning feature track $j$ to object $O_i$ \\	
  & $\bp^i(t)$ & Position of object $O_i$ at time $t$ \\
  & $\bomega^i(t)$ & Orientation of object $O_i$ at time $t$ \\
  & $\bB^i$ & 3D dimensions of object $O_i$ (independent of time $t$) \\
 \hline
 \end{tabular}
 \vspace{-0.25cm}
-\caption{Notation of input and output.}
+\caption{Notation of inputs and outputs.}
 \label{tab:notations}
 \vspace{-0.5cm}
 \end{table}
@@ -139,13 +139,13 @@ Thank you, we will fix typos, include requested details and cite the listed rela
 
 \vspace{-0.4cm}
 \paragraph{R26: Superiority over baselines}
-Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects, while BBox uses depth but makes a heuristic hard assignment. In contrast, our formulation can handle static objects and makes accurate probabilistic soft assignment.
+Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects, while BBox uses depth but makes a heuristic hard assignment. In contrast, our formulation can handle point tracks on static objects and makes accurate probabilistic soft assignment.
 %Figure 5 may be considered with Table 1, which provides separate results for static and dynamic objects. Methods like BM and RAS cannot handle point tracks on static objects. BBox does start with both depth and motion information, but makes a hard assignment. In contrast, our formulation can incorporate point tracks, bounding boxes and detection scores in a unified probabilistic framework.
 
 
 \vspace{-0.4cm}
 \paragraph{R26: Role of reflection and transmission probabilities}
-Transmission probability only indicates if a ray is transmissible to a particular depth, reflection probability indicates which object obstructs the ray at that depth. Thus, a combination of transmission and reflection probabilities is necessary to explain image observations. Lines 260-274 describe this intuition.
+Transmission probability only indicates whether a ray is transmissible to a particular depth, reflection probability indicates which object obstructs the ray at that depth. Thus, a combination of transmission and reflection probabilities is necessary to explain image observations. Lines 260-274 describe this intuition.
 
 
 \vspace{-0.4cm}
