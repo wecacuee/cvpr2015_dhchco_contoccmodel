@@ -46,12 +46,12 @@ The reflection probability ensures the presence of an object to constitute the o
 
 \vspace{-0.3cm}
 \paragraph{Reflection probability}
-Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\bK$ be the intrinsic calibration matrix for the camera and $\ray = \displaystyle\frac{\bK^{-1}\bu_j}{\lVert \bK^{-1}\bu_j \rVert}$ be the unit vector along the backprojected ray from the camera center passing through $\bu_j$. Then, the probability of reflection at depth $\lambda$ along the ray $\ray$, by an object $O_i$, is determined by the gradient of the object's occupancy function $f_{occ}^i$:
+Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\bK$ be the intrinsic calibration matrix for the camera and $\ray = \displaystyle\frac{\bK^{-1}\bu_j}{\lVert \bK^{-1}\bu_j \rVert}$ be the unit vector along the backprojected ray from the camera center passing through $\bu_j$. Then, the probability of reflection at depth $\lambda$ along the ray $\ray$, by an object $O_i$, is determined by the gradient of the object's occupancy function $f_{occ}^i$:%
 \begin{align}
-  P^{ij}_{\textit{reflection}} (\lambda) = (\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2
+   \Prefl = \frac{1}{\Zrefl}(\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2
 \label{eq:evalPrefl}
 \end{align}
-The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to the ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object being Lambertian, the above reverts to a (squared) Lambertian reflection.
+The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to the ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object being Lambertian, the above reverts to a (squared) Lambertian reflection. The $\Zrefl$ denotes the normalization factor such that $\int_{0^+}^\infty \Prefl d\lambda = 1$.
 
 
 \vspace{-0.3cm}
