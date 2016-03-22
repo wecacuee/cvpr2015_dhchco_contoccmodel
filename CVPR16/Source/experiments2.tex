@@ -44,32 +44,36 @@ We first perform the association experiment that compares the accuracy of point-
 
 
 \newlength{\tblimgwidth}
-\setlength{\tblimgwidth}{0.40\textwidth}
+\setlength{\tblimgwidth}{0.090\textwidth}
 \begin{figure*}[!!t]
   \centering
-  \begin{tabular}{ccc}
-    & Associations & Error in association\\
-    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} BM} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} RAS} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_RAS-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_RAS_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} BBox} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} BM} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} RAS} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_RAS-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_RAS_correct_incorrect-small.png}\\
-    \rotatebox{90}{\hspace{2em} Ours} & \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks-small.png} &%
-    \includegraphics[width=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}
+  \begin{tabular}{cc@{}c@{\hspace{0.1cm}}c@{}c@{}}
+    & Associations & Association Error & Associations & Association Error\\
+    \rotatebox{90}{\hspace{1em} BBox}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{1em} BM}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{1em} RAS}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_RAS-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_RAS_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_RAS-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_RAS_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{1em} Ours}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}
   \end{tabular}
   \vspace{-0.3cm}
-  \caption{\small Qualitative results of the association experiment. The left column
-  shows the point track assignments to appropriate objects. Each color represents
-a different object to which point tracks can be associated to. Right column shows the
+  \caption{\small Qualitative results of the association experiment. The odd columns
+  show the point track assignments to appropriate objects. Each color represents
+a different object to which point tracks can be associated to. The even columns show the
 probabilistic error in association: low error points are in blue while high error points are in red.
 Note that our method changes smoothly at the object boundaries with
 intermediate probabilities, while the baseline method has merely 0-1 error.}

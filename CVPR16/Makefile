@@ -48,7 +48,7 @@ results/0013_0000000060_%-small.png: results/0013_0000000060_%.png
 	convert -crop 300x120+450+150 $< $@
 
 results/0009_0000000060_%-small.png: results/0009_0000000060_%.png
-	convert -crop 600x180+0+150 $< $@
+	convert -crop 500x180+10+150 $< $@
 
 cvprlatexdir:= cvpr2016AuthorKit/latex
 $(cvprlatexdir)/cvpr.sty $(cvprlatexdir)/eso-pic.sty.bak ieee.bst:
@@ -57,7 +57,7 @@ $(cvprlatexdir)/cvpr.sty $(cvprlatexdir)/eso-pic.sty.bak ieee.bst:
 	ln -sf $(cvprlatexdir)/ieee.bst
 
 rebuttallatexdir:= cvpr2016RebuttalKit/latex
-$(rebuttallatexdir)/cvpr.sty $(rebuttallatexdir)/eso-pic.sty.bak ieee.bst:
+$(rebuttallatexdir)/cvpr.sty $(rebuttallatexdir)/eso-pic.sty.bak:
 	wget http://www.pamitc.org/cvpr16/files/cvpr2016RebuttalKit.zip
 	unzip cvpr2016RebuttalKit.zip
 	rm cvpr2016RebuttalKit.zip
