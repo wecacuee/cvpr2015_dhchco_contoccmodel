@@ -2,7 +2,38 @@
 %\section{Occlusion-Aware Association and Localization}
 \label{sec:unified}
 
-In this section, we highlight the versatility of our occlusion modeling by demonstrating its unified application to two different problems: associating point tracks with objects and 3D object localization using objects and point tracks.
+In this section, we highlight the versatility of our occlusion modeling by demonstrating its unified application to two different problems: associating point tracks with objects and 3D object localization using objects and point tracks. Inputs and outputs required in both the problems and corresponding notation is tabulated in Table~\ref{tab:notations}.
+
+\newcommand\RotText[1]{\rotatebox{90}{\parbox{1.7cm}{\centering#1}}}
+\begin{table}[!!t]
+\centering\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+ & Symbol & Description \\
+\hline
+\hline
+\multirow{2}{*}{\rotatebox{90}{Input}} & $\bu_j(t)$ & 2D feature track $j$ at time $t$ \\
+ & $\bb{i}$ & 2D detection bounding box of object $O_i$ at time $t$ \\
+\hline
+\hline
+\multirow{5}{*}{\RotText{Estimated for initialization}} & $\bp^c(t)$ & Position of camera at time $t$ \\
+ & $\bomega^c(t)$ & Orientation of camera at time $t$ \\
+ & $\bp_0^i(t)$ & Initial position of object $O_i$ at time $t$ \\
+ & $\bomega_0^i(t)$ & Initial orientation of object $O_i$ at time $t$ \\
+ & $\bB_0^i$ & Initial 3D dimensions of object $O_i$ (independent of $t$) \\
+\hline
+\hline
+\multirow{4}{*}{\rotatebox{90}{Output}} & $P^{ij}_{\text{assoc}}$ & Probability of assigning feature track $j$ to object $O_i$ \\	
+ & $\bp^i(t)$ & Position of object $O_i$ at time $t$ \\
+ & $\bomega^i(t)$ & Orientation of object $O_i$ at time $t$ \\
+ & $\bB^i$ & 3D dimensions of object $O_i$ (independent of time $t$) \\
+\hline
+\end{tabular}
+\vspace{-0.25cm}
+\caption{Notation of inputs and outputs.}
+\label{tab:notations}
+\vspace{-0.5cm}
+\end{table}
 
 \subsection{Object-Point Association}
 \label{sec:association}
