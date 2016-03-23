@@ -45,7 +45,7 @@ S'(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \Lambda_k^{'-1} \be
 
 The energy of detection scores is simply take to be the inverse of the detection score.
 \begin{align}
-  \Energy{detect}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
+  \Energy{detect}(\{ \relp{i}{t} \}_i, \{\dimsn{i}\}_i ) = \frac{1}{S'(\bb{i})}
 \end{align}
 
 %For object detections we use object detector by \cite{Felzenszwalb_etal_2010} which is detector by parts model and we use eight parts to train the car model on half of the KITTI dataset \cite{geiger2013vision}. The trained modeled is used to get detections for the other half of the dataset and vice versa. 

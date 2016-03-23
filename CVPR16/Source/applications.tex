@@ -86,9 +86,12 @@ We exploit in this section the application of our continuous occlusion model to 
   \sum_{t=s_i}^{e_i}
   \sum_{i=1}^N  
   %\sum_{\substack{i \in [1, \dots, N] \\t \in [s_i, \dots e_i]}}
-  \lambda_d\EnergyBBox
-  + \lambda_{\text{dyn}}\EnergyDyn
-  + \lambda_{\text{size}}\EnergySize
+  \left(
+    \lambda_d\EnergyBBox
+    + \lambda_{\text{dyn}}\EnergyDyn
+    \right.  \\ \left.
+    + \lambda_{\text{size}}\EnergySize
+  \right)
   \enspace,
 \end{multline*}
 %
