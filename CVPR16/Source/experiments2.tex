@@ -1,7 +1,7 @@
 \section{Experiments}
 \label{sec:experiments}
 
-In this section, we benchmark our continuous occlusion model for point-to-object association against the baseline method using detection bounding boxes and state-of-the-art methods for motion segmentation \cite{Rao_etal_2010,Brox_Malik_2010}. We then show how the proposed model may be applied for 3D localization in road scenes. For our experiments, we use the KITTI dataset~\cite{geiger2013vision}, which consists of video sequences of road scenes under a variety of driving conditions. 
+In this section, we benchmark our continuous occlusion model for point-to-object association against the baseline method using detection bounding boxes and state-of-the-art methods for motion segmentation \cite{Rao_etal_2010,Brox_Malik_2010}. We then show how the proposed model may be applied for 3D localization in road scenes. For our experiments, we use the KITTI dataset~\cite{geiger2013vision}, which consists of 35 video sequences (10088 frames, 634 object tracks) of road scenes under a variety of driving conditions. 
 %It also provides ground truth data for different tasks such as segmentation, detection, tracking and 3D localization.
 
 %\paragraph{Dataset} We use KITTI dataset for our experiments.  \cite{geiger2013vision}. KITTI dataset is a labeled video sequence of road scenes under variety of driving conditions including highways and residential areas in Karlsruhe, Germany. It provides manually labelled ground truth data for localization of cars and also uses velodyne data provide metrically accurate estimates of cars location.
@@ -84,7 +84,7 @@ intermediate probabilities, while the baseline method has merely 0-1 error.}
 
 %To verify the correctness of our association probability $\assocP$ we perform association error experiment that compare the accuracy of point track association with TPs with that of bounding box baseline method.
 
-For each sequence of the KITTI dataset, the methods of \cite{Felzenszwalb_etal_2010} and \cite{Choi_Savarese_2010} are used for computing detection bounding boxes and object tracklets, respectively. We then apply \cite{Zach2007} to extract point tracks. Note that our method can handle occlusions in both static and dynamic scenes, but motion segmentation focuses on dynamic scenes. For a complete evaluation, we organize the point tracks into four sets: all point tracks, occluded point tracks, dynamic point tracks and dynamic as well as occluded point tracks. In addition to point tracks, the parameters of all objects (cars) estimated by the method of \cite{Song_Chandraker_2015} are provided to our method (for computing association probability) and the baseline BBox method (for depth ordering).
+For each sequence of the KITTI dataset, the methods of \cite{Felzenszwalb_etal_2010} and \cite{Choi_Savarese_2010} are used for computing detection bounding boxes and object tracklets, respectively. We then apply \cite{Zach2007} to extract point tracks. Note that our method can handle occlusions in both static and dynamic scenes, but motion segmentation focuses on dynamic scenes. For a complete evaluation, we organize the point tracks into four sets: all point tracks, occluded point tracks, dynamic point tracks and dynamic as well as occluded point tracks. In addition to point tracks, the parameters of all objects (cars)--including their unknown 3D position and sizes--estimated by the method of \cite{Song_Chandraker_2014} are provided to our method (for computing association probability) and the baseline BBox method (for depth ordering).
 
 
 \vspace{-0.4cm}
@@ -150,8 +150,12 @@ Qualitative comparisons of point track associations from various methods are sho
 \begin{table}
   \begin{tabular}{lrr}
     \toprule
-    Energy & t & dim \\
+    Method & t & dim \\
     \midrule
+    Point cloud fit
+    & 6.87 & 4.02\\
+    Initialization
+    & 5.61 & 3.23\\
     $\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$ 
     & 3.95  & 1.72\\        
     $\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$        
@@ -168,7 +172,7 @@ Qualitative comparisons of point track associations from various methods are sho
 
 
 \subsection{Localization Experiments}
-We report errors in translation and dimension estimates, measured in meters per car, in Table~\ref{tab:localizationExperiment}. Average depth of cars in the dataset is approximately $20$ meters. We compare four combinations of energies.  The energy $\EnergyTrackNoOcc$ represents the point tracks energy without accounting for occlusion, that is, we model $\EnergyTrack$ in the absence of $a^{ij} (\lambda)$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the modification of $\Lambda_k$ that accounts for occlusion. We observe that the use of the continuous occlusion model improves the localization accuracy in terms of the translation error, which is the most significant metric affected by all cues. Occlusion modeling for detection increases dimension error since we explicitly allow greater uncertainty in occluded edges of the bounding box. Note that none of our energies optimize yaw angles for static objects, which can be handled in practice through either the detector orientation or external information such as lane geometry.
+We report errors in translation and dimension estimates, measured in meters per car, in Table~\ref{tab:localizationExperiment}. Average depth of cars in the dataset is approximately $20$ meters. We compare four combinations of energies with two baselines. We initialize the unknowns using \cite{Song_Chandraker_2014} whose accuracy is reported as \emph{Initialization} in the table. We develop a simple baseline by fitting cuboids to the point cloud created by triangulation of point tracks in two successive frames. The accuracy of this baseline is reported as \emph{Point cloud fit} in the table. The energy $\EnergyTrackNoOcc$ represents the point tracks energy without accounting for occlusion, that is, we model $\EnergyTrack$ in the absence of $a^{ij} (\lambda)$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the modification of $\Lambda_k$ that accounts for occlusion. We observe that the use of the continuous occlusion model improves the localization accuracy in terms of the translation error, which is the most significant metric affected by all cues. Occlusion modeling for detection increases dimension error since we explicitly allow greater uncertainty in occluded edges of the bounding box. Note that none of our energies optimize yaw angles for static objects, which can be handled in practice through either the detector orientation or external information such as lane geometry.
 
 %of all three metrics: translation, yaw and dimension error.
 

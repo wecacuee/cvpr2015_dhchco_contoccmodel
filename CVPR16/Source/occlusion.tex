@@ -51,7 +51,7 @@ Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\bK$ be
    \Prefl = \frac{1}{\Zrefl}(\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2
 \label{eq:evalPrefl}
 \end{align}
-The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to the ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object being Lambertian, the above reverts to a (squared) Lambertian reflection. The $\Zrefl$ denotes the normalization factor such that $\int_{0^+}^\infty \Prefl d\lambda = 1$.
+The $\max \{ \}$ ensures that the negative probability due to gradient in the direction opposite to the ray is clipped off and squaring the function allows it to be smooth near zero. We note that in the extreme case of an object being fully opaque (i.e. $\nabla {f^i_{occ}(\bx_j)} \in \{0,1\}$), the above model reverts to a (squared) Lambertian reflection. The $\Zrefl$ denotes the normalization factor such that $\int_{0^+}^\infty \Prefl d\lambda = 1$.
 
 
 \vspace{-0.3cm}
@@ -62,7 +62,7 @@ Since we are modeling occupancy as transparency, we derive inspiration from opti
 I(\alpha) = I_0 e^{-\beta\rho\alpha}.
 \end{align}
 %
-In our formulation of scene occupancy, both opacity and density at a scene point $\bx_j$ are encapsulated within the total occupancy function summer over all objects, $\occftot = \sum_i \occf$. Further, the domain of our ocupancy function $\occftot$ is $[0, 1]$ instead of $[0, \infty)$ for opacity $\beta$. Thus, we replace $e^{-\beta\rho}$ by the transparency function $1 - \occftot$ and consequently, the transmission probability over a small distance $d\lambda$ is given by
+In our formulation of scene occupancy, both opacity and density at a scene point $\bx_j$ are encapsulated within the total occupancy function sum over all objects, $\occftot = \sum_i \occf$. Further, the domain of our ocupancy function $\occftot$ is $[0, 1]$ instead of $[0, \infty)$ for opacity $\beta$. Thus, we replace $e^{-\beta\rho}$ by the transparency function $1 - \occftot$ and consequently, the transmission probability over a small distance $d\lambda$ is given by
 %
 \begin{align}
   \!\!\!\! P^j_{\textit{transmission}}(\lambda + d\lambda) = P^j_{\textit{transmission}}(\lambda) (1-\occftot)^{d\lambda}.
