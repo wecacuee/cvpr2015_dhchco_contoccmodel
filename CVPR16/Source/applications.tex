@@ -114,7 +114,7 @@ where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations su
 \vspace{-0.3cm}
 \paragraph{Continuous point track energy with occlusion}
 %\label{sec:totalContPtTracksEnergy}
-Let $\relp{i}{t}$ be the pose of object $O_i$ at time $t$ in world coordinates (computed using the camera pose at time $t$ and the relative pose of object $O_i$ with respect to the camera). We denote $\projectionOf{.}$ and $\invProjectionOftm{.}$ as the forward and inverse projection functions that project a 3D point to the 2D image and vice versa. Then, the reprojection error for 2D point $\trackp{t}$ with hypothesized depth $\lambda$, is given by
+Let $\relp{i}{t}$ be the pose of object $O_i$ at time $t$ in world coordinates, which is computed using the camera pose at time $t$ and the relative pose of object $O_i$ with respect to the camera at time $t$. We denote $\projectionOf{.}$ and $\invProjectionOftm{.}$ as the forward and inverse projection functions that project a 3D point to the 2D image and vice versa. Then, the reprojection error for 2D point $\trackp{t}$ with hypothesized depth $\lambda$, is given by
 \begin{equation}
 \Ereproj(\lambda) = \left\|\trackpj{t} - \projectionOf{\invProjectionOftm{\trackpj{t-1}, \lambda}}\right\|^2.
 \label{eq:reprojerror}
