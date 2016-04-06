@@ -2,7 +2,7 @@
 %\section{Occlusion-Aware Association and Localization}
 \label{sec:unified}
 
-In this section, we highlight the versatility of our occlusion modeling by demonstrating its unified application to two different problems: associating point tracks with objects and 3D object localization using objects and point tracks. Inputs and outputs required in both the problems and corresponding notation is tabulated in Table~\ref{tab:notations}.
+In this section, we highlight the versatility of our occlusion modeling by demonstrating its unified application to two different problems: associating point tracks with objects and 3D object localization using objects and point tracks. Table~\ref{tab:notations} summarizes inputs and outputs for these problems.
 
 \newcommand\RotText[1]{\rotatebox{90}{\parbox{1.7cm}{\centering#1}}}
 \begin{table}[!!t]
@@ -16,21 +16,21 @@ In this section, we highlight the versatility of our occlusion modeling by demon
  & $\bb{i}$ & 2D detection bounding box of object $O_i$ at time $t$ \\
 \hline
 \hline
-\multirow{5}{*}{\RotText{Estimated for initialization}} & $\bp^c(t)$ & Position of camera at time $t$ \\
+\multirow{5}{*}{\RotText{Est. by~\cite{Song_Chandraker_2014} for initialization}} & $\bp^c(t)$ & Position of camera at time $t$ \\
  & $\bomega^c(t)$ & Orientation of camera at time $t$ \\
  & $\bp_0^i(t)$ & Initial position of object $O_i$ at time $t$ \\
  & $\bomega_0^i(t)$ & Initial orientation of object $O_i$ at time $t$ \\
- & $\bB_0^i$ & Initial 3D dimensions of object $O_i$ (independent of $t$) \\
+ & $\bB_0^i$ & Initial 3D dimensions of object $O_i$ \\
 \hline
 \hline
 \multirow{4}{*}{\rotatebox{90}{Output}} & $P^{ij}_{\text{assoc}}$ & Probability of assigning feature track $j$ to object $O_i$ \\	
  & $\bp^i(t)$ & Position of object $O_i$ at time $t$ \\
  & $\bomega^i(t)$ & Orientation of object $O_i$ at time $t$ \\
- & $\bB^i$ & 3D dimensions of object $O_i$ (independent of time $t$) \\
+ & $\bB^i$ & 3D dimensions of object $O_i$ \\
 \hline
 \end{tabular}
 \vspace{-0.25cm}
-\caption{Notation of inputs and outputs.}
+\caption{Notation of inputs and outputs for object-point association and 3D object localization. Note that object dimensions are independent of time.}
 \label{tab:notations}
 \vspace{-0.5cm}
 \end{table}
@@ -47,23 +47,23 @@ Given 2D image points $\{\bu_j\}$ which are tracked between consecutive frames a
 \end{align}
 where $\Prefl$ and $\Ptrans$ are from \eqref{eq:evalPrefl} and \eqref{eq:evalCumulativePtrans} respectively. Note that the fraction $\assocP$, although called association probability, does not capture the entire information that we have available for computing the association of point tracks to objects. 
 
-Rather, to compute the association probability between point track $\bu_j$ and object $O_i$, we should also use the reprojection error. When the association of point track $\bu_j$ and object $O_i$ is correct and the point of reflection is at depth $\lambda$, the corresponding reprojection error $\Ereproj(\lambda)$ must be zero \eqref{eq:reprojerror}, otherwise the error becomes a measure of distance from the true solution. The error $\Ereproj(\lambda)$ can be used for associating point tracks and objects by converting it to the probability domain as
+Rather, to compute the association probability between point track $\bu_j$ and object $O_i$, we should also use the reprojection error. When the association of point track $\bu_j$ and object $O_i$ is correct and the point of reflection is at depth $\lambda$, the corresponding reprojection error $\Ereproj(\lambda)$ must be zero, otherwise the error becomes a measure of distance from the true solution. The error $\Ereproj(\lambda)$ can be used for associating point tracks and objects by converting it to the probability domain as
 \begin{align}
-  P^{ij}_{\text{reproj}}(\lambda) = \frac{1}{Z}\exp(-\Ereproj(\lambda)),
+  P^{ij}_{\text{reproj}}(\lambda) = \frac{1}{Z'}\exp(-\Ereproj(\lambda)),
 \label{eq:Passocbyreproj}
 \end{align}
-where $Z$ is the normalization coefficient.
+where $Z'$ is the normalization coefficient.
 
 Using both of the evidence terms in \eqref{eq:defineassocP} and \eqref{eq:Passocbyreproj}, we can define the new association probability $P^{ij}_{\text{assoc}}$ as follows
 \begin{align}
-  P^{ij}_{\text{assoc}} = \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda,
+  P^{ij}_{\text{assoc}} = \frac{1}{Z"}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda,
   \label{eq:prob-assoc}
 \end{align}
-where $Z'$ is the new normalization coefficient.
+where $Z"$ is the new normalization coefficient.
 
 Once we have computed the association probability $P^{ij}_{\text{assoc}}$ for every pair of point tracks and objects, we can assign each point track to the object with the highest association probability. The point tracks having very small association probabilities are assigned to the background.
 
-In contrast to the principled approach above, a heuristic baseline may simply assign a point track to the detection bounding box enclosing it (and background if outside all bounding boxes). For regions where bounding boxes overlap, it may assign point tracks to the object that has the smallest mean depth among the competing bounding boxes. As we demonstrate in our experiments, such heuristics are sub-optimal compared to using \eqref{eq:prob-assoc} from our occlusion model.
+In contrast to the principled approach above, a heuristic baseline may simply assign a point track to the detection bounding box enclosing it (and the background if outside all bounding boxes). For regions where bounding boxes overlap, it may assign point tracks to the object that has the smallest mean depth among the competing bounding boxes. As we demonstrate in our experiments, such heuristics are sub-optimal compared to using \eqref{eq:prob-assoc} from our occlusion model.
 
 %For the baseline method, the associations between point tracks and TPs are achieved by using detection bounding boxes, where point tracks within each bounding box are simply assigned to it. For the regions where the bounding boxes overlap, we assign the point tracks to the TP that has smaller mean depth than the competing bounding boxes.
 
@@ -76,26 +76,25 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 
 %To show the effectiveness of our method we also apply it to the localization problem, where we must jointly solve for association and object poses, while considering occlusions. In road scenes, we estimate the position, orientation and dimensions traffic participants (cars) with our framework and compute the error in birds eye view along the ground plane. We propose a graphical model as shown in Figure \ref{fig:graphmodel} that allows a factorization of the intractable probability distribution into following form
 
-We exploit in this section the application of our continuous occlusion model to 3D localization in road scenes, which further demonstrates the versatility of the proposed model. Given a set of tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants (TPs), in particular, for each TP, estimating its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. The total number of TPs, $N$, is taken to be the number of car detections. We build a graphical model for representing object relationships and decompose the negative log likelihood as follows
+We exploit in this section the application of our continuous occlusion model to 3D object localization in road scenes, which further demonstrates the versatility of the proposed model. Given a set of 2D tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants, in particular, for each traffic participant, estimating its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. Please refer to Table~\ref{tab:notations} for a summary of inputs and outputs. 
+
+We build a graphical model for representing object relationships and decompose the negative log likelihood as follows
 %
 \begin{multline*}
   -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i(t) \} | \{\bu_j(t)\} , \{\bb{i}\} )} = \\
-  -Z 
-   + \sum_{t=s_i}^{e_i} \lambda_t\EnergyTrack
-  + 
-  \sum_{t=s_i}^{e_i}
-  \sum_{i=1}^N  
-  %\sum_{\substack{i \in [1, \dots, N] \\t \in [s_i, \dots e_i]}}
+  -\tilde{Z} 
+  + \sum_{t=s_i}^{e_i} \lambda_{\text{track}}\EnergyTrack
+  + \\ 
+  \sum_{t=s_i}^{e_i} \sum_{i=1}^N  
   \left(
-    \lambda_d\EnergyBBox
-    + \lambda_{\text{dyn}}\EnergyDyn
-    \right.  \\ \left.
+    \lambda_{\text{detect}}\EnergyBBox
+    + \lambda_{\text{dyn}}\EnergyDyn    
     + \lambda_{\text{size}}\EnergySize
   \right)
   \enspace,
 \end{multline*}
 %
-where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations such as point tracks and bounding boxes while $\Energy{dyn}$  and $\Energy{size}$ impose smoothness constraints and size priors respectively. Here, $\lambda_{t}$, $\lambda_{d}$, $\lambda_{dyn}$, $\lambda_{size}$ are energy weights, $N$ is the number of objects in the sequence, $s_i$ and $t_i$ are respectively the starting and ending frames of object $O_i$ and $Z$ is the normalization coefficient. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. Next, we present our unified continuous occlusion modelling for both point track and bounding box energies. Due to space constraints, we present the details of other energies in the supplementary material.
+where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations such as point tracks and bounding boxes, while $\Energy{dyn}$  and $\Energy{size}$ impose smoothness constraints and size priors respectively. Here, $\lambda_{\text{track}}$, $\lambda_{\text{detect}}$, $\lambda_{\text{dyn}}$, $\lambda_{\text{size}}$ are energy weights, $N$ is the number of objects in the sequence, $s_i$ and $t_i$ are respectively the starting and ending frames of object $O_i$, and $\tilde{Z}$ is the normalization coefficient. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. Next, we present our unified continuous occlusion modeling for both point track and bounding box energies. Due to space constraints, we present the details of other energies in the supplementary material.
 
 \begin{figure}
   \centering
@@ -106,23 +105,23 @@ where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations su
       \hspace{-0.8cm}
     \input{Source/graphical_model_multiple}
   \end{tabular}
-  \caption{\small (Top) A sample road scene with occlusions, where the unknowns of each car are modeled as random variables. (Bottom) Graphical model for a single frame. The six numbered nodes represent the unknown state variables of each car. The shaded nodes in the graphical model are observed variables (detection bounding boxes and point tracks), while the colored squares represent various energies that capture object-object interactions.}
+  \caption{\small (Top) A sample road scene with occlusions, where the unknowns of each object are modeled as random variables. (Bottom) The graphical model corresponding to the above frame. In particular, the numbered nodes denote the unknown state variables of each object (position, orientation, and dimensions), the shaded nodes are observed variables (detection bounding boxes and point tracks), and the colored squares represent various energies that capture object-object interactions.}
   \label{fig:graphmodel}
 \end{figure}
 
 
 
 \vspace{-0.3cm}
-\paragraph{Continuous point tracks energy with occlusion}
+\paragraph{Continuous point track energy with occlusion}
 %\label{sec:totalContPtTracksEnergy}
-Let $\relp{i}{t}$ be the pose of object $O_i$ with respect to the camera at time $t$. We denote $\projectionOf{.}$ and $\invProjectionOftm{.}$ for the forward and inverse projection functions that project a 3D point to the camera image and vice versa. Then, the reprojection error for the 2D point $\trackp{t}$ with hypothesized depth $\lambda$, is given by
+Let $\relp{i}{t}$ be the pose of object $O_i$ at time $t$ in world coordinates (computed using the camera pose at time $t$ and the relative pose of object $O_i$ with respect to the camera). We denote $\projectionOf{.}$ and $\invProjectionOftm{.}$ as the forward and inverse projection functions that project a 3D point to the 2D image and vice versa. Then, the reprojection error for 2D point $\trackp{t}$ with hypothesized depth $\lambda$, is given by
 \begin{equation}
 \Ereproj(\lambda) = \left\|\trackpj{t} - \projectionOf{\invProjectionOftm{\trackpj{t-1}, \lambda}}\right\|^2.
 \label{eq:reprojerror}
 \end{equation}
-Note that inverse projection $\invProjectionOf{.}$ depends on both the 2D point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection is dependent on object pose at time $t-1$ while the forward projection depends on pose at time $t$, which can be different.
+Note that the inverse projection $\invProjectionOf{.}$ depends on both the 2D point $\trackp{t}$ and the unknown depth $\lambda$. Also note that the inverse projection relies on the object pose at time $t-1$ while the forward projection relies on the object pose at time $t$, which can be different.
 
-For an object $O_i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding objects at time $t$ (inclusive of object $i$) and $ \{ \bB \}_i$ be their corresponding 3D dimensions. Then, we model the continuous point tracks energy with explicit occlusion reasoning as the expected reprojection error over the association probability:
+For an object $O_i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding objects at time $t$ (inclusive of object $O_i$) and $ \{ \bB \}_i$ be their corresponding 3D dimensions. Then, we model the continuous point track energy with explicit occlusion reasoning as the expected reprojection error over the association probability
 \begin{multline}
   %\!\!\!\! \Energy{track}(\relp{i}{t}, \relp{i}{t-1}, \dimsn{i}, \{ \Omega (t) \}_i, \{ \Omega (t-1) \}_i, \{ \bB \}_i ) 
   %\Energy{track}(\{ \relp{i}{t} \}_i, \{ \relp{i}{t-1} \}_i, \{\dimsn{i}\}_i ) = 
@@ -131,9 +130,9 @@ For an object $O_i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding obje
     = \sum_{i=1}^{N} 
     %\sum_{t = s_i}^{e_i}
     \sum_{j = 1}^{M}
-    \int_1^\infty \assocP\Ereproj(\lambda) d\lambda
+    \int_0^\infty \assocP\Ereproj(\lambda) d\lambda,
 \end{multline}
-where $N$ and $M$ are respectively the number of objects and points and $\assocP$ is the association probability of point $\trackp{t}$ with the object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
+where $N$ and $M$ are respectively the number of objects and points and $\assocP$ is the association probability of point $\trackp{t}$ with object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
 
 %\begin{align}
 %  \assocP &= \Prefl\Ptrans\\
@@ -157,7 +156,7 @@ where $N$ and $M$ are respectively the number of objects and points and $\assocP
 
 \vspace{-0.3cm}
 \paragraph{Inference on graphical model}
-We apply Metropolis Hastings method~\cite{mackay1998introduction} for performing inference on the graphical model. Since we are optimizing over continuous variables, we use Gaussian distribution as the proposal function. We choose this over alternatives such as block coordinate descent since they are slower in our experiments.
+We apply Metropolis Hastings method~\cite{mackay1998introduction} for performing inference on the graphical model. Since we are optimizing over continuous variables, we use Gaussian distribution as the proposal function. We choose this over alternatives such as block-coordinate descent since they are slower in our experiments.
 
 %in our experiments. Please refer to the supplementary material for our comparisons of inference methods.
 

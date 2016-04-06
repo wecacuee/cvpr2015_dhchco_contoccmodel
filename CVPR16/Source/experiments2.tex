@@ -1,7 +1,7 @@
 \section{Experiments}
 \label{sec:experiments}
 
-In this section, we benchmark our continuous occlusion model for point-to-object association against the baseline method using detection bounding boxes and state-of-the-art methods for motion segmentation \cite{Rao_etal_2010,Brox_Malik_2010}. We then show how the proposed model may be applied for 3D localization in road scenes. For our experiments, we use the KITTI dataset~\cite{geiger2013vision}, which consists of 35 video sequences (10088 frames, 634 object tracks) of road scenes under a variety of driving conditions. 
+In this section, we benchmark our continuous occlusion model for point-to-object association against the baseline method using detection bounding boxes and state-of-the-art methods for motion segmentation \cite{Rao_etal_2010,Brox_Malik_2010}. We then show how the proposed model may be applied for 3D object localization in road scenes. For our experiments, we use 35 sequences of the KITTI raw dataset~\cite{Geiger_etal_2012}, which are recorded under a variety of driving conditions and include 10,088 frames and 634 object tracks in total. 
 %It also provides ground truth data for different tasks such as segmentation, detection, tracking and 3D localization.
 
 %\paragraph{Dataset} We use KITTI dataset for our experiments.  \cite{geiger2013vision}. KITTI dataset is a labeled video sequence of road scenes under variety of driving conditions including highways and residential areas in Karlsruhe, Germany. It provides manually labelled ground truth data for localization of cars and also uses velodyne data provide metrically accurate estimates of cars location.
@@ -14,7 +14,7 @@ In this section, we benchmark our continuous occlusion model for point-to-object
 \subsection{Association Experiments}
 %\vspace{-0.2cm}
 \paragraph{Setup}
-We first perform the association experiment that compares the accuracy of point-to-object association using our proposed model against a heuristic baseline and state-of-the-art motion segmentation methods. The detection bounding box baseline method (BBox) is as described at the end of Section \ref{sec:association}. For motion segmentation, we use robust algebraic segmentation with hybrid perspective constraints (RAS)~\cite{Rao_etal_2010} and spectral clustering with point track spatial affinity (BM)~\cite{Brox_Malik_2010}.
+We first perform the association experiment that compares the accuracy of point-to-object association using our proposed model against a heuristic baseline and state-of-the-art motion segmentation methods. The detection bounding box baseline method (BBox) is as described at the end of Section \ref{sec:association}. For motion segmentation, we use robust algebraic segmentation with hybrid perspective constraints (RAS)~\cite{Rao_etal_2010} and spectral clustering with point track spatial affinities (BM)~\cite{Brox_Malik_2010}.
 
 
 \begin{figure*}[!!t]
@@ -22,7 +22,7 @@ We first perform the association experiment that compares the accuracy of point-
 %\includegraphics[trim=1.0in 0.4in 1.0in 0.2in, clip, width=\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
 \includegraphics[width=0.95\textwidth]{graphics/figure5.png}
   \vspace{-0.3cm}
-  \caption{\small Association errors on different sets of input point tracks. Numbers on y-axis represent data sequence numbers in KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
+  \caption{\small Association errors on different sets of input point tracks. Numbers on x-axis represent sequence numbers in the KITTI raw dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
   \vspace{-0.3cm}
   \label{fig:assoc-occ-results}
 \end{figure*}
@@ -30,15 +30,15 @@ We first perform the association experiment that compares the accuracy of point-
 \begin{table}
 \begin{tabular}{lrrrr}
   \toprule
-  & Ours & BBox & BM & RAS\\
+  Point tracks & Ours & BBox & BM & RAS\\
   \midrule
-  Dyn. and occ. tracks        & \textbf{13.2} & 21.3 & 30.9 & 30.1 \\
-  Occluded tracks             & \textbf{15.7} & 19.8 & 39.5 & 37.8 \\
-  Dynamic tracks              & \textbf{06.6} & 11.4 & 15.3 & 17.7 \\
-  All tracks                  & \textbf{08.6} & 12.6 & 21.9 & 21.5 \\
+  Dynamic \& occluded         & \textbf{13.2} & 21.3 & 30.9 & 30.1 \\
+  Occluded		              & \textbf{15.7} & 19.8 & 39.5 & 37.8 \\
+  Dynamic		              & \textbf{6.6} & 11.4 & 15.3 & 17.7 \\
+  All		                  & \textbf{8.6} & 12.6 & 21.9 & 21.5 \\
   \bottomrule
 \end{tabular}
-\caption{\small Mean association errors on different sets of input point tracks over all sequences of KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
+\caption{\small Mean association errors on different sets of input point tracks over all sequences. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
 \label{tab:meanAssoc}
 \end{table}
 
@@ -48,7 +48,7 @@ We first perform the association experiment that compares the accuracy of point-
 \begin{figure*}[!!t]
   \centering
   \begin{tabular}{cc@{}c@{\hspace{0.1cm}}c@{}c@{}}
-    & Associations & Association Error & Associations & Association Error\\
+    & Associations & Errors & Associations & Errors\\
     \rotatebox{90}{\hspace{1em} BBox}%
     & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png}%
     & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}%
@@ -71,12 +71,12 @@ We first perform the association experiment that compares the accuracy of point-
     & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}
   \end{tabular}
   \vspace{-0.3cm}
-  \caption{\small Qualitative results of the association experiment. The odd columns
+  \caption{\small Qualitative results of the association experiment. The ``Associations" columns
   show the point track assignments to appropriate objects. Each color represents
-a different object to which point tracks can be associated to. The even columns show the
-probabilistic error in association: low error points are in blue while high error points are in red.
+a different object to which point tracks can be associated to. The ``Errors" columns show the
+probabilistic errors in association: low error points are in blue while high error points are in red.
 Note that our method changes smoothly at the object boundaries with
-intermediate probabilities, while the baseline method has merely 0-1 error.}
+intermediate probabilities, while the baseline method has merely 0 and 1 errors.}
 \label{fig:qualitative}
 \vspace{-0.3cm}
 \end{figure*}
@@ -84,12 +84,12 @@ intermediate probabilities, while the baseline method has merely 0-1 error.}
 
 %To verify the correctness of our association probability $\assocP$ we perform association error experiment that compare the accuracy of point track association with TPs with that of bounding box baseline method.
 
-For each sequence of the KITTI dataset, the methods of \cite{Felzenszwalb_etal_2010} and \cite{Choi_Savarese_2010} are used for computing detection bounding boxes and object tracklets, respectively. We then apply \cite{Zach2007} to extract point tracks. Note that our method can handle occlusions in both static and dynamic scenes, but motion segmentation focuses on dynamic scenes. For a complete evaluation, we organize the point tracks into four sets: all point tracks, occluded point tracks, dynamic point tracks and dynamic as well as occluded point tracks. In addition to point tracks, the parameters of all objects (cars)--including their unknown 3D position and sizes--estimated by the method of \cite{Song_Chandraker_2014} are provided to our method (for computing association probability) and the baseline BBox method (for depth ordering).
+For each sequence, the methods of \cite{Felzenszwalb_etal_2010} and \cite{Choi_Savarese_2010} are used for computing detection bounding boxes and object tracklets, respectively. We then apply \cite{Zach2007} to extract point tracks. Note that our method can handle occlusions in both static and dynamic scenes, but motion segmentation focuses on dynamic scenes. For a complete evaluation, we organize the point tracks into four sets: all point tracks, occluded point tracks, dynamic point tracks and dynamic as well as occluded point tracks. In addition to point tracks, the parameters (position, orientation, and dimensions) of all objects (cars) estimated by the method of \cite{Song_Chandraker_2014} are provided to our method (for computing association probability) and the baseline BBox method (for depth ordering). 
 
 
 \vspace{-0.4cm}
 \paragraph{Results}
-Figure~\ref{fig:assoc-occ-results} shows the association errors -- the percentages of point tracks incorrectly assigned to objects -- for all methods on the four sets of input point tracks, for each sequence of the KITTI dataset. The mean results over all sequences are summarized in Table~\ref{tab:meanAssoc}. From Figure~\ref{fig:assoc-occ-results}, our method is usually the most accurate among all methods, leading to the best mean error on all sets of input point tracks in Table~\ref{tab:meanAssoc}, which is followed by the bounding box baseline method. This clearly shows the advantage of our continuous occlusion model over the simple baseline method for resolving occlusions. RAS and BM often have the highest errors in Figure~\ref{fig:assoc-occ-results}, thus, the highest mean errors on all sets of input point tracks in Table~\ref{tab:meanAssoc}. 
+Figure~\ref{fig:assoc-occ-results} shows the association errors -- the percentages of point tracks incorrectly assigned to objects -- for all methods on the four sets of input point tracks, for each sequence. The mean results over all sequences are summarized in Table~\ref{tab:meanAssoc}. From Figure~\ref{fig:assoc-occ-results}, our method is usually the most accurate among all methods, leading to the best mean error on all sets of input point tracks in Table~\ref{tab:meanAssoc}, which is followed by the bounding box baseline method. This clearly shows the advantage of our continuous occlusion model over the simple baseline method for resolving occlusions. RAS and BM often have the highest errors in Figure~\ref{fig:assoc-occ-results}, thus, the highest mean errors on all sets of input point tracks in Table~\ref{tab:meanAssoc}. 
 
 More importantly, both RAS and BM rely on motions of objects for clustering point tracks, therefore they cannot work well with static point tracks (for example, point tracks that belong to parked cars). This fact can be observed in Table~\ref{tab:meanAssoc}, where there are large differences in the mean errors of both methods on data containing static point tracks (rows 2 and 4) and data consisting of dynamic point tracks only (rows 1 and 3). In contrast, our method and the baseline method are relatively independent of object motions, resulting in smaller performance gaps. Further, our method also outperforms motion segmentation on dynamic objects (row 3), which shows the effect of detection bounding boxes and by a more significant margin when occlusions are present (row 1), which shows the effect of our occlusion modeling.
 
@@ -152,7 +152,7 @@ Qualitative comparisons of point track associations from various methods are sho
     \toprule
     Method & t & dim \\
     \midrule
-    Point cloud fit
+    Point cloud fitting
     & 6.87 & 4.02\\
     Initialization
     & 5.61 & 3.23\\
@@ -172,7 +172,12 @@ Qualitative comparisons of point track associations from various methods are sho
 
 
 \subsection{Localization Experiments}
-We report errors in translation and dimension estimates, measured in meters per car, in Table~\ref{tab:localizationExperiment}. Average depth of cars in the dataset is approximately $20$ meters. We compare four combinations of energies with two baselines. We initialize the unknowns using \cite{Song_Chandraker_2014} whose accuracy is reported as \emph{Initialization} in the table. We develop a simple baseline by fitting cuboids to the point cloud created by triangulation of point tracks in two successive frames. The accuracy of this baseline is reported as \emph{Point cloud fit} in the table. The energy $\EnergyTrackNoOcc$ represents the point tracks energy without accounting for occlusion, that is, we model $\EnergyTrack$ in the absence of $a^{ij} (\lambda)$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the modification of $\Lambda_k$ that accounts for occlusion. We observe that the use of the continuous occlusion model improves the localization accuracy in terms of the translation error, which is the most significant metric affected by all cues. Occlusion modeling for detection increases dimension error since we explicitly allow greater uncertainty in occluded edges of the bounding box. Note that none of our energies optimize yaw angles for static objects, which can be handled in practice through either the detector orientation or external information such as lane geometry.
+We report errors in translation and dimension estimates, measured in meters per car, in Table~\ref{tab:localizationExperiment}. Average depth of cars in the dataset is approximately $20$ meters. We compare four combinations of energies against the initialization by~\cite{Song_Chandraker_2014} and a simple baseline which fits a 3D cuboid on the 3D point cloud reconstructed using SFM within detection bounding boxes in consecutive frames (for unobservable dimensions, e.g., only the back of a car is visible, we rely on 3D size priors). The energy $\EnergyTrackNoOcc$ represents the point track energy without accounting for occlusion, that is, we model $\EnergyTrack$ in the absence of $a^{ij} (\lambda)$. Similarly, $\EnergyBBoxNoOcc$ is the bounding box energy without the modification of $\bLambda_k$ that accounts for occlusion.
+
+From Table~\ref{tab:localizationExperiment}, the baseline method has the highest errors, which is likely due to lack of point tracks and incorrect point-to-object associations (using detection bounding boxes). Moreover, minimizing different combinations of energies yields lower errors than the initialization by~\cite{Song_Chandraker_2014}, which shows the advantage of our energy minimization. Finally, we observe that the use of the continuous occlusion model improves the localization accuracy in terms of the translation error, which is the most significant metric affected by all cues. Occlusion modeling for detection increases dimension error since we explicitly allow greater uncertainty in occluded edges of the bounding box. Note that none of our energies optimize yaw angles for static objects, which can be handled in practice through either the detector orientation or external information such as lane geometry.
+
+
+%We report errors in translation and dimension estimates, measured in meters per car, in Table~\ref{tab:localizationExperiment}. Average depth of cars in the dataset is approximately $20$ meters. We compare four combinations of energies with two baselines. We initialize the unknowns using \cite{Song_Chandraker_2014} whose accuracy is reported as \emph{Initialization} in the table. We develop a simple baseline by fitting cuboids to the point cloud created by triangulation of point tracks in two successive frames. The accuracy of this baseline is reported as \emph{Point cloud fit} in the table. The energy $\EnergyTrackNoOcc$ represents the point tracks energy without accounting for occlusion, that is, we model $\EnergyTrack$ in the absence of $a^{ij} (\lambda)$. Similarly, $\EnergyBBoxNoOcc$ is the energy without the modification of $\Lambda_k$ that accounts for occlusion. We observe that the use of the continuous occlusion model improves the localization accuracy in terms of the translation error, which is the most significant metric affected by all cues. Occlusion modeling for detection increases dimension error since we explicitly allow greater uncertainty in occluded edges of the bounding box. Note that none of our energies optimize yaw angles for static objects, which can be handled in practice through either the detector orientation or external information such as lane geometry.
 
 %of all three metrics: translation, yaw and dimension error.
 
