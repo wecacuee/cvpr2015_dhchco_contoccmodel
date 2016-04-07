@@ -327,6 +327,30 @@ Size energy imposes prior knowledge on object dimensions as
 \end{align}
 where $\expDimsn$ and $\Sigma_{\expDimsn}$ are the mean and covariance, respectively, of object dimensions obtained from the KITTI dataset.
 
+\section{Parameters value used}
+\begin{table}[!h]
+  \centering
+\begin{tabular}{cccccc}
+  \toprule
+  Parameters
+  & $\lambda_{\text{track}}$  
+  & $\lambda_{\text{detect}}$ 
+  & $\lambda_{\text{dyn}}$    
+  & $\lambda_{\text{size}}$   
+  & $k_u$, $k_d$ \\
+  \midrule
+  Value
+  & 1
+  & 1
+  & 10
+  & 7
+  & $10\ln(49)$\\
+  \bottomrule
+\end{tabular}
+\caption{Parameter values used for experiments}
+\label{tab:paramters}
+\end{table}
+
 \begin{comment}
 \section{Inference method Comparison}
 
