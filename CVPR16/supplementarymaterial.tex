@@ -114,7 +114,7 @@ In object coordinates, the ellipsoid equation is written as
   (\xt - \muit)^\top \Sigmait (\xt - \muit) = 1,
 \label{equ:ellipsoidobj}
 \end{align}
-where $\xt$ is a point in object coordinates. Given $\Omega^i$ as the pose of $O_i$ in camera coordinates, we can extract the rotation $\Rctot$ and translation $\tctot$ for converting points in camera coordinates to object coordinates and rewrite \eqref{equ:ellipsoidobj} as
+where $\xt$ is a point in object coordinates. Given the relative pose of $O_i$ in camera coordinates, we can extract the rotation $\Rctot$ and translation $\tctot$ for converting points in camera coordinates to object coordinates and rewrite \eqref{equ:ellipsoidobj} as
 \begin{align}
   (\Rctot \xc + \tctot - \muit)^\top \Sigmait (\Rctot \xc + \tctot - \muit) = 1,
 \label{equ:ellipsoidobj1}
@@ -327,7 +327,7 @@ Size energy imposes prior knowledge on object dimensions as
 \end{align}
 where $\expDimsn$ and $\Sigma_{\expDimsn}$ are the mean and covariance, respectively, of object dimensions obtained from the KITTI dataset.
 
-\section{Parameters value used}
+\section{Parameter settings}
 \begin{table}[!h]
   \centering
 \begin{tabular}{cccccc}
@@ -337,7 +337,7 @@ where $\expDimsn$ and $\Sigma_{\expDimsn}$ are the mean and covariance, respecti
   & $\lambda_{\text{detect}}$ 
   & $\lambda_{\text{dyn}}$    
   & $\lambda_{\text{size}}$   
-  & $k_u$, $k_d$ \\
+  & $k$, $k_u$, $k_d$ \\
   \midrule
   Value
   & 1
@@ -347,7 +347,7 @@ where $\expDimsn$ and $\Sigma_{\expDimsn}$ are the mean and covariance, respecti
   & $10\ln(49)$\\
   \bottomrule
 \end{tabular}
-\caption{Parameter values used for experiments}
+\caption{Parameter settings used in our experiments.}
 \label{tab:paramters}
 \end{table}
 

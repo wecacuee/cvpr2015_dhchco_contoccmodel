@@ -31,7 +31,7 @@ where $\cL(\cdot)$ is the logistic function given by
 \begin{align}
   \cL(\bx; \bp, \bSigma) = \frac{1}{1 + e^{-k(1 - d(\mathbf{x},\bp))}},
 \end{align}
-with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma^{-1}(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln{49}$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends on the dimensions of the object. Please refer to the supplementary material for the computation of $\bSigma_i$ from object dimensions.
+with $d(\bx, \bp) = (\bx-\bp)^\top\bSigma^{-1}(\bx-\bp)$ being the Mahalanobis distance. We set $k = 10\ln({49})$ as the value that allows the logistic function $\cL$ to drop to $0.98$ at a distance $d = 0.9$ from the object center. The spread of the ellipsoid, determined by $\bSigma_i$, depends on the dimensions of the object. Please refer to the supplementary material for the computation of $\bSigma_i$ from object dimensions.
 
 
 \vspace{-0.3cm}
