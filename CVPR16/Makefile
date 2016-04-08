@@ -2,6 +2,7 @@
 .PHONY: all clean
 
 BASENAME=continuousocclusion
+#BASENAME=supplementarymaterial
 TARGETS=out/$(BASENAME).pdf
 
 # http://stackoverflow.com/questions/18136918/how-to-get-current-directory-of-your-makefile
@@ -13,7 +14,7 @@ LATEXMK = latexmk -recorder -use-make -deps
 PDFLATEX=pdflatex# -interaction=nonstopmode
 
 all : $(TARGETS)
-	
+
 supplementarymaterial: out/supplementarymaterial.pdf
 rebuttal: out/rebuttal2.pdf
 

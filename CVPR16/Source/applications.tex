@@ -16,7 +16,7 @@ In this section, we highlight the versatility of our occlusion modeling by demon
  & $\bb{i}$ & 2D detection bounding box of object $O_i$ at time $t$ \\
 \hline
 \hline
-\multirow{5}{*}{\RotText{Initialization by~\cite{Song_Chandraker_2014}}} & $\bp^c(t)$ & Position of camera at time $t$ \\
+\multirow{5}{*}{\RotText{Initialization with~\cite{Song_Chandraker_2014}}} & $\bp^c(t)$ & Position of camera at time $t$ \\
  & $\bomega^c(t)$ & Orientation of camera at time $t$ \\
  & $\bp_0^i(t)$ & Initial position of object $O_i$ at time $t$ \\
  & $\bomega_0^i(t)$ & Initial orientation of object $O_i$ at time $t$ \\
@@ -40,7 +40,7 @@ In this section, we highlight the versatility of our occlusion modeling by demon
 
 %Given a set of corresponding 2D points $\trackpj{t-1}$ and $\trackpj{t}$ in consecutive frames, object poses $\relp{i}{t}$ and object dimensions $\dimsn{i}$, we wish to associate points with various objects. We call this the association problem. Even if the pose of the object is not immediately available, we propose the use of hypothesized pose of the object as we show in the localization estimation experiments. 
 
-Given 2D image points $\{\bu_j\}$ which are tracked between consecutive frames and a set of objects $\{O_i\}$ appearing in the frames, we aim to associate $\bu_j$ with $O_i$. Based on our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ between point track $\bu_j$ and object $O_i$ at depth $\lambda$ can be defined as
+Given 2D image points $\{\bu_j\}$ that are tracked between consecutive frames and a set of objects $\{O_i\}$ appearing in the frames, we aim to associate $\bu_j$ with $O_i$. Based on our continuous occlusion model in Section~\ref{sec:setup}, the association probability $\assocP$ between point track $\bu_j$ and object $O_i$ at depth $\lambda$ can be defined as
 \begin{align}
 \assocP = \Prefl\Ptrans,
 \label{eq:defineassocP}
@@ -54,12 +54,12 @@ Rather, to compute the association probability between point track $\bu_j$ and o
 \end{align}
 where $Z'$ is the normalization coefficient.
 
-Using both of the evidence terms in \eqref{eq:defineassocP} and \eqref{eq:Passocbyreproj}, we can define the new association probability $P^{ij}_{\text{assoc}}$ as follows
+Using both of the evidence terms in \eqref{eq:defineassocP} and \eqref{eq:Passocbyreproj}, we can define the new association probability $P^{ij}_{\text{assoc}}$, as follows:
 \begin{align}
-  P^{ij}_{\text{assoc}} = \frac{1}{Z"}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda,
+  P^{ij}_{\text{assoc}} = \frac{1}{Z''}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda,
   \label{eq:prob-assoc}
 \end{align}
-where $Z"$ is the new normalization coefficient.
+where $Z''$ is the new normalization coefficient.
 
 Once we have computed the association probability $P^{ij}_{\text{assoc}}$ for every pair of point tracks and objects, we can assign each point track to the object with the highest association probability. The point tracks having very small association probabilities are assigned to the background.
 
@@ -76,9 +76,9 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 
 %To show the effectiveness of our method we also apply it to the localization problem, where we must jointly solve for association and object poses, while considering occlusions. In road scenes, we estimate the position, orientation and dimensions traffic participants (cars) with our framework and compute the error in birds eye view along the ground plane. We propose a graphical model as shown in Figure \ref{fig:graphmodel} that allows a factorization of the intractable probability distribution into following form
 
-We exploit in this section the application of our continuous occlusion model to 3D object localization in road scenes, which further demonstrates the versatility of the proposed model. Given a set of 2D tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants, in particular, for each traffic participant, estimating its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. Please refer to Table~\ref{tab:notations} for a summary of inputs and outputs. 
+In this section, we exploit our continuous occlusion model for another application, namely, 3D object localization in road scenes, which further demonstrates its versatility. Given a set of 2D tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants. In particular, for each traffic participant, we wish to estimate its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. Please refer to Table~\ref{tab:notations} for a summary of inputs and outputs. 
 
-We build a graphical model for representing object relationships and decompose the negative log likelihood as follows
+We construct a graphical model for representing relationships among objects, as well as between objects and point tracks. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. The negative log likelihood is decomposed as follows:
 %
 \begin{multline*}
   -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i(t) \} | \{\bu_j(t)\} , \{\bb{i}\} )} = \\
@@ -94,7 +94,7 @@ We build a graphical model for representing object relationships and decompose t
   \enspace,
 \end{multline*}
 %
-where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations such as point tracks and bounding boxes, while $\Energy{dyn}$  and $\Energy{size}$ impose smoothness constraints and size priors respectively. Here, $\lambda_{\text{track}}$, $\lambda_{\text{detect}}$, $\lambda_{\text{dyn}}$, $\lambda_{\text{size}}$ are energy weights, $N$ is the number of objects in the sequence, $s_i$ and $t_i$ are respectively the starting and ending frames of object $O_i$, and $\tilde{Z}$ is the normalization coefficient. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. Next, we present our unified continuous occlusion modeling for both point track and bounding box energies. Due to space constraints, we present the details of other energies in the supplementary material.
+where $\pEnergy{track}$ and $\Energy{detect}$ reason about image observations such as point tracks and bounding boxes, while $\Energy{dyn}$  and $\Energy{size}$ impose smoothness constraints and size priors respectively. Here, $\lambda_{\text{track}}$, $\lambda_{\text{detect}}$, $\lambda_{\text{dyn}}$, $\lambda_{\text{size}}$ are energy weights, $N$ is the number of objects in the sequence, $s_i$ and $t_i$ are respectively the starting and ending frames of object $O_i$, and $\tilde{Z}$ is the normalization coefficient. Next, we present our unified continuous occlusion modeling for both point track and bounding box energies. Due to space constraints, we present the details of other energies in the supplementary material.
 
 \begin{figure}
   \centering
@@ -132,7 +132,7 @@ For an object $O_i$, let $\{ \Omega (t) \}_i$ be the poses of all occluding obje
     \sum_{j = 1}^{M}
     \int_0^\infty \assocP\Ereproj(\lambda) d\lambda,
 \end{multline}
-where $N$ and $M$ are respectively the number of objects and points and $\assocP$ is the association probability of point $\trackp{t}$ with object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
+where $N$ and $M$ are, respectively, the number of objects and points and $\assocP$ is the association probability of point $\trackp{t}$ with object $O_i$ at depth $\lambda$, given by \eqref{eq:defineassocP}.
 
 %\begin{align}
 %  \assocP &= \Prefl\Ptrans\\
@@ -156,7 +156,7 @@ where $N$ and $M$ are respectively the number of objects and points and $\assocP
 
 \vspace{-0.3cm}
 \paragraph{Inference on graphical model}
-We apply Metropolis Hastings method~\cite{mackay1998introduction} for performing inference on the graphical model. Since we are optimizing over continuous variables, we use Gaussian distribution as the proposal function. We choose this over alternatives such as block-coordinate descent since they are slower in our experiments.
+We apply the Metropolis-Hastings method~\cite{mackay1998introduction} to perform inference on the graphical model. Since we optimize over continuous variables, we use the Gaussian distribution as the proposal function. We choose this over alternatives such as block-coordinate descent since they are slower in our experiments.
 
 %in our experiments. Please refer to the supplementary material for our comparisons of inference methods.
 

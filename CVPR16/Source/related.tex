@@ -18,7 +18,7 @@ Occlusions have also been handled in tracking-by-detection frameworks by conside
 \paragraph{Motion segmentation and multibody SFM}
 An application for our occlusion modeling is to determine point track associations in scenes with multiple objects. For moving objects, this is within the purview of motion segmentation, which has been approached through algebraic factorization methods \cite{Costeria98,Vidal03,Vidal04}, statistical methods~\cite{Kanatani01,Gruber04,Rao08} and clustering methods~\cite{Yan06,Goh07}. Some recent efforts include robust algebraic segmentation with hybrid perspective constraints \cite{Rao_etal_2010} and spectral clustering with point track spatial affinities \cite{Brox_Malik_2010}. Unlike our work, such methods cannot handle static objects, or dynamic objects with little relative motion.
 %\cite{Tron_Vidal_2007,Rao_etal_2010}. This also motivates further applications such as object segmentation based on point trajectories \cite{Brox_Malik_2010}. 
-Closer to our application, motion segmentation is also used within multibody SFM frameworks \cite{Ozden_etal_2010,Kundu_etal_2011,Namdev2012}. In contrast to these works, our formulation does not distinguish between moving and static objects and also explicitly reasons about occlusions due to 3D object geometries for associating point tracks to individual objects.
+Closer to our application, motion segmentation is also used within multibody SFM frameworks \cite{Kundu_etal_2011,Namdev2012,Ozden_etal_2010}. In contrast to these works, our formulation does not distinguish between moving and static objects and also explicitly reasons about occlusions due to 3D object geometries for associating point tracks to individual objects.
 
 
 %\paragraph{Motion segmentation}
@@ -27,9 +27,9 @@ Closer to our application, motion segmentation is also used within multibody SFM
 
 \vspace{-0.3cm}
 \paragraph{3D localization}
-One of the vital goals of 3D scene understanding is to localize the 3D objects in complex scenes. 
+One of the vital goals of 3D scene understanding is to localize 3D objects in complex scenes. 
 %For instance, using stereo imagery, several visual cues are combined in \cite{Geiger_etal_2014} to simultaneously determine object locations and a rough intersection topology. 
-Monocular frameworks like ours have also reasoned about occlusions, for instance, \cite{Wojek_etal_2013} considers partial object detectors. A detailed part-based representation of objects based on annotated CAD models is used for monocular scene understanding in \cite{Zia_etal_2013,Zia_etal_2014,Zia2015}, which also allows reasoning about mutual occlusions between objects. In contrast to these works, our monocular framework uses a physical modeling of occlusion in continuous space and derives unified representations for SFM points and object detection bounding boxes. This makes our model more general, extensible and amenable for continuous optimization.
+Monocular frameworks like ours have also reasoned about occlusions, for instance, partial object detectors are considered in \cite{Wojek_etal_2013}. A detailed part-based representation of objects based on annotated CAD models is used for monocular scene understanding in \cite{Zia_etal_2013,Zia_etal_2014,Zia2015}, which also allows reasoning about mutual occlusions between objects. In contrast to these works, our monocular framework uses a physical modeling of occlusion in continuous space and derives unified representations for SFM points and object detection bounding boxes. This makes our model more general, extensible and amenable for continuous optimization.
 
 
 %One of the models closest to our unified occupancy model was recently presented by Rhodin et al. \cite{Rhodin:2015} applied to the problem of pose estimation.  Although they model transmission probability like we do, they do not model reflectance probability. We explicitly model reflectance probability that differentiates between the center and surface of the 3D object.

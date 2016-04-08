@@ -16,14 +16,14 @@ A common parametric modeling for objects, especially traffic participants in roa
     \input{Source/reflectiontransmissiongraph.tex}
   \end{tikzpicture}
   \vspace{-0.3cm}
-  \caption{\small We represent objects as translucent ellipsoids, which leads to formulation of transmission and reflection probabilities. This figure shows the reflection probability for the first object (in violet), which has high values around the camera-facing face of the object. Also, note that the transmission probability is inversely proportional to occupancy.}
+  \caption{\small We represent objects as translucent ellipsoids, which leads to the formulation of transmission and reflection probabilities. This figure shows the reflection probability for the first object (in violet), which has high values around the camera-facing side of the object. Also, note that the transmission probability is inversely proportional to occupancy.}
   \label{fig:reflectiontransimission}
   \vspace{-0.3cm}
 \end{figure}
 
 \vspace{-0.3cm}
 \paragraph{Occupancy model for traffic participants}
-Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque, while regions more likely to be free space are more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whose opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at 3D location $\bx$ corresponding to an object $O_i$ centered at $\bp_i$ as
+Intuitively, we consider traffic participants to be regions of 3D space with a high probability of occupancy. We model the uncertainty in occupancy as a translucency function, with regions more likely to be occupied by an object considered more opaque and regions more likely to be free space considered more transparent. Based on this intuition, we model objects as translucent 3D ellipsoids whose opacity is maximum at the center and falls off towards the edges. In particular, we model the occupancy at 3D location $\bx$ corresponding to an object $O_i$ centered at $\bp_i$ as
 \begin{align}
   f^i_{\text{occ}}(\bx) = \cL(\bx; \bp_i, \bSigma_i),
 \end{align}
@@ -51,7 +51,7 @@ Consider a 3D point $\bx_j$ observed in the image at pixel $\bu_j$. Let $\bK$ be
    \Prefl = \frac{1}{Z}(\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2.
 \label{eq:evalPrefl}
 \end{align}
-The gradient $\nabla {f^i_{occ}}(\bx_j)$ encourages the reflection probability to be high near object boundaries, $\max$ ensures that negative probability due to gradient in the direction opposite to the ray is clipped off and squaring allows the function to be smooth near zero. $Z$ denotes the normalization factor. We note that in the extreme case of an object being fully opaque (i.e., $\nabla {f^i_{occ}(\bx_j)} \in \{0,1\}$), the above model reverts to a (squared) Lambertian reflection. Figure~\ref{fig:reflectiontransimission} shows an example of the reflection probability.
+The gradient $\nabla {f^i_{occ}}(\bx_j)$ encourages the reflection probability to be high near object boundaries, the $\max$ ensures that negative probability due to the gradient in the direction opposite to the ray is clipped off and squaring allows the function to be smooth near zero. Here, $Z$ denotes the normalization factor. We note that in the extreme case of an object being fully opaque (that is, $\nabla {f^i_{occ}(\bx_j)} \in \{0,1\}$), the above model reverts to a (squared) Lambertian reflection. Figure~\ref{fig:reflectiontransimission} shows an example of the reflection probability.
 
 \vspace{-0.3cm}
 \paragraph{Transmission probability}
@@ -79,7 +79,7 @@ Here, $\prod_{c}^{\lambda}$ represents a \emph{product integral} from $c$ to $\l
 \end{equation}
 }
 
-In practice, the integral for transmission probability \eqref{eq:ptrans-integral} is difficult to compute even numerically. So we choose a parameterization in the form of a product of sigmoid functions, which is a reasonable approximation to the behaviour of the transmission probability as follows
+In practice, the integral for transmission probability \eqref{eq:ptrans-integral} is difficult to compute even numerically. So we choose a parameterization in the form of a product of sigmoid functions, which is a reasonable approximation to the behaviour of the transmission probability, as follows:
 %
 \newcommand{\Ptransmission}{P_{\textit{transmission}}}%
 \begin{align}
