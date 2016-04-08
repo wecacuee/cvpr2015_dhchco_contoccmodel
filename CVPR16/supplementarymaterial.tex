@@ -1,0 +1,418 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{shadows,trees}
+
+\usepackage{verbatim}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs} % for better tables
+\usepackage{microtype}
+
+\newlength{\eqs}
+\setlength{\eqs}{-0.04in}
+
+\usepackage{enumitem}
+\setitemize[0]{leftmargin=15pt}
+
+\newenvironment{tight_itemize}{
+\begin{itemize}[leftmargin=10pt]
+  \setlength{\topsep}{0pt}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+
+\input{preamble}
+\newcommand{\xmin}{x_\text{min}}
+\newcommand{\ymin}{y_\text{min}}
+\newcommand{\xmax}{x_\text{max}}
+\newcommand{\ymax}{y_\text{max}}
+\DeclareMathOperator*{\argmin}{\arg\min}
+\input{Source/drawingslib}
+
+% Some diagrams have "visble" macro from beamer. Everything should be visible in paper mode.
+\makeatletter
+\def\visible<#1>#2{#2}
+\makeatother
+
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{2072} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+%\ifcvprfinal\pagestyle{empty}\fi
+%\setcounter{page}{4321}
+
+
+\begin{document}
+\title{Supplement: A Continuous Occlusion Model for Road Scene Understanding}
+
+\author{Vikas Dhiman$^\dagger$
+\and
+Quoc-Huy Tran$^*$
+\and
+Jason J. Corso$^\dagger$
+\and
+Manmohan Chandraker$^*$
+\and
+$^\dagger$ University of Michigan,\\
+Ann Arbor, MI, USA
+%{\tt\small \{dhiman,jjcorso\}@umich.edu}
+\and
+$^*$ NEC Laboratories America, Inc.\\
+Cupertino, CA, USA
+%{\tt\small \{qhtran,manu\}@nec-labs.com}
+}
+
+\maketitle
+
+\appendix 
+
+\section{Computation of Ellipsoids}
+\label{sec:sigmacomputation}
+In this section, we present computation of the parameters of ellipsoids representing occupancy of traffic participants. For an object $O_i$, let $\bB^i = [l~w~h]$ be its 3D dimensions, where $l$, $w$ and $h$ are its length, width and height on the ground plane, respectively. We wish to calculate the center $\muic$ and spread $\Sigmaicf$ of the ellipsoid representing the occupancy of $O_i$ with respect to the camera coordinate system $\cC$ of the current frame. 
+
+Consider an object coordinate system $\cO$, which has the same orthonormal axes as the camera coordinate system and the origin at the projected point of the object center on the ground plane. For an object $O_i$, the center $\muit$ and spread $\Sigmait$ of the ellipsoid representing the occupancy of $O_i$ in the object coordinate system are expressed as
+\begin{align}
+  \muit &= \begin{bmatrix}
+  0& 0& \frac{h}{2}
+  \end{bmatrix}^\top,\\
+  \Sigmait &= \begin{bmatrix}
+    \frac{4}{l^2} & 0 & 0 \\
+    0 & \frac{4}{w^2} & 0 \\
+    0 & 0 & \frac{4}{h^2}
+  \end{bmatrix}.
+\end{align}
+In object coordinates, the ellipsoid equation is written as
+\begin{align}
+  (\xt - \muit)^\top \Sigmait (\xt - \muit) = 1,
+\label{equ:ellipsoidobj}
+\end{align}
+where $\xt$ is a point in object coordinates. Given the relative pose of $O_i$ in camera coordinates, we can extract the rotation $\Rctot$ and translation $\tctot$ for converting points in camera coordinates to object coordinates and rewrite \eqref{equ:ellipsoidobj} as
+\begin{align}
+  (\Rctot \xc + \tctot - \muit)^\top \Sigmait (\Rctot \xc + \tctot - \muit) = 1,
+\label{equ:ellipsoidobj1}
+\end{align}
+where $\xc$ is a point in camera coordinates.
+
+Let $\tcmut = \tctot - \muit$, then \eqref{equ:ellipsoidobj1} becomes
+%\begin{align}
+%  (\Rctot \xc + \tcmut)^\top \Sigmait (\Rctot \xc + \tcmut) = 1
+%\end{align}
+\begin{multline}
+  \xc^\top \Rctot^\top \Sigmait \Rctot \xc + 2 (\Rctot^\top \tcmut)^\top  \Rctot^\top\Sigmait \Rctot \xc
+  \\
+  + \tcmut^\top \Sigmait \tcmut = 1.
+\
+\label{equ:ellipsoidobj2}
+\end{multline}
+Next, denote $\Sigmaic = \Rctot^\top \Sigmait \Rctot$ and $\muic = - \Rctot^\top
+\tcmut$, then \eqref{equ:ellipsoidobj2} becomes
+\begin{multline}
+  (\xc - \muic)^\top\Sigmaic(\xc - \muic) - \muic^\top\Sigmaic\muic 
+  \\
+  + \tcmut^\top \Sigmait \tcmut = 1.
+\end{multline}
+Finally, denoting $\Sigmaicf = \displaystyle\frac{\Sigmaic}{1 - \tcmut^\top \Sigmait \tcmut +
+\muic^\top\Sigmaic\muic}$, we have the ellipsoid equation in camera coordinates
+\begin{align}
+(\xc - \muic)^\top\Sigmaicf(\xc - \muic) = 1.
+\label{equ:ellipsoidcam}
+\end{align}
+
+Therefore, the center $\muic$ and spread $\Sigmaicf$ of the ellipsoid representing the occupancy of $O_i$ in camera coordinates are expressed as
+\begin{align}
+  \label{eq:ellipsoidMeanSigma}
+  \muic &= - \Rctot^\top \tcmut, \\
+  \Sigmaicf &= \frac{\Sigmaic}
+{1 - \tcmut^\top \Sigmait \tcmut + \muic^\top\Sigmaic\muic},
+\end{align}
+where $\Rctot$, $\tcmut$, $\Sigmaic$, $\Sigmait$ are derived as above.
+
+\begin{comment}
+\section{Projection of Ellipsoids to Image}
+\newcommand{\mubar}{\bar{\mu}_i}
+In general, the perspective projection of an ellipsoid to the image plane is not an ellipse. We describe below two reasonable approximate methods which project a slice of the ellipsoid to the image such that the projection is always an ellipse.
+
+\subsection{Tangent plane method}
+\newcommand{\nx}{\hat{n}_x}
+We chose the slice as the plane passing through the four points that touch 
+the tangent planes through the origin.
+Let the normal to plane representing $\xmin$, $\xmax$ be $\nx = [\cot(\alpha),
+0, 1]^\top$. The tangent point lies on the plane, ellipsoid and at
+the tangent point the gradient of ellipsoid is parallel to the plane normal.
+%
+\begin{align}
+  x^\top \nx = \nx^\top x &= 0\\
+  (x-\muic)^\top\Sigmaicf(x-\muic) &= 1 \\
+  2\Sigmaicf (x - \muic) &= \lambda \nx \enspace .
+\end{align}%
+%
+Eliminating $x$ from the three equations we get,
+%
+\begin{align}
+  \frac{ \lambda^2 }{ 4 } \nx^\top \Sigmaicfinv \nx &= 1\\
+  \frac{ \lambda }{ 2 } \nx^\top \Sigmaicfinv \nx - \muic^\top \nx &= 0
+\end{align}%
+%
+Solving for $\lambda$ we get $\lambda = \frac{ 2 \muic^\top \nx }{ \nx^\top \Sigmaicfinv \nx }$ or
+%
+\begin{align}
+  \nx^\top \muic \muic^\top \nx &= \nx^\top \Sigmaicfinv \nx\\
+  \nx^\top (\Sigmaicfinv - \muic \muic^\top) \nx &= 0
+\end{align}%
+%
+Let $C := \Sigmaicfinv - \muic \muic^\top$ and the quadratic equation can be solved by
+%
+\begin{align}
+  \cot(\alpha) &= \frac{ - C_{13} \pm \sqrt{ C^2_{13} - C_{11}C_{33} } }{ C_{11}  }
+\end{align}%
+%
+Similarly for $\beta_y$
+
+\begin{align}
+  \cot(\beta) &= \frac{ - C_{23} \pm \sqrt{ C^2_{23} - C_{22}C_{33} } }{ C_{22}  }
+\end{align}%
+
+%
+\begin{align}
+  \lambda &= \frac{ 2 } { [\cot(\alpha), 0, 1] \muic}\\
+  x &= \frac{ 1 } { [\cot(\alpha), 0, 1] \muic } \Sigmaicfinv [\cot(\alpha), 0, 1]^\top + \muic
+\end{align}%
+%
+Once we have four such points $[x_1, x_2, x_3, x_4]$, we can solve for the plane which is given by the null space of $A = \begin{bmatrix}
+  x_1^\top & 1\\
+  x_2^\top & 1\\
+  x_3^\top & 1\\
+  x_4^\top & 1
+\end{bmatrix}$
+\newcommand{\np}{\hat{n}_p}
+Let $\np$ be the normal of the derived plane such that the equation of plane is $\np^\top x = 1$.
+
+\subsection{Perpendicular plane method}
+ We choose the slice as the plane perpendicular to the
+line joining the center of ellipsoid to the optical center of camera. Let
+$\muic$ and $\Sigmaicf$ be the parameters of ellipsoid describing the ellipsoid
+in camera coordinates. The any point $x$ on the plane satisfies
+$x^\top\frac{\muic}{\|\muic\|} = \|\muic\|$. We introduce 
+$\np = \mubar = \frac{\muic}{\|\muic\|^2}$ for notational simplicity. Hence, we want
+to project the points that satisfy both the equation of chosen plane and the 
+ellipsoid i.e.
+
+\begin{align}
+  \np^\top x = x^\top\np &= 1\\ 
+  (x-\muic)^\top\Sigmaicf(x-\muic) &= 1 \enspace.
+\end{align}
+We rewrite $\muic = \muic\np^\top x$, and $1 = x^\top\np \np^\top x$
+\begin{align}
+  (x-\muic\np^\top x)^\top\Sigmaicf(x-\muic\np^\top x) &= x^\top\np \np^\top x \enspace,
+\end{align}
+which is equivalent to 
+\begin{align}
+  x^\top\left((I-\muic\np^\top)^\top\Sigmaicf(I-\muic\np^\top) - \np \np^\top\right)x &= 0\enspace.
+\end{align}
+
+Note that if $u$ is a projection of $x$ to camera with intrinsic parameters
+$K$, then $x = K^{-1}u$ where $u$ is in homgeneous coordinates. Hence the above equation can be re-written as
+\newcommand{\Sproj}{\Sigma^{-1}_{\text{proj }i}}
+\newcommand{\Sperpcut}{\Sigma^{-1}_{\text{perpcut }i}}
+\begin{align}
+  u^\top\Sproj u &= 0\enspace, 
+\end{align}
+where $\Sproj = K^{-\top}\Sperpcut K^{-1}$ and 
+\begin{align}
+  \Sperpcut = (I-\muic\np^\top)^\top\Sigmaicf(I-\muic\np^\top) - \np \np^\top \enspace.
+\end{align}
+If $u = [v^\top, 1]^\top$, $A = \Sproj(1:2, 1:2)$, $b = \Sproj(1:2, 3)$, $b^\top = \Sproj(3, 1:2)$ and $d = \Sproj(3,3)$ the equation can be expanded as
+%
+\begin{align}
+[v^\top, 1]\begin{bmatrix} A & b\\ b^\top & d \end{bmatrix}[v^\top, 1]^\top &= 0\\
+v^\top A v + 2 b^\top v + d &= 0
+\end{align}
+\begin{multline}
+  v^\top A v + 2 b^\top A^{-\top} A v + b^\top A^{-\top} A A^{-1}b \\
+  = b^\top A^{-\top} b - d
+\end{multline}
+\begin{multline}
+  \left(v + A^{-1} b\right)^\top A \left( v + A^{-1} b\right) \\
+  = b^\top A^{-\top}b - d
+\end{multline}%
+%
+The mean and sigma of the projected ellipse can be computed by
+
+%
+\begin{align}
+  \mu_{\text{2D}} &= A^{-1} b\\
+  \Sigma^{-1}_{\text{2D}} &= \frac{1}{b^\top A^{-\top} b - d} A
+\end{align}%
+%
+\end{comment}
+
+\section{Other Energies for 3D Object Localization}
+This section provides the details of other energies, namely dynamic and size energies (in addition to point track and detection bounding box energies already presented in the main paper), that are used in our localization experiment.
+
+\begin{comment}
+\subsubsection{Lane energy}
+\label{sec:laneEnergy}
+ The lanes are modeled as splines. Here we assume that the confidence in lane
+ detection is decreases as the distance from the lane center increases.  The
+ energy is given by the dot product between car orientation and tangent to the
+ lane at that point.
+
+\begin{align}
+  \label{eq:laneOrientationEnergy}
+  \Energy{lane} = 
+  \sum_{m \in M_{\text{close}}}
+  (1 - \ori{i}{t} \cdot \text{TAN}(L_{m}(k), \pos{i}{t}) )
+\LaneUncertainty{\pos{i}{t}}
+\end{align}
+where $M_{\text{close}} = \{m : \text{DIST}(L_{m}(k), \pos{i}{t}) < d_{\text{thresh}}\} $ is
+the set of nearby lanes close to the object by a certain distance threshold $d_{\text{thresh}}$ and 
+\begin{align}
+\LaneUncertainty{\pos{i}{t}} = 
+  \frac{1}{1 + \exp(-q(w_{\text{road}} - \text{DIST}(L_{m}(k), \pos{i}{t})))}
+\end{align}
+for some constant $w_{\text{road}}$ that represents the width of the road.
+\end{comment}
+
+\subsection{Dynamic energy}
+Dynamic energy imposes both temporal smoothness and holonomic constraints. In particular, holonomic constraints penalize changes in object position that are not in the direction of object orientation at the previous time step, as
+\begin{align}
+  \label{eq:totalPosTransitionEnergy}
+  \Energy{dyn-hol} = 1 - \ori{i}{t-1} \cdot (\pos{i}{t} - \pos{i}{t-1}).
+\end{align}
+Temporal smoothness constraints add a penalty for unsmooth changes in object orientation and velocity over consecutive time steps, as
+\begin{align}
+  \Energy{dyn-ori} &= \|\ori{i}{t} - \ori{i}{t-1}\|^2,\\
+  \Energy{dyn-vel} &= \|(\pos{i}{t} - 2\pos{i}{t-1}) + \pos{i}{t-2}\|^2.
+\end{align}
+The total dynamic energy is expressed as a weighted combination of holonomic and smoothness constraints
+\begin{align}
+  \Energy{dyn} &= \WEnergy{dyn-hol} + \WEnergy{dyn-ori} + \WEnergy{dyn-vel},
+\end{align}
+where $\lambda_{\text{dyn-hol}}$, $\lambda_{\text{dyn-ori}}$ and $\lambda_{\text{dyn-vel}}$ are the weights of the component energies.
+
+\subsection{Size energy}
+Size energy imposes prior knowledge on object dimensions as
+\begin{align}
+  \label{eq:totalSizeEnergy}
+  \Energy{size} &= (\dimsn{i} - \expDimsn)^\top\Sigma_{\expDimsn}^{-1}(\dimsn{i} -
+  \expDimsn),
+\end{align}
+where $\expDimsn$ and $\Sigma_{\expDimsn}$ are the mean and covariance, respectively, of object dimensions obtained from the KITTI dataset.
+
+\section{Parameter settings}
+\begin{table}[!h]
+  \centering
+\begin{tabular}{cccccc}
+  \toprule
+  Parameter
+  & $k$, $k_u$, $k_d$ 
+  & $\lambda_{\text{track}}$  
+  & $\lambda_{\text{detect}}$ 
+  & $\lambda_{\text{dyn}}$    
+  & $\lambda_{\text{size}}$\\   
+  
+  \midrule
+  Value
+  & $10\ln({49})$
+  & 1
+  & 1
+  & 10
+  & 7\\
+  \bottomrule
+\end{tabular}
+\caption{Parameter settings for our experiments.}
+\label{tab:paramters}
+\end{table}
+
+\begin{comment}
+\section{Inference method Comparison}
+
+We use two methods for inference, Metropolic Hastings and block coordinate descent. We briefly describe the inference algorithms for completeness.
+
+\subsection{Metropolis Hastings}
+Metropolis Hastings requires a \emph{transition probability} $Q(\map'|
+\map^r)$, that depends on current sample $\map^r$ and guides
+the random walk in the high-dimensional space. We randomly sample a point
+$\map'$ from from $Q(.)$ and it is either accepted or rejected based on the
+\emph{acceptance probability} $a$:
+\begin{align}
+  a = \frac{P(\map')Q(\map^r| \map')}
+  {P(\map^r)Q(\map'| \map^r)}
+  \enspace,
+\end{align}
+where $P(\map)$ is joint probability of the model at point $\map$.
+
+If $a \ge 1$, then the new point $\map'$ is accepted otherwise it is accepted
+with probability $a$. Here acceptance means that the point in the next
+iteration is taken as the sampled point otherwise the earlier point is retained.
+
+\subsection{Block Coordinate Descent}
+
+We use block coordinate descent algorithm on our factor graph, by iteratively
+minimizing the energy with respect to only a subset (block) of random 
+variables. We choose to divide the blocks along the
+variable types like dimension, yaw and position. Hence we iteratively minimize the energies with respect to dimension variables, then with respect to yaw variables and then with respect to position variables. Since we know the dependence of parts of our energy on specific variables, thanks to factor graph formulation, we can minimize the energies corresponding to the given set of variables.
+
+  \begin{center}
+    \scalebox{0.5}{
+    \begin{tikzpicture}
+      \begin{axis}[xlabel=CPU time (sec),ylabel=Energy,
+          legend entries={Coordinate Descent,Metropolic Hastings},
+          legend columns=-1,
+          legend to name=convergencelegend,
+          legend style={draw=none,fill=none},
+          width=0.5\textwidth,
+          y post scale=0.8,
+        name=plot1]
+        \addplot table [x index=0,y index=1,header=false] {graphics/mcmc_inference_cputime_0000000060.txt};
+        \addplot table [x index=0,y index=1,header=false] {graphics/stepWiseInference_cputime_0000000060.txt};
+      \end{axis}
+      %\includegraphics[width=0.5\textwidth, trim=4.5cm 7cm 4.5cm 7cm, clip]{graphics/mcmc_vs_coordinate_descent_60.pdf}
+      \begin{axis}[at={(plot1.south east)},
+          xlabel=CPU time (sec),xshift=0.5cm,
+          width=0.5\textwidth,
+          y post scale=0.8,
+        ]
+        \addplot table [x index=0,y index=1,header=false] {graphics/mcmc_inference_cputime_0000000192.txt};
+        \addplot table [x index=0,y index=1,header=false] {graphics/stepWiseInference_cputime_0000000192.txt};
+      \end{axis}
+    \end{tikzpicture}
+    }
+    \ref{convergencelegend}
+  \end{center}
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{results/0009_contPtTracks_size_bboxOcc_yawTstepWiseInference_0000000061.png}
+  \includegraphics[width=\columnwidth]{results/0009_lane_size_bboxOcc_yawTstepWiseInference_0000000061.png}
+  \caption{Qualitative localization results}
+  \label{fig:qualLocalizationResults}
+\end{figure}
+\end{comment}
+
+
+\end{document}
