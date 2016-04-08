@@ -76,7 +76,11 @@ In contrast to the principled approach above, a heuristic baseline may simply as
 
 %To show the effectiveness of our method we also apply it to the localization problem, where we must jointly solve for association and object poses, while considering occlusions. In road scenes, we estimate the position, orientation and dimensions traffic participants (cars) with our framework and compute the error in birds eye view along the ground plane. We propose a graphical model as shown in Figure \ref{fig:graphmodel} that allows a factorization of the intractable probability distribution into following form
 
+<<<<<<< HEAD
 In this section, we exploit our continuous occlusion model for another application, namely, 3D object localization in road scenes, which further demonstrates its versatility. Given a set of 2D tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants. In particular, for each traffic participant, we wish to estimate its position $\bp^i(t)$ and orientation $\bomega^i(t)$ on the ground plane and its 3D dimensions $\bB^i(t)$. Please refer to Table~\ref{tab:notations} for a summary of inputs and outputs. 
+=======
+We exploit in this section the application of our continuous occlusion model to 3D object localization in road scenes, which further demonstrates the versatility of the proposed model. Given a set of 2D tracked feature points $\{\bu_j(t)\}$ and 2D detection bounding boxes $\{\bb{i}\}$ at frame $t$, the goal is to localize 3D traffic participants, in particular, for each traffic participant, estimating its position $\bp^i(t)$, orientation $\bomega^i(t)$, and 3D dimensions $\bB^i(t)$ on the ground plane. Please refer to Table~\ref{tab:notations} for a summary of inputs and outputs. 
+>>>>>>> 191b61830cafd6713dfcaceb79a8ef06478cde62
 
 We construct a graphical model for representing relationships among objects, as well as between objects and point tracks. Figure~\ref{fig:graphmodel} illustrates an example of the graph and energies. The negative log likelihood is decomposed as follows:
 %
