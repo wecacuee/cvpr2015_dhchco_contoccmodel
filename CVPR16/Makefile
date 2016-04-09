@@ -42,6 +42,9 @@ results/0009_0000000060_%.png: 	$(ROOT_OUT_DIR)/Visualization/City/2011_09_26_dr
 results/plotPtransmission_%: $(ROOT_OUT_DIR)/plotPtransmission_%
 	cp $< $@
 
+results/plotPtransmission_exact_vs_approx_embedded_fonts.pdf: results/plotPtransmission_exact_vs_approx.pdf
+	ps2pdf	-dPDFSETTINGS=/prepress "$^" "$@"
+
 results/plotPtransmission_exact_vs_approx_pt_vis-small.png: results/plotPtransmission_exact_vs_approx_pt_vis.png
 	convert -crop 300x110+600+170 $< $@
 
