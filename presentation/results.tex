@@ -15,76 +15,29 @@
 \end{frame}
 
 \begin{frame}{Quantitative results}
-  % Show that quantiative results are still negative but ...
-  \small{
-    t : Mean translation error in ground plane per traffic particpant per frame
 
-    yaw : Mean yaw error in ground plane per traffic particpant per frame
-
-    dim : Mean dimension error in ground plane per traffic particpant per frame
-
-\begin{table}
-  \begin{tabular}{lrrr}
+  \begin{tabular}{lrr}
     \toprule
-    Energy & t & yaw & dim \\
+    Method & t & dim \\
     \midrule
-    initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
-    $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
-    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
-    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
-    %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
-    $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBoxNoOcc+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
-    $\EnergyLane+\EnergyTrack+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol   $ & \textbf{3.78} & 0.91 & 1.58 \\
+    Point cloud fit
+    & 6.87 & 4.02\\
+    Initialization
+    & 5.61 & 3.23\\
+    $\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$ 
+    & 3.95  & 1.72\\        
+    $\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$        
+    & 4.81  & 2.16\\        
+    $\EnergyTrack + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$      
+    & 4.05  & {\bf 1.59}\\        
+    $\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$             
+    & {\bf 3.24}  & 2.16\\
     \bottomrule
   \end{tabular}
-\end{table}
-  }
-
+  
 \end{frame}
 
-\begin{frame}{Quantitative results}
-  \cite{geiger_etal_2012}
-  \begin{tikzpicture}
-    \node (img) [inner sep=0,anchor=south west] at (0,0) 
-    {\includegraphics[width=\textwidth]{graphics/geigerresults.png}};
-    \begin{scope}[x=(img.south east),y=(img.north west)]
-      \draw [red,thick] (0.01,0.6) rectangle (0.79,0.7);
-      \draw [red,thick] (0.01,0.2) rectangle (0.79,0.3);
-    \end{scope}
-  \end{tikzpicture}
-
-  Ours
-
-  \begin{tabular}{lrrr}
-    \toprule
-    Energy & t & yaw & dim \\
-    \midrule
-    initialization                                                                                  & 3.79 & \textbf{0.86} & 1.64 \\
-    $\EnergyLane+\EnergySize+\EnergyBBox+\EnergyDyn                                       $ & 3.83 & 0.90 & \textbf{1.14} \\
-    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn                                    $ & 3.83 & 0.90 & 1.14 \\
-    %$\EnergyLane+\EnergySize+\EnergyBBoxocc+\EnergyDyn+\EnergyCol                         $ & 3.92 & 0.91 & 1.15 \\
-    %$\EnergyLane+\EnergyContpttracks+\EnergySize+\EnergyBBoxocc+\EnergyDyn             $ & 3.81 & 0.92 & 1.59 \\
-    $\EnergyLane+\EnergyTrackNoOcc+\EnergySize+\EnergyBBoxNoOcc+\EnergyDyn+\EnergyCol $ & 3.80 & 0.91 & 1.58 \\
-    $\EnergyLane+\EnergyTrack+\EnergySize+\EnergyBBox+\EnergyDyn+\EnergyCol   $ & \textbf{3.78} & 0.91 & 1.58 \\
-    \bottomrule
-  \end{tabular}
-\end{frame}
-
-\begin{frame}{What is wrong with the results?}
-  % Outliers in point tracks
-  % Outliers in detections
-  % Poor inference methods
-  \begin{itemize}
-    \item Inference is slow
-    \item Learning parameters is difficult with slow inference
-    \item Poor parameters cause poor results
-  \end{itemize}
-  % Parameter learning
-  % Simplify graphical model
-  % Approximate graphical model to a tree
-  % Use discretization for belief propagation followed by gradient descent
-\end{frame}
-\begin{frame}{What to do?}
+\begin{frame}{Future work}
   \begin{itemize}
     \item Speedup inference
     \item Simplify graph by \cite{chow1968approximating} tree approximation

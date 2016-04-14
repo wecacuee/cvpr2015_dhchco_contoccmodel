@@ -9,7 +9,7 @@ ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 OUT_DIR = out
 DEPS_DIR = out/deps
-LATEXMK = latexmk -recorder -use-make -deps
+LATEXMK = latexmk -f -recorder -use-make -deps
 all : $(TARGETS)
 
 # Include the dependency makefile produced by latexmk

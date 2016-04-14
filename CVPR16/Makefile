@@ -1,9 +1,8 @@
 
 .PHONY: all clean
 
-BASENAME=continuousocclusion
-#BASENAME=supplementarymaterial
-TARGETS=out/$(BASENAME).pdf
+BASENAME=continuousocclusion supplementarymaterial
+TARGETS=$(foreach b,$(BASENAME),out/$(b).pdf)
 
 # http://stackoverflow.com/questions/18136918/how-to-get-current-directory-of-your-makefile
 ROOT_DIR:=$(dir $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -69,13 +68,13 @@ $(rebuttallatexdir)/cvpr.sty $(rebuttallatexdir)/eso-pic.sty.bak:
 	ln -sf $(rebuttallatexdir)/ieee.bst
 
 out/continuousocclusion.pdf: continuousocclusion.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(cvprlatexdir)/cvpr.sty $(wildcard Source/*.tex)
-	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $< -output-directory=out
 
 out/supplementarymaterial.pdf: supplementarymaterial.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(cvprlatexdir)/cvpr.sty $(wildcard Source/*.tex)
-	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+	TEXINPUTS=$(cvprlatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $< -output-directory=out
 
 out/rebuttal2.pdf: rebuttal2.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch $(rebuttallatexdir)/cvpr.sty $(wildcard Source/*.tex)
-	TEXINPUTS=$(rebuttallatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+	TEXINPUTS=$(rebuttallatexdir)/: $(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $< -output-directory=out
 
 clean:
-	latexmk -C -output-directory=out
+	latexmk -C $(foreach b,$(BASENAME),$(b).tex)

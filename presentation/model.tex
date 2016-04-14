@@ -165,13 +165,6 @@
 \end{frame}
 
 \begin{frame}{Association Experiment results}
-
-\begin{align}
-  P^{(ij)}_{\text{assoc by reproj}}(\lambda) &= \frac{1}{Z}\int_0^{\infty}\exp(-\Ereproj(\lambda))\\
-  P^{(ij)}_{\text{assoc}} &= \frac{1}{Z'}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda
-  \label{eq:prob-assoc}
-\end{align}
-
 \begin{table}
   \centering
   \begin{tabular}{lccc}
@@ -186,6 +179,60 @@
   \end{tabular}
   \caption{Error Metric: Average fraction of foreground points incorrectly associated to objects per sequence}
   %\caption{Association Experiment results. The error is in terms of fraction of points wrongly associated with objects, hence lower is better.}
+\end{table}
+  
+\end{frame}
+
+\begin{frame}{Association Experiment results}
+
+\newlength{\tblimgwidth}
+\setlength{\tblimgwidth}{0.090\textwidth}
+\begin{figure}[!!t]
+  \centering
+  \begin{tabular}{cc@{}c@{\hspace{0.1cm}}c@{}c@{}}
+    & Associations & Association Error & Associations & Association Error\\
+    \rotatebox{90}{\hspace{1em} BBox}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_bbox2D_model_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{1em} BM}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_BroxAndMalik2010_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{1em} RAS}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_RAS-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_RAS_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_RAS-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_RAS_correct_incorrect-small.png}\\
+    \rotatebox{90}{\hspace{1em} Ours}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0009_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks-small.png}%
+    & \includegraphics[height=\tblimgwidth]{results/0013_0000000060_point_assign_contPtTracks_correct_incorrect-small.png}
+  \end{tabular}
+  \vspace{-0.3cm}
+\label{fig:qualitative}
+\vspace{-0.3cm}
+\end{figure}
+  
+\end{frame}
+
+\begin{frame}
+\begin{table}
+\begin{tabular}{lrrrr}
+  \toprule
+  & Ours & BBox & BM & RAS\\
+  \midrule
+  Dyn. and occ. tracks        & \textbf{13.2} & 21.3 & 30.9 & 30.1 \\
+  Occluded tracks             & \textbf{15.7} & 19.8 & 39.5 & 37.8 \\
+  Dynamic tracks              & \textbf{06.6} & 11.4 & 15.3 & 17.7 \\
+  All tracks                  & \textbf{08.6} & 12.6 & 21.9 & 21.5 \\
+  \bottomrule
+\end{tabular}
+\caption{\small Mean association errors on different sets of input point tracks over all sequences of KITTI dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
+\label{tab:meanAssoc}
 \end{table}
 \end{frame}
 

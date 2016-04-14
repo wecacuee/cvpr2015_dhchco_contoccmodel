@@ -10,13 +10,13 @@ ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 OUT_DIR = out
 DEPS_DIR = out/deps
 LATEXMK = latexmk -recorder -use-make -deps
-PDFLATEX=pdflatex# -interaction=nonstopmode
+PDFLATEX=pdflatex -interaction=nonstopmode
 
 all : $(TARGETS)
 
 # Include the dependency makefile produced by latexmk
 # latexmk -deps-out= is used to record the dependencies
-$(foreach file,$(TARGETS),$(eval -include $(DEPS_DIR)/$(notdir file)P))
+$(foreach file,$(TARGETS),$(eval -include $(DEPS_DIR)/$(notdir $(file))P))
 
 
 $(OUT_DIR)/.touch:
@@ -29,6 +29,7 @@ $(DEPS_DIR)/.touch:
 
 out/%.pdf : %.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch
 	$(LATEXMK) -pdf -dvi- -ps- -output-directory=out -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+	sed -i '/$(basename $(notdir $@)).bcf/d' $(DEPS_DIR)/$(notdir $@)P
 
 clean:
 	latexmk -C -output-directory=out
