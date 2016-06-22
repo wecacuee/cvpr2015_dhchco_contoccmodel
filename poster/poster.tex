@@ -119,6 +119,9 @@
           P^{ij}_{\textit{reflection}}(\lambda) = \frac{1}{Z}(\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2
         \end{align}
         \begin{align}
+	        \occftot = \sum_i \occf      
+        \end{align}
+        \begin{align}
           P^{j}_{\textit{transmission}}(\lambda) &= \prod_{c}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda}\\
           &\approx \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i) \cL_{\lambda}(\lambda; \meandepth{i}))
         \end{align}
@@ -183,7 +186,7 @@
               & 4.81  & 2.16\\        
               $\EnergyTrack + \Energy{detectNoOcc} +\EnergySize+\EnergyDyn$      
               & 4.05  & {\bf 1.59}\\        
-              $\EnergyTrack + \Energy{detectNoOcc} +\EnergySize+\EnergyDyn$             
+              $\EnergyTrack + \Energy{detect} +\EnergySize+\EnergyDyn$             
               & {\bf 3.24}  & 2.16\\
               \bottomrule
             \end{tabular}
@@ -239,20 +242,18 @@
           a^{ij}(\lambda) = P^{ij}_{\textit{reflection}}P^{j}_{\textit{transmission}}
         \end{align}
         \begin{align}
-          P^{ij}_{\textit{assoc}} = \frac{1}{Z}\int_0^{\infty} a^{ij}(\lambda) \exp(-E^{ij}_{\textit{reproj}}(\lambda))d\lambda
+          P^{ij}_{\textit{assoc}} = \frac{1}{Z'}\int_0^{\infty} a^{ij}(\lambda) \exp(-E^{ij}_{\textit{reproj}}(\lambda))d\lambda
         \end{align}
 
 	  \textbf{3D Object Localization:}
 		\begin{figure}
 			\newcommand{\imagewidth}{18cm}
-		      \hspace{-0.8cm}
 		    \input{Source/scenelayoutoverlayCity0961} \\
-		      \hspace{-0.8cm}
 		    \input{Source/graphical_model_multiple}        
         \end{figure}	
         \begin{multline*}
           -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i(t) \} | \{\bu_j(t)\} , \{\textbf{d}^i(t)\} )} = \\
-          -\tilde{Z} 
+          -Z'' 
           + \sum_{t=s_i}^{e_i} \lambda_{\text{track}}\EnergyTrack
           +  
           \sum_{t=s_i}^{e_i} \sum_{i=1}^N  
@@ -270,7 +271,7 @@
 			S(\textbf{d}^i(t)) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \bLambda_k^{-1} \bepsilon_k^{i}(t) \right)
 		\end{equation}		
 		\begin{align}
-		  \Theta_{i}(\bu, \meandepth{i}) = 1 - \Ptransmission(\meandepth{i}, \bu)
+		  \Theta_{i}(\bu, \meandepth{i}) = 1 - \Ptransmission(\bu, \meandepth{i})
 		\end{align}		
 		\begin{align}
 		  \Energy{detect} = \frac{1}{S'(\textbf{d}^i(t))}
