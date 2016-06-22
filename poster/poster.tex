@@ -177,13 +177,13 @@
               & 6.87 & 4.02\\
               Initialization by~\cite{Song_Chandraker_2014}
               & 5.61 & 3.23\\
-              $\EnergyTrackNoOcc + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$ 
+              $\EnergyTrackNoOcc + \Energy{detectNoOcc} +\EnergySize+\EnergyDyn$ 
               & 3.95  & 1.72\\        
-              $\EnergyTrackNoOcc + \EnergyBBox +\EnergySize+\EnergyDyn$        
+              $\EnergyTrackNoOcc + \Energy{detect} +\EnergySize+\EnergyDyn$        
               & 4.81  & 2.16\\        
-              $\EnergyTrack + \EnergyBBoxNoOcc +\EnergySize+\EnergyDyn$      
+              $\EnergyTrack + \Energy{detectNoOcc} +\EnergySize+\EnergyDyn$      
               & 4.05  & {\bf 1.59}\\        
-              $\EnergyTrack + \EnergyBBox +\EnergySize+\EnergyDyn$             
+              $\EnergyTrack + \Energy{detectNoOcc} +\EnergySize+\EnergyDyn$             
               & {\bf 3.24}  & 2.16\\
               \bottomrule
             \end{tabular}
@@ -257,7 +257,7 @@
           +  
           \sum_{t=s_i}^{e_i} \sum_{i=1}^N  
           \left(
-            \lambda_{\text{detect}}\EnergyBBox
+            \lambda_{\text{detect}}\Energy{detect}
             + \lambda_{\text{dyn}}\EnergyDyn    
             + \lambda_{\text{size}}\EnergySize
           \right)
