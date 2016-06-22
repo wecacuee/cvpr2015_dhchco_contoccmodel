@@ -28,8 +28,8 @@ $(DEPS_DIR)/.touch:
 	touch $@
 
 out/%.pdf : %.tex $(DEPS_DIR)/.touch $(OUT_DIR)/.touch
-	$(LATEXMK) -pdf -dvi- -ps- -output-directory=out -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
+	$(LATEXMK) -pdf -dvi- -ps- -pdflatex="$(PDFLATEX)" -deps-out=$(DEPS_DIR)/$(notdir $@)P $<
 	sed -i '/$(basename $(notdir $@)).bcf/d' $(DEPS_DIR)/$(notdir $@)P
 
 clean:
-	latexmk -C -output-directory=out
+	latexmk -C

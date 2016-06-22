@@ -12,6 +12,8 @@
 \usepackage{booktabs}
 \usepackage{bm}
 \usepackage{tikz}
+\usepackage{multirow}
+\usepackage{booktabs}
 
 \usetikzlibrary{trees,shadows}
 
@@ -19,6 +21,10 @@
 \tikzset{/tikz/y=2.5cm}
 
 \newcommand{\Ptransmission}{P_{\textit{transmission}}}%
+\newcommand\RotText[1]{\rotatebox{90}{\parbox{1.7cm}{\centering#1}}}
+\newcommand{\bepsilon}{{\bm{\epsilon}}}
+\newcommand{\meandepth}[1]{\nu_#1}
+\newcommand{\bLambda}{\bm{\Lambda}}
 
 %-----------------------------------------------------------
 % Define the column width and poster size
@@ -74,8 +80,8 @@
 %-----------------------------------------------------------
 
 \title{A Continuous Occlusion Model for Road Scene Understanding}
-\author{Vikas Dhiman$^\dagger$ \and Quoc-Huy Tran$^*$ \and Jason J Corso$^\dagger$ \and Manmohan Chandraker$^*$}
-\institute{$^\dagger$University of Michigan, Ann Arbor, MI \qquad $^*$NEC Labs, Cupertino, CA}
+\author{Vikas Dhiman$^\dagger$ \and Quoc-Huy Tran$^*$ \and Jason J. Corso$^\dagger$ \and Manmohan Chandraker$^*$}
+\institute{$^\dagger$University of Michigan, Ann Arbor, MI \qquad $^*$NEC Laboratories America, Cupertino, CA}
 
 %-----------------------------------------------------------
 % Start the poster itself
@@ -91,25 +97,30 @@
         \begin{figure}[!!t]
           \input{Source/figure_introduction.tex}
         \end{figure}
+        \textbf{Contributions}:
+        \begin{itemize}
+		  \item A novel theoretical model for handling occlusions that is continuous and formulated in 3D.
+		  \item Unified occlusion handling for point tracks in SFM and bounding boxes and detection scores in object detection.
+		  \item Application of our proposed model to association of point tracks with both static and moving objects, improving over motion segmentation and occlusion-unaware baselines.
+		  \item Application of our unified formulation to 3D localization of traffic participants in road scenes.
+		\end{itemize}
       \end{block}
 
       \begin{block}{Continuous Occlusion Model}
+		\textbf{Occupancy Model}: Traffic participants are represented as translucent 3D ellipsoids whose opacity is maximum at the center and falls off towards the edges.
         \begin{align}
-          f^i_{\text{occ}}(\bx) = \cL(\bx; \bp_i, \bSigma_i),
+          f^i_{\textit{occ}}(\bx) = \cL(\bx; \bp_i, \bSigma_i)
+        \end{align}
+		\textbf{Image Formation}: A point on an object is observed in the camera if: 1) the back-projected ray from the observed image pixel is transmitted through free space until it reaches the object, and 2) the ray encounters an opaque enough object surface and is reflected.		
+        \begin{align}
+          P^{ij}_{\textit{observation}} = P^{ij}_{\textit{reflection}}P^{j}_{\textit{transmission}}
         \end{align}
         \begin{align}
-          P^{ij}_{\textit{observation}} = P^{ij}_{\textit{reflection}}P^{j}_{\textit{transmission}}.
-          \label{eq:imgform}
+          P^{ij}_{\textit{reflection}}(\lambda) = \frac{1}{Z}(\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2
         \end{align}
         \begin{align}
-          \Prefl = \frac{1}{Z}(\max \{0, \nabla {f^i_{occ}}(\bx_j)^\top \ray \})^2.
-          \label{eq:evalPrefl}
-        \end{align}
-
-        \begin{align}
-          P^j_{\textit{transmission}}(\lambda) &= \prod_{c}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda}\\
-          &\approx \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i) \cL_{\lambda}(\lambda; \meandepth{i})).
-          \label{eq:ptrans-integral}
+          P^{j}_{\textit{transmission}}(\lambda) &= \prod_{c}^{\lambda} (1 - \occft{\lambda \ray})^{d\lambda}\\
+          &\approx \prod_i (1 - \cL_u (\bu; \bmu_i, \bGamma_i) \cL_{\lambda}(\lambda; \meandepth{i}))
         \end{align}
 
         % \begin{figure}
@@ -124,21 +135,23 @@
         %   \vspace{-0.3cm}
         % \end{figure}
         \begin{figure}
+  		  \usetikzlibrary{calc}
+  		  \centering
+  		  \begin{tikzpicture}
+    			\input{Source/reflectiontransmissiongraph.tex}
+  		  \end{tikzpicture}  			
+  		\end{figure}
+        \begin{figure}
           \centering
-          \includegraphics[width=0.9\columnwidth]{results/plotPtransmission_exact_vs_approx_pt_vis-small.png}\\
-          \includegraphics[trim=0.0 0 0.3in 0, clip, width=0.9\columnwidth]{results/plotPtransmission_exact_vs_approx_embedded_fonts.pdf}
-          \vspace{-0.3cm}
-          \caption{\small Comparisons between the approximate and exact formulations of $\Ptrans$. The drop in the approximate version is delayed because we assume drop at the object center rather than the camera-facing face of the object.}
-          \label{fig:compare:exact:approx:ptrans}
-          \vspace{-0.3cm}
+          \includegraphics[width=0.5\columnwidth]{results/plotPtransmission_exact_vs_approx_pt_vis-small.png}
+          \includegraphics[trim=0 0 0.3 0, clip, width=0.5\columnwidth]{results/plotPtransmission_exact_vs_approx_embedded_fonts.pdf}          
         \end{figure}
       \end{block}
 
     \end{column}
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{2.0\onecolwid}
-      \begin{block}{Results}
-        \vspace*{-\baselineskip}
+      \begin{block}{Experiments}
         \begin{columns}[t]
           \column{1.000\onecolwid}
           \begin{table}
@@ -153,7 +166,6 @@
               \bottomrule
             \end{tabular}
             \caption{\small Mean association errors on different sets of input point tracks over all sequences. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
-            \label{tab:meanAssoc}
           \end{table}
           \column{1.000\onecolwid}
           \begin{table}
@@ -176,69 +188,95 @@
               \bottomrule
             \end{tabular}
             \caption{\small Localization experiment results with different combinations of energies. We report translation error (t) and dimension error (dim) in meters per car. Yaw angles for static objects are not optimized by our model. These experiments use the set of occluded tracks to demonstrate the effect of our modeling.}
-            \label{tab:localizationExperiment}
           \end{table}
         \end{columns}
-      \end{block}
-
-      \begin{block}{Association error}
+      
         \begin{figure}[!!t]
           \centering
           \includegraphics[trim=1.0in 0.4in 1.0in 0.2in, clip, width=0.9\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
-          \vspace{-0.3cm}
-          \caption{\small Association errors on different sets of input point tracks. Numbers on the x-axis represent sequence numbers in the KITTI raw dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
-          \vspace{-0.3cm}
-          \label{fig:assoc-occ-results}
+		  \caption{\small Association errors on different sets of input point tracks. Numbers on the horizontal axis represent sequence numbers in the KITTI raw dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
         \end{figure}
         \newlength{\tblimgwidth}
         \setlength{\tblimgwidth}{0.080\textwidth}
-        \input{Source/figure_assoc_qualitative.tex}
+        \input{Source/figure_assoc_qualitative.tex}                                
       \end{block}
+      \smallsize{
+      \textbf{Acknowledgements}
+      This work was part of V.~Dhiman's internship at NEC Laboratories America, Cupertino. V.~Dhiman and J.~J.~Corso were also supported by NSF NRI IIS 1522904.}
     \end{column}
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\onecolwid}
-      \begin{block}{Object Point Association}
+      \begin{block}{Unified Occlusion Models}  
+      
+		\begin{table}[!!t]
+		\centering\footnotesize
+		\begin{tabular}{|l|l|l|}
+		\hline
+		 & Symbol & Description \\
+		\hline
+		\hline
+		\multirow{2}{*}{\rotatebox{90}{Input}} & $\bu_j(t)$ & 2D feature track $j$ at time $t$ \\
+		 & $\textbf{d}^i(t)$ & 2D detection bounding box of object $O_i$ at time $t$ \\
+		\hline
+		\hline
+		\multirow{8}{*}{\RotText{Initialization with~\cite{Song_Chandraker_2014}}} & $\bp^c(t)$ & Position of camera at time $t$ \\
+		 & $\bomega^c(t)$ & Orientation of camera at time $t$ \\
+		 & $\bp_0^i(t)$ & Initial position of object $O_i$ at time $t$ \\
+		 & $\bomega_0^i(t)$ & Initial orientation of object $O_i$ at time $t$ \\
+		 & $\bB_0^i$ & Initial 3D dimensions of object $O_i$ \\
+		\hline
+		\hline
+		\multirow{4}{*}{\rotatebox{90}{Output}} & $P^{ij}_{\text{assoc}}$ & Probability of assigning feature track $j$ to object $O_i$ \\	
+		 & $\bp^i(t)$ & Position of object $O_i$ at time $t$ \\
+		 & $\bomega^i(t)$ & Orientation of object $O_i$ at time $t$ \\
+		 & $\bB^i$ & 3D dimensions of object $O_i$ \\
+		\hline
+		\end{tabular}
+		\end{table}           
+      
+      \textbf{Object-Point Association:}
         \begin{align}
-          \assocP = \Prefl\Ptrans,
-          \label{eq:defineassocP}
+          a^{ij}(\lambda) = P^{ij}_{\textit{reflection}}P^{j}_{\textit{transmission}}
         \end{align}
         \begin{align}
-          P^{ij}_{\text{assoc}} = \frac{1}{Z''}\int_0^{\infty} \assocP \exp(-\Ereproj(\lambda))d\lambda,
-          \label{eq:prob-assoc}
+          P^{ij}_{\textit{assoc}} = \frac{1}{Z}\int_0^{\infty} a^{ij}(\lambda) \exp(-E^{ij}_{\textit{reproj}}(\lambda))d\lambda
         \end{align}
-      \end{block}
-      \vspace{0.5in}
-      \begin{block}{3D Object Localization}
-        \begin{figure}
-          \centering
-          \input{Source/graphical_model_multiple}%
-          \caption{Graphical model showing the factor nodes among different
-            cars in the same frame. We assume occlusion relationships between
-            different cars are known and hence the occlusion modeling can be done
-            locally. In this example, the occlusion relationship affects the
-            following pair of cars 6-2, 2-5, 5-1. Cars 3 and 4 are not occluded
-            and hence affected by only unary terms within the frame. We also avoid 
-            collision modeling between unoccluded cars to encourage sparsity.
-          }
-          \label{fig:graphmodel}
-        \end{figure}
+
+	  \textbf{3D Object Localization:}
+		\begin{figure}
+			\newcommand{\imagewidth}{18cm}
+		      \hspace{-0.8cm}
+		    \input{Source/scenelayoutoverlayCity0961} \\
+		      \hspace{-0.8cm}
+		    \input{Source/graphical_model_multiple}        
+        \end{figure}	
         \begin{multline*}
-          -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i(t) \} | \{\bu_j(t)\} , \{\bb{i}\} )} = \\
+          -\log{P(\{ \bp^i(t) , \bomega^i(t) , \bB^i(t) \} | \{\bu_j(t)\} , \{\textbf{d}^i(t)\} )} = \\
           -\tilde{Z} 
           + \sum_{t=s_i}^{e_i} \lambda_{\text{track}}\EnergyTrack
-          + \\ 
+          +  
           \sum_{t=s_i}^{e_i} \sum_{i=1}^N  
           \left(
             \lambda_{\text{detect}}\EnergyBBox
             + \lambda_{\text{dyn}}\EnergyDyn    
             + \lambda_{\text{size}}\EnergySize
           \right)
-          \enspace,
-        \end{multline*}
+          \enspace
+        \end{multline*}        
+        \begin{align}
+		  \pEnergy{track} = \sum_{i=1}^{N} \sum_{j = 1}^{M} \int_0^\infty a^{ij}(\lambda) E^{ij}_{\textit{reproj}}(\lambda) d\lambda
+		\end{align}        
         \begin{equation}
-          \Ereproj(\lambda) = \left\|\trackpj{t} - \projectionOf{\invProjectionOftm{\trackpj{t-1}, \lambda}}\right\|^2.
-          \label{eq:reprojerror}
-        \end{equation}
+			S(\textbf{d}^i(t)) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \bLambda_k^{-1} \bepsilon_k^{i}(t) \right)
+		\end{equation}		
+		\begin{align}
+		  \Theta_{i}(\bu, \meandepth{i}) = 1 - \Ptransmission(\meandepth{i}, \bu)
+		\end{align}		
+		\begin{align}
+		  \Energy{detect} = \frac{1}{S'(\textbf{d}^i(t))}
+		\end{align}
+        
+                
         % \begin{figure}
         %   \centering
         %   \newcommand{\imagewidth}{\onecolwid}
@@ -248,18 +286,14 @@
         % \end{figure}
 
       \end{block}
-      \vspace{0.5in}
-      \begin{block}{Conclusions and Future work}
+      \begin{block}{Conclusion}
         \begin{itemize}
-          \item Presented physically interpretable unified occlusion modeling
-          \item The model generalizes to different applications: point association and 3D localization
-          \item Challenges include the slow inference on 3D localization
+          \item A physically interpretable, continuous model for occlusion reasoning in 3D.
+          \item Unified models for various applications of scene understanding such as object-point association and 3D localization.
+          \item Future work will explore speeding up graphical model inference and more detailed object representation.
         \end{itemize}
       \end{block}
-      \vspace{0.5in}
-      \begin{block}{Acknowledgements}
-        This work was part of V.~Dhiman's internship at NEC Labs America, in Cupertino. V.~Dhiman and J.~J.~Corso were also supported by NSF NRI IIS 1522904.
-      \end{block}
+
       \begin{block}{References}
         \bibliography{poster}
         \bibliographystyle{ieee}
