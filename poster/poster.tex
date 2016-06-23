@@ -9,6 +9,7 @@
 \usepackage{beamerposter}
 \usepackage{graphicx}			% allows us to import images
 
+\usepackage{ragged2e}
 \usepackage{booktabs}
 \usepackage{bm}
 \usepackage{tikz}
@@ -99,11 +100,12 @@
         \end{figure}
         \textbf{Contributions}:
         \begin{itemize}
-		  \item A novel theoretical model for handling occlusions that is continuous and formulated in 3D.
-		  \item Unified occlusion handling for point tracks in SFM and bounding boxes and detection scores in object detection.
-		  \item Application of our proposed model to association of point tracks with both static and moving objects, improving over motion segmentation and occlusion-unaware baselines.
-		  \item Application of our unified formulation to 3D localization of traffic participants in road scenes.
-		\end{itemize}
+          \item We propose a novel continuous occlusion model in 3D that is
+            physically interpretable.
+          \item Unified occlusion handling for point tracks in SFM and bounding boxes and detection scores in object detection.
+          \item Application of our proposed model to association of point tracks with both static and moving objects, improving over motion segmentation and occlusion-unaware baselines.
+          \item Application of our unified formulation to 3D localization of traffic participants in road scenes.
+        \end{itemize}
       \end{block}
 
       \begin{block}{Continuous Occlusion Model}
@@ -193,15 +195,14 @@
             \caption{\small Localization experiment results with different combinations of energies. We report translation error (t) and dimension error (dim) in meters per car. Yaw angles for static objects are not optimized by our model. These experiments use the set of occluded tracks to demonstrate the effect of our modeling.}
           \end{table}
         \end{columns}
-      
+        \newlength{\tblimgwidth}
+        \setlength{\tblimgwidth}{0.080\textwidth}
+        \input{Source/figure_assoc_qualitative.tex}
         \begin{figure}[!!t]
           \centering
           \includegraphics[trim=1.0in 0.4in 1.0in 0.2in, clip, width=0.9\textwidth]{results/plotErrorBarEvalAssocCoeffAllSequence.pdf}
 		  \caption{\small Association errors on different sets of input point tracks. Numbers on the horizontal axis represent sequence numbers in the KITTI raw dataset. Errors are in terms of average fractions of foreground points incorrectly associated to objects per sequence.}
         \end{figure}
-        \newlength{\tblimgwidth}
-        \setlength{\tblimgwidth}{0.080\textwidth}
-        \input{Source/figure_assoc_qualitative.tex}                                
       \end{block}
       \smallsize{
       \textbf{Acknowledgements}
