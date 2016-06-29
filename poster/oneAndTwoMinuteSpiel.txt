@@ -1,0 +1,73 @@
+# What to convey?
+
+Contributions: 
+* Optics motivated 3D soft occlusion model.
+* Unified occlusion handling for point tracks and detection scores 
+
+Method:
+* We can only observe a point if it is reflected and then gets transmitted
+through space between the point and the camera.
+* We model probability of reflection motivated by lambertian reflection model.
+* We model probability of transmission motivated by Beer-Lambert law.
+* We can use this general occlusion model in different applications. For
+example, we can compute the association probability of point tracks to the
+cars, especially when the point tracks lie on the overlapping region of
+bounding boxes. We can also change our confidence on the bounding boxes using
+the occlusion model.
+
+Experiments and Results:
+We evaluate our occlusion model in two applications (1) association of point
+tracks to cars (2) localization
+(1) For application to point tracks to car association we compare our method to state of art
+motion segmentation baselines of Robust Algebraic Segmentation and Spectral
+clustering with spatial affinity constraint. We found that occlusion models
+result in better association.
+(2) For application to localization we formulate the problem on a factor graph
+and evaluate the localization accuracy with and without occlusion models. The
+occlusion models result in slightly better localization.
+
+Conclusion:
+The take home message is the detailed physics inspired 3D occlusion model when
+computation time is not a constraint.
+
+# One minute
+We propose a general optics motivated continuous 3D occlusion model that can
+be used in varying applications such as point track associations, occlusion
+dependent confidence in object detection scores, and object localization. 
+
+We can only observe a point in 3D if it is reflected by a surface and the
+light is transmitted through the intermediate space between the point and the
+camera. Hence we model probability of observation as product of reflection and
+transmission probability which we assume to be independent. Our  
+reflection probability model is inspired by lambertian reflection model, while
+our transmission probability model is inspired by Beer-Lambert law. 
+
+We evaluate our occlusion model in two applications : point track to object
+association and car localization on KITTI dataset. We find that our occlusion
+model helps in increasing performance in both the applications.
+
+# Two minute
+We propose a general optics motivated continuous 3D occlusion model that can
+be used in varying applications such as point track associations, occlusion
+dependent confidence in object detection scores, and object localization. 
+
+We can only observe a point in 3D if it is reflected by a surface and the
+light is transmitted through the intermediate space between the point and the
+camera. Hence we model probability of observation as product of reflection and
+transmission probability which we assume to be independent. Our  
+reflection probability model is inspired by lambertian reflection model, while
+our transmission probability model is inspired by Beer-Lambert law. Our
+occlusion model is general enough to be applied to different applications
+for example point track association and object localization.
+
+We evaluate our occlusion model in two applications (1) association of point
+tracks to cars (2) localization.  (1) For application to point tracks to car
+association we compare our method to state of art motion segmentation
+baselines of Robust Algebraic Segmentation and Spectral clustering with
+spatial affinity constraint. We found that occlusion models result in better
+association.  (2) For application to localization we formulate the problem on
+a factor graph and evaluate the localization accuracy with and without
+occlusion models. The occlusion models result in slightly better localization.
+
+The take home message is the detailed physics inspired 3D occlusion model when
+computation time is not a constraint.
