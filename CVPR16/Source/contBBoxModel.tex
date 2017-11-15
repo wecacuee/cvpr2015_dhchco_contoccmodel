@@ -39,9 +39,9 @@ $\mathcal{P}_{i} = \rho_{i}\rho_{i}^\top$, where $\rho_{i} = \Theta_{i}(\mathbf{
 The detection score GMM $S'(.)$ with explicit occlusion reasoning is given by replacing the covariance
 matrix, as follows:
 %
-\begin{multline}
+\begin{align}
 S'(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \bLambda_k^{'-1} \bepsilon_k^{i}(t) \right).
-\end{multline}
+\end{align}
 
 The energy of detection scores is simply taken to be the inverse of the above detection score, that is,
 \begin{align}

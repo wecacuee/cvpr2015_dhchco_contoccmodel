@@ -1,0 +1,419 @@
+\newlength{\eqs}
+\setlength{\eqs}{-0.04in}
+
+\setitemize[0]{leftmargin=15pt}
+
+\newenvironment{tight_itemize}{
+\begin{itemize}[leftmargin=10pt]
+  \setlength{\topsep}{0pt}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+%\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+
+
+\providecommand{\bA}{\mathbf{A}}
+\providecommand{\bB}{\mathbf{B}}
+\providecommand{\bC}{\mathbf{C}}
+\providecommand{\bD}{\mathbf{D}}
+\providecommand{\bE}{\mathbf{E}}
+\providecommand{\bF}{\mathbf{F}}
+\providecommand{\bG}{\mathbf{G}}
+\providecommand{\bH}{\mathbf{H}}
+\providecommand{\bI}{\mathbf{I}}
+\providecommand{\bJ}{\mathbf{J}}
+\providecommand{\bK}{\mathbf{K}}
+\providecommand{\bL}{\mathbf{L}}
+\providecommand{\bM}{\mathbf{M}}
+\providecommand{\bN}{\mathbf{N}}
+\providecommand{\bO}{\mathbf{O}}
+\providecommand{\bP}{\mathbf{P}}
+\providecommand{\bQ}{\mathbf{Q}}
+\providecommand{\bR}{\mathbf{R}}
+\providecommand{\bS}{\mathbf{S}}
+\providecommand{\bT}{\mathbf{T}}
+\providecommand{\bU}{\mathbf{U}}
+\providecommand{\bV}{\mathbf{V}}
+\providecommand{\bW}{\mathbf{W}}
+\providecommand{\bX}{\mathbf{X}}
+\providecommand{\bY}{\mathbf{Y}}
+\providecommand{\bZ}{\mathbf{Z}}
+
+\providecommand{\ba}{\mathbf{a}}
+%\providecommand{\bb}{\mathbf{b}}
+\providecommand{\bc}{\mathbf{c}}
+\providecommand{\bd}{\mathbf{d}}
+\providecommand{\be}{\mathbf{e}}
+%\providecommand{\bf}{\mathbf{f}}
+\providecommand{\bg}{\mathbf{g}}
+\providecommand{\bh}{\mathbf{h}}
+\providecommand{\bi}{\mathbf{i}}
+\providecommand{\bj}{\mathbf{j}}
+\providecommand{\bk}{\mathbf{k}}
+\providecommand{\bl}{\mathbf{l}}
+%\providecommand{\bm}{\mathbf{m}}
+\providecommand{\bn}{\mathbf{n}}
+%\providecommand{\bo}{\mathbf{o}}
+\providecommand{\bp}{\mathbf{p}}
+\providecommand{\bq}{\mathbf{q}}
+\providecommand{\br}{\mathbf{r}}
+\providecommand{\bs}{\mathbf{s}}
+\providecommand{\bt}{\mathbf{t}}
+\providecommand{\bu}{\mathbf{u}}
+\providecommand{\bv}{\mathbf{v}}
+\providecommand{\bw}{\mathbf{w}}
+\providecommand{\bx}{\mathbf{x}}
+\providecommand{\by}{\mathbf{y}}
+\providecommand{\bz}{\mathbf{z}}
+
+\providecommand{\bff}{\mathbf{f}}
+
+\providecommand{\bo}{\mathbf{0}}
+\providecommand{\tx}{\tilde{\mathbf{x}}}
+
+
+\providecommand{\hbn}{{\widehat{\mathbf{n}}}}
+\providecommand{\hbs}{{\widehat{\mathbf{s}}}}
+\providecommand{\hbh}{{\widehat{\mathbf{h}}}}
+\providecommand{\hbv}{{\widehat{\mathbf{v}}}}
+\providecommand{\hbw}{{\widehat{\mathbf{w}}}}
+\providecommand{\hbc}{{\widehat{\mathbf{c}}}}
+
+\providecommand{\hh}{{\widehat{h}}}
+\providecommand{\hn}{{\widehat{n}}}
+\providecommand{\hx}{{\widehat{x}}}
+\providecommand{\hy}{{\widehat{y}}}
+\providecommand{\hz}{{\widehat{z}}}
+
+
+% Mathcal definitions
+\providecommand{\cS}{\mathcal{S}}
+\providecommand{\cD}{\mathcal{D}}
+\providecommand{\cP}{{\mathcal{P}}}
+\providecommand{\cU}{{\mathcal{U}}}
+\providecommand{\cV}{{\mathcal{V}}}
+\providecommand{\cE}{{\mathcal{E}}}
+\providecommand{\cQ}{{\mathcal{Q}}}
+\providecommand{\cG}{{\mathcal{G}}}
+\providecommand{\cB}{{\mathcal{B}}}
+\providecommand{\cI}{\mathcal{I}}
+\providecommand{\cL}{\mathcal{L}}
+\providecommand{\cR}{{\mathcal{R}}}
+\providecommand{\cC}{{\mathcal{C}}}
+\providecommand{\cO}{{\mathcal{O}}}
+\providecommand{\cX}{{\mathcal{X}}}
+
+
+
+% Mathbb definitions
+\providecommand{\bbp}{\mathbb{P}}
+\providecommand{\bbP}{\mathbb{P}}
+\providecommand{\bbQ}{\mathbb{Q}}
+\providecommand{\bbr}{\mathbb{R}}
+\providecommand{\bbR}{\mathbb{R}}
+\providecommand{\bbS}{\mathbb{S}}
+\providecommand{\bbN}{\mathbb{N}}
+
+
+
+% Mathbm definitions
+\providecommand{\balpha}{{\bm{\alpha}}}
+\providecommand{\bbeta}{{\bm{\beta}}}
+\providecommand{\bgamma}{{\bm{\gamma}}}
+\providecommand{\bepsilon}{{\bm{\epsilon}}}
+\providecommand{\bmu}{{\bm{\mu}}}
+\providecommand{\bpi}{\bm{\pi}}
+\providecommand{\brho}{\bm{\rho}}
+\providecommand{\bomega}{\bm{\omega}}
+\providecommand{\bOmega}{\bm{\Omega}}
+\providecommand{\bSigma}{\bm{\Sigma}}
+\providecommand{\bGamma}{\bm{\Gamma}}
+\providecommand{\bLambda}{\bm{\Lambda}}
+
+
+
+\providecommand{\id}{\mathbf{I}}
+\providecommand{\tid}{\tilde{\id}}
+\providecommand{\st}{{\textrm{subject to }}}
+
+
+\providecommand{\bpm}{{\widehat{\bP}}}
+\providecommand{\bxm}{{\widehat{\mathbf{X}}}}
+\providecommand{\winf}{{{\bm{\Omega}}_\infty}}
+%\providecommand{\bw}{{{\bm{\omega}}^*}}
+\providecommand{\bwi}{{{\bm{\omega}}_i^*}}
+\providecommand{\bwone}{{{\bm{\omega}}_1^*}}
+\providecommand{\diac}{{{\bm{\omega}}^*}}
+\providecommand{\iac}{{{\bm{\omega}}}}
+\providecommand{\ac}{{{\bm{\Omega}}_\infty}}
+\providecommand{\diaci}{{{\bm{\omega}}_i^*}}
+\providecommand{\diacone}{{{\bm{\omega}}_1^*}}
+\providecommand{\w}{{{\bm{\omega}}^*}}
+\providecommand{\daq}{{\mathbf{Q}}_\infty^*}
+\providecommand{\adq}{{\mathbf{Q}}_\infty^*}
+\providecommand{\pinf}{{\bm{\pi}}_\infty}
+\providecommand{\hinf}{{{\bH}_\infty}}
+\providecommand{\hinft}{{{\bH}^\top_\infty}}
+\providecommand{\hinfi}{{{\bH}^i_\infty}}
+\providecommand{\hinfit}{{{\bH}^{i\top}_\infty}}
+\providecommand{\hinfj}{{{\bH}^j_\infty}}
+\providecommand{\hinfjt}{{{\bH}^{j\top}_\infty}}
+\providecommand{\intval}[2]{[\, #1, #2 \, ]}
+\providecommand{\camo}{\left[ \: \id \: \vert \: \bo \: \right]}
+\providecommand{\cama}{\left[ \: \bA \: \vert \: \ba \: \right]}
+\providecommand{\camr}{\left[ \: \bR \: \vert \: \bt \: \right]}
+\providecommand{\camai}{\left[ \: \bA_i \: \vert \: \ba_i \: \right]}
+\providecommand{\camri}{\left[ \: \bR_i \: \vert \: \bt_i \: \right]}
+
+%\providecommand{\algorithmiccomment}[1]{//#1}
+\providecommand{\lb}{\operatorname{\bf{Bound}}}
+\providecommand{\branch}{\operatorname{\bf{Branch}}}
+\providecommand{\feasible}{\operatorname{\bf{Feasible}}}
+\providecommand{\trace}{\operatorname{Tr}}
+\providecommand{\convenv}{\operatorname{\bf{convenv}}}
+\providecommand{\rectangle}{Q}
+
+\providecommand{\epi}{\operatorname{\bf{epi}}}
+\providecommand{\dom}{\operatorname{\bf{dom}}}
+
+\providecommand{\ophi}{f}
+\providecommand{\phimin}{\ophi_{\text{min}}}
+\providecommand{\philb}{\ophi_{\text{lb}}}
+\providecommand{\phiub}{\ophi_{\text{ub}}}
+
+\providecommand{\cvx}{{\mathrm{convex\_env}}}
+\providecommand{\ccv}{{\mathrm{concave\_env}}}
+
+\providecommand{\conc}[1]{\operatorname{conc}{#1}}
+\providecommand{\conv}[1]{\operatorname{conv}{#1}}
+
+%\providecommand{\deg}[1]{\operatorname{deg}{#1}}
+
+\providecommand{\lmi}[1]{\operatorname{LMI}{#1}}
+
+\providecommand{\fa}{\alpha}
+\providecommand{\fb}{\beta}
+\providecommand{\fc}{\gamma}
+
+
+%\providecommand{\tr}{^\top}
+
+\providecommand{\xlt}{x_l^{1/3}}
+\providecommand{\xut}{x_u^{1/3}}
+\providecommand{\tlt}{t_l^{1/3}}
+\providecommand{\tut}{t_u^{1/3}}
+\providecommand{\xl}{x_l}
+\providecommand{\xu}{x_u}
+\providecommand{\yl}{y_l}
+\providecommand{\yu}{y_u}
+\providecommand{\tl}{t_l}
+\providecommand{\tu}{t_u}
+\providecommand{\yp}{y_p}
+\providecommand{\ypd}{y'_p}
+\providecommand{\tp}{t_p}
+\providecommand{\fl}{\frac{x - \xl}{\xu - \xl}}
+\providecommand{\fu}{\frac{\xu - x}{\xu - \xl}}
+
+
+% Bilinear definitions
+\providecommand{\cl}{{\psi}^l}
+\providecommand{\cu}{{\psi}^u}
+\providecommand{\rect}{Q}
+\providecommand{\cond}[1]{\operatorname{{\mathcal{C}}}{#1}}
+\providecommand{\vol}[1]{\operatorname{vol}{#1}}
+
+%\providecommand{\phimin}[1]{\operatorname{\Phi_{\textrm{min}}}{#1}}
+%\providecommand{\philb}[1]{\operatorname{\Phi_{\textrm{lb}}}{#1}}
+%\providecommand{\phiub}[1]{\operatorname{\Phi_{\textrm{ub}}}{#1}}
+
+
+%\providecommand{\rank}{{\mathbf{rank}}}
+%\providecommand{\diag}{{\mathrm{diag}}}
+
+\providecommand{\rank}[1]{\operatorname{rank}{#1}}
+
+%\providecommand{\bx}{x} %general unknown x
+%\providecommand{\bX}{X} %scene point
+
+\providecommand{\ix}{\bx} %image point
+\providecommand{\ixa}{u} %1st coordinate of image point
+\providecommand{\ixb}{v} %2nd coordinate of image point
+\providecommand{\bXa}{U} %1st coordinate of scene point
+\providecommand{\bXb}{V} %2nd coordinate of scene point
+\providecommand{\bXc}{W} %3rd coordinate of scene point
+
+\providecommand{\tr}{^\top}
+
+\providecommand{\Linf}{L_{\infty}}
+\providecommand{\Ltwo}{L_{2}}
+\providecommand{\Lone}{L_{1}}
+\providecommand{\Lp}{L_{p}}
+\providecommand{\Lq}{L_{q}}
+
+\def\smallmat#1{\left[\begin{smallmatrix}#1\end{smallmatrix}\right]}
+
+
+
+\providecommand{\brs}{\bR_0}
+\providecommand{\bts}{\bt_0}
+\providecommand{\bzero}{\mathbf{0}}
+\providecommand{\bdx}{\mathbf{dx}}
+
+\providecommand{\p}{\partial}
+
+
+\providecommand{\del}[1]{\nabla_{#1}}
+\providecommand{\I}{\mathbf{I}}
+\providecommand{\II}{\mathbf{II}}
+\providecommand{\skewsymm}[1]{[{#1}]_\times}
+
+
+
+
+
+% 3D pose of the cars and ego motion
+\providecommand{\pos}[2]{\mathbf{p}^{#1}({#2})}
+\providecommand{\ori}[2]{\mathbf{\omega}^{#1}(#2)}
+\providecommand{\state}[2]{\mathbf{s}^{#1}(#2)}
+
+% ego pose
+\providecommand{\egop}[1][t]{\pos{c}{#1}}
+\providecommand{\egoo}[1][t]{\ori{c}{#1}}
+\providecommand{\egos}[1][t]{\state{c}{#1}}
+
+% relative pose between camera and car $i$
+\providecommand{\relp}[2]{\Omega^{#1}(#2)}
+\providecommand{\relpz}[2]{\Omega_z^{#1}(#2)}
+
+% 3D tracks on car $i$ in its own coordinate frame
+\providecommand{\tracklets}{\mathbf{X}^{i}_o}
+\providecommand{\tracklet}[1]{\mathbf{x}^{i}_{#1}}
+% track projections on camera
+\providecommand{\trackpit}[2]{\mathbf{u}_{#1}(#2)}
+\providecommand{\trackp}[1]{\mathbf{u}_j(#1)}
+\providecommand{\trackpj}[1]{\mathbf{u}_j(#1)}
+% Unclassified track point projected on camera
+\providecommand{\ucTrackp}{\mathbf{u}(t)}
+
+
+% dimensions of car $i$
+\providecommand{\dimsn}[1]{\mathbf{B}^{#1}}
+\providecommand{\expDimsn}{\hat{\mathbf{B}}}
+
+% projection function
+\providecommand{\projectionOf}[1]{\pi_{\relp{i}{t}}\left(#1\right)}
+\providecommand{\projectionOft}[1]{\pi_{\relp{i}{t+1}}\left(#1\right)}
+\providecommand{\centerProj}{\bar{\pi}_{\relp{i}{t}}(\dimsn{i})}
+\providecommand{\cornerProj}[1]{\pi^{#1}_{\relp{i}{t}}(\dimsn{i})}
+\providecommand{\triangleProj}[1]{\triangle^{#1}_{\relp{i}{t}}(\dimsn{i})}
+
+% bounding box corners on image
+\providecommand{\bbt}[2]{\mathbf{d}^{#1}({#2})}
+\providecommand{\bb}[1]{\mathbf{d}^{#1}(t)}
+
+
+\providecommand{\Energy}[1]{\mathcal{E}^{it}_{\text{#1}}}
+\providecommand{\pEnergy}[1]{\mathcal{E}^{ijt}_{\text{#1}}}
+% Weighted energy
+\providecommand{\WEnergy}[1]{\lambda_{\text{#1}}\Energy{#1}}
+\providecommand{\WpEnergy}[1]{\lambda_{\text{#1}}\pEnergy{#1}}
+\providecommand{\EnergyCol}{\mathcal{E}^{ijt}_{\text{col}}}
+\providecommand{\WEnergyCol}{\lambda_{\text{col}}\EnergyCol}
+
+\providecommand{\EnergyBBoxNoOcc}{\Energy{detectNoOcc}}
+\providecommand{\EnergyBBox}{\Energy{detect}}
+\providecommand{\EnergyTrack}{ \pEnergy{track}}
+\providecommand{\EnergyTrackNoOcc}{\pEnergy{trackNoOcc}}
+\providecommand{\EnergyLane}{\Energy{lane}}
+\providecommand{\EnergySize}{\Energy{size}}
+\providecommand{\EnergyDyn}{\Energy{dyn}}
+\providecommand{\EnergyDynHol}{\Energy{dyn-hol}}
+\providecommand{\EnergyDynOri}{\Energy{dyn-ori}}
+\providecommand{\EnergyDynVel}{\Energy{dyn-vel}}
+
+\providecommand{\occFreeProj}[1]{\Pi_{\relp{i}{t}}(#1)}
+\providecommand{\minx}{x_{\text{min}}}
+\providecommand{\miny}{y_{\text{min}}}
+\providecommand{\maxx}{x_{\text{max}}}
+\providecommand{\maxy}{y_{\text{max}}}
+\providecommand{\frontface}{F^i_\text{FF}(t)}
+
+\providecommand{\occ}[1]{o({#1})}
+\providecommand{\face}{F^i_k(t)}
+
+\providecommand{\invProjectionOf}[1]{\pi^{-1}_{\relp{i}{t}}\left(#1\right)}
+\providecommand{\invProjectionOftm}[1]{\pi^{-1}_{\relp{i}{t-1}}\left(#1\right)}
+\providecommand{\occf}{f^i_{occ}(\mathbf{x}_j)}
+\providecommand{\occftot}{f_{occ}(\mathbf{x}_j)}
+\providecommand{\occft}[1]{f_{occ}(#1)}
+
+\providecommand{\ray}{\hat{\mathbf{r}}_j}
+\providecommand{\occfray}{f_{occ}(\lambda\ray)}
+\providecommand{\lambdadist}{f_{\lambda}(\trackpj{t-1}, \lambda)}
+
+\providecommand{\occfxi}{L(\mathbf{x}; \pos{i}{t-1}, \Sigma_i)}
+\providecommand{\occfi}{L(\lambda \ray; \pos{i}{t-1}, \Sigma_i)}
+\providecommand{\assocP}{a^{ij}(\lambda)}
+\providecommand{\assocPk}{a^{ij}(\lambda_k)}
+
+\providecommand{\Ereproj}{E^{ij}_{\text{reproj}}}
+\providecommand{\Ptransarg}[1]{P^{j}_{\text{transmission}}(#1)}
+\providecommand{\Ptrans}{\Ptransarg{\lambda}}
+\providecommand{\Ptransmud}{P^{j}_{\text{transmission}}(\mu^{i}_d)}
+\providecommand{\Prefl}{P^{ij}_{\text{reflection}}(\lambda)}
+\providecommand{\Zrefl}{Z_{\text{refl}}}
+\providecommand{\dishort}{d_i(\mathbf{x})}
+
+\providecommand{\Lu}{L_u(\mathbf{u}, \mu^i_u,\Sigma^i_u)}
+\providecommand{\Llambda}{L_{\lambda}(\mathbf{u}, \lambda; \mu^i_d)}
+
+\providecommand{\Gauss}{\mathcal{N}}
+\providecommand{\PropDist}{\mathcal{W}_j}
+
+\providecommand{\muijl}{\mu^{ij}_{\lambda}}
+\providecommand{\sigmaijl}{\sigma^{ij}_{\lambda}}
+
+\providecommand{\Sigmait}{\bSigma^{i^{-1}}_o}
+
+\providecommand{\muit}{\bmu^{i}_o}
+\providecommand{\Sigmaic}{\bSigma'^{i^{-1}}_c}
+
+\providecommand{\muic}{{\bmu^{i}_c}}
+\providecommand{\Sigmaicf}{\bSigma^{i^{-1}}_c}
+\providecommand{\Sigmaicfinv}{\Sigma^{i}_c}
+
+\providecommand{\muiu}{\mu^{i}_t}
+\providecommand{\Sigmaiu}{\Sigma^{i^{-1}}_u}
+
+\providecommand{\uv}[1]{\hat{\mathbf{#1}}}
+\providecommand{\Tr}[3]{{}^{#1}{#2}_{#3}}
+\providecommand{\xymin}[1]{#1_{\text{min}}}
+\providecommand{\xymax}[1]{#1_{\text{max}}}
+\providecommand{\vect}[1]{\mathbf{#1}}
+\providecommand{\map}{\vect{x}}
+
+\providecommand{\xt}{\mathbf{x}_t}
+\providecommand{\xc}{\mathbf{x}_c}
+
+\providecommand{\Rctot}{\bR}
+\providecommand{\tctot}{\bt}
+
+\providecommand{\tcmut}{\bt'}
+
+
+\providecommand{\Beizer}{B\'eizer }
+
+\providecommand{\LaneUncertainty}[1]{\Sigma_{L_m}(#1)}
+\providecommand{\projOnLane}[1]{\pi_{L_m(k)}(#1)}
+\providecommand{\meandepth}[1]{\nu_#1}
+
+
+

@@ -5,18 +5,7 @@
 As a two-dimensional (2D) projection of the three-dimensional (3D) world, image formation is associated with a loss of information. This is especially significant when objects in 3D space occlude each other with respect to the camera viewpoint. In recent years, we have seen remarkable progress in various aspects of scene understanding, such as structure from motion (SFM) and object detection. However, occlusions still present a challenge, with the difficulty of physically modeling them being a major bottleneck. 
 %Prior works have considered occlusions in 2D or through discrete occluder patterns
 
-\begin{figure}[!!t]
-\begin{center}
-\includegraphics[width=\linewidth]{graphics/figure1.png}
-\end{center}
-\vspace{-0.6cm}
-\caption{\small We propose an occlusion model in 3D that is physically-inspired and continuous. Given object detection and SFM point tracks, our unified model probabilistically assigns point tracks to objects and reasons about object detection scores and bounding boxes. It uniformly handles static and dynamic objects, thus, outperforms motion segmentation for association problems. We also demonstrate occlusion-aware 3D localization in road scenes.}
-\label{fig:page1}
-\vspace{-0.4cm}
-\end{figure}
-
 Our main contribution is a novel theoretical model for occlusion handling that is continuous and fully 3D. Our model is motivated by insights from computer graphics, whereby we represent objects as translucent 3D ellipsoids. In Section \ref{sec:setup}, we develop novel continuous models for representing \emph{transmission} and \emph{reflection} probabilities for each ray emanating from the camera. This allows assigning probabilities for each point in space belonging to an object, which can explicitly explain image observations and reason about occlusions. This is in contrast to prior works that consider occlusions in 2D, or through discrete occluder patterns or models that are not physically interpretable \cite{Pepik_etal_2012,Pepik_etal_2013,Xiang_Savarese_2013,Zia_etal_2013,Zia_etal_2014,Zia2015}.
-
 
 A key advantage afforded by our occlusion model is unification. While previous approaches to handling occlusions are application-dependent, ours is physically-inspired, thus, flexible enough to be used in a variety of scenarios. In this paper, we show that our theory can be used for uniformly modeling the association of SFM point tracks with static or dynamic objects (Section \ref{sec:association}), as well as modeling object detection scores in applications like 3D localization (Section \ref{sec:localization}). We demonstrate the application of our formulations for road scenes from the KITTI raw dataset \cite{Geiger_etal_2012}.
 
@@ -24,6 +13,17 @@ A key advantage afforded by our occlusion model is unification. While previous a
 In particular, assigning 2D point tracks to independent, but potentially occluding, objects is a fundamental challenge in computer vision problems such as multibody SFM \cite{Ozden_etal_2010}. Recent works use motion segmentation \cite{Brox_Malik_2010,Rao_etal_2010} as a precursor to localizing objects, which often suffices for moving objects \cite{Tron_Vidal_2007} and has also been considered for multibody SFM \cite{Kundu_etal_2011}. However, motion-based segmentation is not always applicable in road scenes, due to static parked cars, or dynamic cars that move with similar velocities. Occlusions make the problem more severe since point tracks get clustered together for static objects and may frequently appear to change association among dynamic objects in 2D.
 %In contrast, we leverage the success of 
 Indeed, we show in Section \ref{sec:experiments} that our point track association outperforms state-of-the-art motion segmentation methods, as well as a baseline that uses detection bounding boxes but does not consider occlusions.
+
+\begin{wrapfigure}[25]{r}{0.5\linewidth}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{graphics/figure1.png}
+\end{center}
+\vspace{-0.6cm}
+\caption{\small We propose an occlusion model in 3D that is physically-inspired and continuous. Given object detection and SFM point tracks, our unified model probabilistically assigns point tracks to objects and reasons about object detection scores and bounding boxes. It uniformly handles static and dynamic objects, thus, outperforms motion segmentation for association problems. We also demonstrate occlusion-aware 3D localization in road scenes.}
+\label{fig:page1}
+\vspace{-0.4cm}
+\end{wrapfigure}
+
 
 Another potential application of our proposed model is towards 3D localization in road scenes. Prior works such as \cite{Song_Chandraker_2015} combine information from point tracks and detection bounding boxes, but do not consider occlusions for either. In contrast, our unified occlusion model allows a probabilistic soft assignment of point tracks to objects, as well as an occlusion-aware interpretation of object detection outputs. Our model is continuous, so it remains amenable to the use of continuous optimization tools.
 

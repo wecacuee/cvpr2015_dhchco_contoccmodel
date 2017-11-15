@@ -1,91 +1,50 @@
-\documentclass[10pt,twocolumn,letterpaper]{article}
-
-\usepackage{cvpr}
-\usepackage{times}
-\usepackage{epsfig}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{tikz}
-\usepackage{tikz3d}
-\usetikzlibrary{shadows,trees,calc}
-
-\usepackage{verbatim}
-\usepackage{bm}
-\usepackage{microtype}
-\usepackage{url}
-\usepackage{multirow}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{booktabs} % for better tables
-
-\newlength{\eqs}
-\setlength{\eqs}{-0.04in}
-
-\usepackage{enumitem}
-\setitemize[0]{leftmargin=15pt}
-
-\newenvironment{tight_itemize}{
-\begin{itemize}[leftmargin=10pt]
-  \setlength{\topsep}{0pt}
-  \setlength{\itemsep}{0pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
-}{\end{itemize}}
-
-
-
-% If you comment hyperref and then uncomment it, you should delete
-% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
-% run, let it finish, and you should be clear).
-\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
-
-
-\input{preamble}
-\newcommand{\xmin}{x_\text{min}}
-\newcommand{\ymin}{y_\text{min}}
-\newcommand{\xmax}{x_\text{max}}
-\newcommand{\ymax}{y_\text{max}}
-\DeclareMathOperator*{\argmin}{\arg\min}
-\input{Source/drawingslib}
-
-% Some diagrams have "visble" macro from beamer. Everything should be visible in paper mode.
-\makeatletter
-\def\visible<#1>#2{#2}
-\makeatother
-
-
-\cvprfinalcopy % *** Uncomment this line for the final submission
-
-\def\cvprPaperID{2072} % *** Enter the CVPR Paper ID here
-\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
-
-
-% Pages are numbered in submission mode, and unnumbered in camera-ready
-\ifcvprfinal\pagestyle{empty}\fi
-%\setcounter{page}{4321}
-
-\begin{document}
-\title{A Continuous Occlusion Model for Road Scene Understanding}
-
-\author{Vikas Dhiman$^\dagger$
-\and
-Quoc-Huy Tran$^*$
-\and
-Jason J. Corso$^\dagger$
-\and
-Manmohan Chandraker$^*$
-\and
-$^\dagger$ University of Michigan,\\
-Ann Arbor, MI, USA
-%{\tt\small \{dhiman,jjcorso\}@umich.edu}
-\and
-$^*$ NEC Laboratories America, Inc.\\
-Cupertino, CA, USA
-%{\tt\small \{qhtran,manu\}@nec-labs.com}
-}
-
-\maketitle
+% \documentclass[10pt,twocolumn,letterpaper]{article}
+% 
+\input{macros}
+% \newcommand{\xmin}{x_\text{min}}
+% \newcommand{\ymin}{y_\text{min}}
+% \newcommand{\xmax}{x_\text{max}}
+% \newcommand{\ymax}{y_\text{max}}
+% \DeclareMathOperator*{\argmin}{\arg\min}
+% \input{Source/drawingslib}
+% 
+% % Some diagrams have "visble" macro from beamer. Everything should be visible in paper mode.
+% \makeatletter
+% \def\visible<#1>#2{#2}
+% \makeatother
+% 
+% 
+% \cvprfinalcopy % *** Uncomment this line for the final submission
+% 
+% \def\cvprPaperID{2072} % *** Enter the CVPR Paper ID here
+% \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+% 
+% 
+% % Pages are numbered in submission mode, and unnumbered in camera-ready
+% \ifcvprfinal\pagestyle{empty}\fi
+% %\setcounter{page}{4321}
+% 
+% \begin{document}
+% \title{A Continuous Occlusion Model for Road Scene Understanding}
+% 
+% \author{Vikas Dhiman$^\dagger$
+% \and
+% Quoc-Huy Tran$^*$
+% \and
+% Jason J. Corso$^\dagger$
+% \and
+% Manmohan Chandraker$^*$
+% \and
+% $^\dagger$ University of Michigan,\\
+% Ann Arbor, MI, USA
+% %{\tt\small \{dhiman,jjcorso\}@umich.edu}
+% \and
+% $^*$ NEC Laboratories America, Inc.\\
+% Cupertino, CA, USA
+% %{\tt\small \{qhtran,manu\}@nec-labs.com}
+% }
+% 
+% \maketitle
 
 
 
@@ -105,8 +64,8 @@ Cupertino, CA, USA
 
 
 
-{\small
-\bibliographystyle{ieee}
-\bibliography{continuousocclusion}
-}
-\end{document}
+%{\small
+%\bibliographystyle{ieee}
+%\bibliography{continuousocclusion}
+%}
+%\end{document}

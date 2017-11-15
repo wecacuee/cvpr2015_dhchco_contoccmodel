@@ -9,7 +9,7 @@ A common parametric modeling for objects, especially traffic participants in roa
 
 %In this section, we introduce our representation of 3D objects and our modeling of object-object occlusion relationships. We refer the reader to Figure~\ref{fig:reflectiontransimission} for an illustration of the proposed concepts.
 
-\begin{figure}
+\begin{wrapfigure}[15]{r}{0.5\textwidth}
   \usetikzlibrary{calc}
   \centering
   \begin{tikzpicture}
@@ -19,7 +19,7 @@ A common parametric modeling for objects, especially traffic participants in roa
   \caption{\small We represent objects as translucent ellipsoids, which leads to the formulation of transmission and reflection probabilities. This figure shows the reflection probability for the first object (in violet), which has high values around the camera-facing side of the object. Also, note that the transmission probability is inversely proportional to occupancy.}
   \label{fig:reflectiontransimission}
   \vspace{-0.3cm}
-\end{figure}
+\end{wrapfigure}
 
 \vspace{-0.3cm}
 \paragraph{Occupancy model for traffic participants}
@@ -100,8 +100,8 @@ In Figure \ref{fig:compare:exact:approx:ptrans}, we compare the exact and approx
 
 \begin{figure}
 \centering
-  \includegraphics[width=0.9\columnwidth]{results/plotPtransmission_exact_vs_approx_pt_vis-small.png}\\
-  \includegraphics[trim=0.0 0 0.3in 0, clip, width=0.9\columnwidth]{results/plotPtransmission_exact_vs_approx_embedded_fonts.pdf}
+  \includegraphics[width=0.45\textwidth]{results/plotPtransmission_exact_vs_approx_pt_vis-small.png}%\\
+  \includegraphics[trim=0.0 0 0.3in 0, clip, width=0.45\textwidth]{results/plotPtransmission_exact_vs_approx_embedded_fonts.pdf}
   \vspace{-0.3cm}
   \caption{\small Comparisons between the approximate and exact formulations of $\Ptrans$. The drop in the approximate version is delayed because we assume drop at the object center rather than the camera-facing face of the object.}
   \label{fig:compare:exact:approx:ptrans}
