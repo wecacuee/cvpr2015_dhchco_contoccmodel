@@ -2,10 +2,10 @@
 \paragraph{Continuous bounding box energy with occlusion}
 Object detection is usually followed by non-maximal suppression that results in discarding similar bounding boxes. When we are jointly optimizing detections with other cues, it is usually not desirable to use a single bounding box. To retain the entire detection output while maintaining the continuous form of our energies, we approximate the distribution of detection scores with a multi-modal sum of Gaussian-like logistic functions. In particular, let 2D bounding box $\bb{i}$ be parameterized as a 4D vector $[\minx, \miny, \maxx, \maxy]^\top$. We fit a parametric function to the detection scores, of the form
 \begin{equation}
-S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \bLambda_k^{-1} \bepsilon_k^{i}(t) \right),
+S(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \bbS_k^{-1} \bepsilon_k^{i}(t) \right),
 \label{eq:GMMscores}
 \end{equation}
-where $A_k$ is an amplitude and $\bepsilon_k^{i}(t) = \bb{i}-\bmu_k$, with $\bmu_k$ the mean and $\bLambda_k$ the covariance.
+where $A_k$ is an amplitude and $\bepsilon_k^{i}(t) = \bb{i}-\bbMu_k$, with $\bbMu_k$ the mean and $\bbS_k$ the covariance.
 %% %
 %% \begin{multline}
 %%   S(\bb{i}) = \\
@@ -14,16 +14,15 @@ where $A_k$ is an amplitude and $\bepsilon_k^{i}(t) = \bb{i}-\bmu_k$, with $\bmu
 %% \end{multline}
 %% %
 %% to detection scores, by 
-We use a non-linear solver to minimize the above, with initialization from non-maximal suppressed outputs. The optimization is constrained by the symmetry and positive definiteness of $\bLambda_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
+We use a non-linear solver to minimize the above, with initialization from non-maximal suppressed outputs. The optimization is constrained by the symmetry and positive definiteness of $\bbS_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
 %Here $\mu^{(d)}_j$ is one of the $k$ modes as a 4D vector representing a single bounding box as $[\minx, \miny, \maxx, \maxy]^\top$. The optimization is constrained with symmetry and positive definiteness of $\Sigma^{(d)-1}_k$, $\maxx \ge \minx$ and $\maxy \ge \miny$.
 
 \paragraph{Detection scores with occlusion reasoning} 
-\def\u{\mathbf{u}}
 With our model of $\Ptrans$ described in Section \ref{sec:ptransmission}, we 
-compute the probability of a point $\u$ in the image to be occluded, assuming
-the point is on object $O_i$ with mean depth $\meandepth{i}$, as
+compute the probability of a point $\impt$ in the image to be occluded, assuming
+the point is on object $\Obj_i$ with mean depth $\meandepth{i}$, as
 \begin{align}
-  \Theta_{i}(\u, \meandepth{i}) = 1 - \Ptransmission(\meandepth{i}, \u).
+  \Theta_{i}(\impt, \meandepth{i}) = 1 - \PtransR(\meandepth{i}, \impt).
 \end{align}
 If a portion of the proposed detection bounding box is known to be 
 occluded, one would like to decrease the confidence in the detection score 
@@ -31,16 +30,16 @@ about the localization of that end of the object. Assuming that occlusions
 are more likely on the boundaries of the detection bounding box, we wish to decrease the 
 confidence on the mean detection boundaries around the occluded boundaries.
 To re-model detection scores scaled by continuous occlusion, we sample
-$\Theta_{i}(\mathbf{u}, \meandepth{i})$ at the hypothesized detection boundaries from
+$\Theta_{i}(\impt, \meandepth{i})$ at the hypothesized detection boundaries from
 the Gaussian mixture model (GMM) $S(.)$ in \eqref{eq:GMMscores} and augment the detection boundary covariance matrix by
 $\mathcal{P}_{i} = \rho_{i}\rho_{i}^\top$, where $\rho_{i} = \Theta_{i}(\mathbf{u},
 \meandepth{i})$. The new covariance matrix for the detection scores is given by 
-  $\bLambda'_k = \mathcal{P}_{i} + \bLambda_k$ for all $k$.
+  $\bbS'_k = \mathcal{P}_{i} + \bbS_k$ for all $k$.
 The detection score GMM $S'(.)$ with explicit occlusion reasoning is given by replacing the covariance
 matrix, as follows:
 %
 \begin{align}
-S'(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \bLambda_k^{'-1} \bepsilon_k^{i}(t) \right).
+S'(\bb{i}) = \sum_k A_k \exp \left( -\bepsilon_k^{i}(t)^\top \bbS_k^{'-1} \bepsilon_k^{i}(t) \right).
 \end{align}
 
 The energy of detection scores is simply taken to be the inverse of the above detection score, that is,
